@@ -94,8 +94,12 @@ type LeftToolbarItemVariant =
   | 'bond-doublearomatic'
   | 'chain'
   // charge group
+  | 'charge'
   | 'charge-plus'
   | 'charge-minus'
+  | 'radical'
+  // lone pair tool
+  | 'lone-pair'
   // sgroup group
   | 'sgroup'
   // reaction
@@ -121,6 +125,7 @@ type LeftToolbarItemVariant =
   | 'reaction-arrow-elliptical-arc-arrow-filled-triangle'
   | 'reaction-arrow-elliptical-arc-arrow-open-angle'
   | 'reaction-arrow-elliptical-arc-arrow-open-half-angle'
+  | 'curly-arrow'
   | typeof MULTITAIL_ARROW_TOOL_NAME
   // mapping
   | 'reaction-mapping-tools'

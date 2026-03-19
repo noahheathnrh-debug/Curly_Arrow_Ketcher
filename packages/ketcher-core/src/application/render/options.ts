@@ -17,7 +17,7 @@
 import { Vec2 } from 'domain/entities';
 import utils from '../editor/shared/utils';
 import { ShowHydrogenLabels } from './restruct/reatom';
-import { RenderOptions } from './render.types';
+import { ChargeDisplayStyle, RenderOptions } from './render.types';
 
 function defaultOptions(renderOptions: RenderOptions): RenderOptions {
   const options = getOptionsWithConvertedUnits(renderOptions);
@@ -44,6 +44,9 @@ function defaultOptions(renderOptions: RenderOptions): RenderOptions {
     // rendering customization flags
     // TODO: hide enhanced flags opts
     showValenceWarnings: true,
+    showLonePairs: false,
+    lonePairSize: 4,
+    lonePairDistance: 3,
     autoScale: false, // scale structure to fit into the given view box, used in view mode
     autoScaleMargin: 0,
     maxBondLength: 0, // 0 stands for "not specified"
@@ -53,6 +56,8 @@ function defaultOptions(renderOptions: RenderOptions): RenderOptions {
     // atoms
     carbonExplicitly: false,
     showCharge: true,
+    chargeDisplayStyle: ChargeDisplayStyle.Standard,
+    chargeSize: 6,
     showHydrogenLabels: ShowHydrogenLabels.TerminalAndHetero,
     showValence: true,
     // bonds

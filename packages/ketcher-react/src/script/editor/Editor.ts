@@ -226,6 +226,9 @@ class Editor implements KetcherEditor {
 
   public serverSettings = {};
 
+  isAllExplicitHShown = false;
+  atomsWithExplicitHBeforeAllMode: Set<number> = new Set();
+
   lastEvent: any;
   macromoleculeConvertionError: string | null | undefined;
 
@@ -430,6 +433,7 @@ class Editor implements KetcherEditor {
     }
 
     const struct = this.render.ctab.molecule;
+    const savedViewBox = this.render.viewBox;
     const zoom = this.render.options.zoom;
     this.render.clientArea.innerHTML = '';
     const wasViewOnlyEnabled = !!this.render.options.viewOnlyMode;
@@ -440,8 +444,9 @@ class Editor implements KetcherEditor {
     });
     this.updateToolAfterOptionsChange(wasViewOnlyEnabled);
     this.render.setMolecule(struct);
-    this.struct(struct.clone());
+    this.struct(struct.clone(), false);
     this.render.setZoom(zoom);
+    this.render.setViewBox(savedViewBox);
     this.render.update();
     return this.render.options;
   }

@@ -297,6 +297,26 @@ function arrow(
         shouldApplySnappingStyle,
       );
     }
+    case RxnArrowMode.CurlyMechanism: {
+      return arrowCurlyMechanism(
+        paper,
+        item,
+        length,
+        angle,
+        options,
+        shouldApplySnappingStyle,
+      );
+    }
+    case RxnArrowMode.FishhookMechanism: {
+      return arrowFishhookMechanism(
+        paper,
+        item,
+        length,
+        angle,
+        options,
+        shouldApplySnappingStyle,
+      );
+    }
   }
 }
 
@@ -1402,6 +1422,22 @@ function bondHydrogen(
     .attr(isSnapping ? options.bondSnappingStyle : {});
 }
 
+function bondOneElectron(
+  paper: RaphaelPaper,
+  halfBond1: HalfBond,
+  halfBond2: HalfBond,
+  options: RenderOptions,
+  isSnapping: boolean,
+) {
+  const a = halfBond1.p;
+  const b = halfBond2.p;
+  return paper
+    .path(makeStroke(a, b))
+    .attr(options.lineattr)
+    .attr({ 'stroke-dasharray': '--' })
+    .attr(isSnapping ? options.bondSnappingStyle : {});
+}
+
 function bondDative(
   paper: RaphaelPaper,
   halfBond1: HalfBond,
@@ -1737,6 +1773,194 @@ function rgroupAttachmentPointLabel(
   return labelPath;
 }
 
+function arrowCurlyMechanism(
+  paper: RaphaelPaper,
+  { pos: [start], height, height2 }: ArrowItem,
+  arrowLength: number,
+  arrowAngle: number,
+  options: RenderOptions,
+  shouldApplySnappingStyle: boolean,
+) {
+  const { arrowHeadLength, arrowHeadWidth, arrowHeadAttr } =
+    getArrowHeadDimensions(options);
+
+  const endX = start.x + arrowLength;
+  let shaftPath: string;
+  let tx: number, ty: number, px: number, py: number;
+
+  if (height2 !== undefined) {
+    // Cubic Bezier — two independent control handles
+    // cp1 = (arrowLength/3, -h1*4/3), cp2 = (2*arrowLength/3, -h2*4/3)
+    // Scale factor 4/3 ensures symmetric cubic (h1==h2) matches old quadratic visually.
+    const h1 = height;
+    const h2 = height2;
+    const cp1X = start.x + arrowLength / 3;
+    const cp1Y = start.y - h1 * (4 / 3);
+    const cp2X = start.x + (2 * arrowLength) / 3;
+    const cp2Y = start.y - h2 * (4 / 3);
+
+    // End tangent: 3*(P3 - P2)
+    const rawTanX = endX - cp2X; // = arrowLength / 3
+    const rawTanY = start.y - cp2Y; // = h2 * 4/3
+    const tLen = Math.hypot(rawTanX, rawTanY);
+    tx = tLen > 1e-9 ? rawTanX / tLen : 1;
+    ty = tLen > 1e-9 ? rawTanY / tLen : 0;
+    px = -ty;
+    py = tx;
+
+    const bx = endX - arrowHeadLength * tx;
+    const by = start.y - arrowHeadLength * ty;
+
+    shaftPath = svgPath(
+      `M${tfx(start.x)},${tfx(start.y)}C${tfx(cp1X)},${tfx(cp1Y)},${tfx(cp2X)},${tfx(cp2Y)},${tfx(bx)},${tfx(by)}`,
+    )
+      .rotate(arrowAngle, start.x, start.y)
+      .toString();
+  } else {
+    // Quadratic Bezier (backward compat — no height2)
+    const curv = height ? height * 2 : arrowLength * 0.25;
+    const cpX = start.x + arrowLength * 0.5;
+    const cpY = start.y - curv;
+
+    // Tangent direction at bezier end (t=1): 2*(end - cp)
+    const rawTanX = endX - cpX; // arrowLength / 2
+    const rawTanY = start.y - cpY; // curv
+    const tLen = Math.hypot(rawTanX, rawTanY);
+    tx = rawTanX / tLen;
+    ty = rawTanY / tLen;
+    px = -ty;
+    py = tx;
+
+    const bx = endX - arrowHeadLength * tx;
+    const by = start.y - arrowHeadLength * ty;
+
+    shaftPath = svgPath(
+      `M${tfx(start.x)},${tfx(start.y)}Q${tfx(cpX)},${tfx(cpY)},${tfx(bx)},${tfx(by)}`,
+    )
+      .rotate(arrowAngle, start.x, start.y)
+      .toString();
+  }
+
+  const headPath = svgPath(
+    `M${tfx(endX)},${tfx(start.y)}` +
+      `L${tfx(endX - arrowHeadLength * tx + arrowHeadWidth * px)},${tfx(start.y - arrowHeadLength * ty + arrowHeadWidth * py)}` +
+      `L${tfx(endX - (arrowHeadLength - arrowHeadAttr) * tx)},${tfx(start.y - (arrowHeadLength - arrowHeadAttr) * ty)}` +
+      `L${tfx(endX - arrowHeadLength * tx - arrowHeadWidth * px)},${tfx(start.y - arrowHeadLength * ty - arrowHeadWidth * py)}Z`,
+  )
+    .rotate(arrowAngle, start.x, start.y)
+    .toString();
+
+  const result = paper.set();
+  result.push(
+    paper.path(shaftPath).attr({
+      ...options.lineattr,
+      fill: 'none',
+      ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
+    }),
+  );
+  result.push(
+    paper.path(headPath).attr({
+      fill: options.lineattr.stroke,
+      stroke: options.lineattr.stroke,
+      'stroke-width': options.lineattr['stroke-width'],
+      ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
+    }),
+  );
+  return result;
+}
+
+function arrowFishhookMechanism(
+  paper: RaphaelPaper,
+  { pos: [start], height, height2 }: ArrowItem,
+  arrowLength: number,
+  arrowAngle: number,
+  options: RenderOptions,
+  shouldApplySnappingStyle: boolean,
+) {
+  const { arrowHeadLength, arrowHeadWidth } = getArrowHeadDimensions(options);
+
+  const endX = start.x + arrowLength;
+  let shaftPath: string;
+  let tx: number, ty: number, px: number, py: number;
+
+  if (height2 !== undefined) {
+    // Cubic Bezier
+    const h1 = height;
+    const h2 = height2;
+    const cp1X = start.x + arrowLength / 3;
+    const cp1Y = start.y - h1 * (4 / 3);
+    const cp2X = start.x + (2 * arrowLength) / 3;
+    const cp2Y = start.y - h2 * (4 / 3);
+
+    const rawTanX = endX - cp2X;
+    const rawTanY = start.y - cp2Y;
+    const tLen = Math.hypot(rawTanX, rawTanY);
+    tx = tLen > 1e-9 ? rawTanX / tLen : 1;
+    ty = tLen > 1e-9 ? rawTanY / tLen : 0;
+    px = -ty;
+    py = tx;
+
+    const bx = endX - arrowHeadLength * tx;
+    const by = start.y - arrowHeadLength * ty;
+
+    shaftPath = svgPath(
+      `M${tfx(start.x)},${tfx(start.y)}C${tfx(cp1X)},${tfx(cp1Y)},${tfx(cp2X)},${tfx(cp2Y)},${tfx(bx)},${tfx(by)}`,
+    )
+      .rotate(arrowAngle, start.x, start.y)
+      .toString();
+  } else {
+    // Quadratic Bezier (backward compat)
+    const curv = height ? height * 2 : arrowLength * 0.25;
+    const cpX = start.x + arrowLength * 0.5;
+    const cpY = start.y - curv;
+
+    // Tangent direction at bezier end (t=1): 2*(end - cp)
+    const rawTanX = endX - cpX;
+    const rawTanY = start.y - cpY;
+    const tLen = Math.hypot(rawTanX, rawTanY);
+    tx = rawTanX / tLen;
+    ty = rawTanY / tLen;
+    px = -ty;
+    py = tx;
+
+    const bx = endX - arrowHeadLength * tx;
+    const by = start.y - arrowHeadLength * ty;
+
+    shaftPath = svgPath(
+      `M${tfx(start.x)},${tfx(start.y)}Q${tfx(cpX)},${tfx(cpY)},${tfx(bx)},${tfx(by)}`,
+    )
+      .rotate(arrowAngle, start.x, start.y)
+      .toString();
+  }
+
+  // Half-bow head: only the +px wing (single-headed fishhook)
+  const headPath = svgPath(
+    `M${tfx(endX)},${tfx(start.y)}` +
+      `L${tfx(endX - arrowHeadLength * tx + arrowHeadWidth * px)},${tfx(start.y - arrowHeadLength * ty + arrowHeadWidth * py)}` +
+      `L${tfx(endX - arrowHeadLength * tx)},${tfx(start.y - arrowHeadLength * ty)}Z`,
+  )
+    .rotate(arrowAngle, start.x, start.y)
+    .toString();
+
+  const result = paper.set();
+  result.push(
+    paper.path(shaftPath).attr({
+      ...options.lineattr,
+      fill: 'none',
+      ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
+    }),
+  );
+  result.push(
+    paper.path(headPath).attr({
+      fill: options.lineattr.stroke,
+      stroke: options.lineattr.stroke,
+      'stroke-width': options.lineattr['stroke-width'],
+      ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
+    }),
+  );
+  return result;
+}
+
 export default {
   recenterText,
   arrow,
@@ -1754,6 +1978,7 @@ export default {
   bondAromatic,
   bondAny,
   bondHydrogen,
+  bondOneElectron,
   bondDative,
   reactingCenter,
   bondMark,

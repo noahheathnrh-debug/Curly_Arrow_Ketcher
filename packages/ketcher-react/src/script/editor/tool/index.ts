@@ -21,6 +21,9 @@ import AttachTool from './attach';
 import BondTool from './bond';
 import ChainTool from './chain';
 import ChargeTool from './charge';
+import LonePairTool from './lonePair';
+import CurlyArrowTool from './curlyArrow';
+import RadicalTool from './radical';
 import EnhancedStereoTool from './enhanced-stereo';
 import EraserTool from './eraser';
 import HandTool from './hand';
@@ -54,6 +57,9 @@ export const toolsMap: Record<string, ToolConstructorInterface> = {
   chain: ChainTool,
   template: TemplateTool,
   charge: ChargeTool,
+  radical: RadicalTool,
+  lonepair: LonePairTool,
+  curlyarrow: CurlyArrowTool,
   rgroupfragment: RGroupFragmentTool,
   apoint: APointTool,
   attach: AttachTool,

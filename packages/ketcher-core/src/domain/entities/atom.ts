@@ -105,6 +105,7 @@ export interface AtomAttributes {
   implicitH?: number;
   implicitHCount?: number | null;
   initiallySelected?: initiallySelectedType;
+  revealedLonePairs?: number;
 }
 
 export type AtomPropertiesInContextMenu = SubsetOfFields<
@@ -177,6 +178,7 @@ export class Atom extends BaseMicromoleculeEntity {
     stereoLabel: null,
     stereoParity: 0,
     implicitHCount: null,
+    revealedLonePairs: 0,
   };
 
   label: string;
@@ -211,6 +213,7 @@ export class Atom extends BaseMicromoleculeEntity {
   stereoParity: number;
   hasImplicitH?: boolean;
   pseudo!: string;
+  revealedLonePairs: number;
 
   /** @deprecated */
   get attpnt() {
@@ -296,6 +299,7 @@ export class Atom extends BaseMicromoleculeEntity {
       : null;
     this.neighbors = []; // set of half-bonds having this atom as their origin
     this.badConn = false;
+    this.revealedLonePairs = attributes.revealedLonePairs ?? 0;
 
     Object.defineProperty(this, 'pseudo', {
       enumerable: true,
@@ -870,7 +874,7 @@ export class Atom extends BaseMicromoleculeEntity {
   }
 
   private overrideHydrogenCountIfNeeded(hydrogenCount: number): number {
-    if (Atom.isHeteroAtom(this.label) && this.implicitHCount !== null) {
+    if (this.implicitHCount !== null) {
       return this.implicitHCount;
     }
     return hydrogenCount;

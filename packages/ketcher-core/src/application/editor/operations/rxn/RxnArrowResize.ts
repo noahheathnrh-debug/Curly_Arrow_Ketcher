@@ -16,7 +16,7 @@
 
 import { ReStruct } from 'application/render';
 import assert from 'assert';
-import { RxnArrow, Vec2 } from 'domain/entities';
+import { LonePairAttachment, RxnArrow, Vec2 } from 'domain/entities';
 import { Scale } from 'domain/helpers';
 import { tfx } from 'utilities';
 import { OperationType } from '../OperationType';
@@ -30,6 +30,7 @@ interface RxnArrowResizeData {
   current: Vec2;
   anchor: Vec2 | null;
   noinvalidate: boolean;
+  newLpAttach?: LonePairAttachment | null;
 }
 export class RxnArrowResize extends Base {
   data: RxnArrowResizeData;
@@ -42,9 +43,14 @@ export class RxnArrowResize extends Base {
     anchor: Vec2 | null,
     noinvalidate: boolean,
     isSnappingEnabled: boolean,
+    newLpAttach?: LonePairAttachment | null,
   ) {
     super(OperationType.RXN_ARROW_RESIZE);
     this.data = { id, d, current, anchor, noinvalidate };
+    // Only include newLpAttach when explicitly provided (including null to clear attachment)
+    if (newLpAttach !== undefined) {
+      this.data.newLpAttach = newLpAttach;
+    }
     this.isSnappingEnabled = isSnappingEnabled;
   }
 
@@ -60,10 +66,20 @@ export class RxnArrowResize extends Base {
     if (anchor) {
       const previousPos0 = item.pos[0].get_xy0();
       const previousPos1 = item.pos[1].get_xy0();
-      let middlePoint;
 
+      // Resolve current handle positions (cubic vs quadratic mode)
+      let middlePoint: Vec2 | undefined;
+      let cp1Point: Vec2 | undefined;
+      let cp2Point: Vec2 | undefined;
       if (RxnArrow.isElliptical(item)) {
-        [, , middlePoint] = reItem.getReferencePoints();
+        const refPts = reItem.getReferencePoints();
+        if (item.height2 !== undefined) {
+          // Cubic mode: [pos0, pos1, cp1, mid, cp2]
+          [, , cp1Point, middlePoint, cp2Point] = refPts;
+        } else {
+          // Quadratic mode: [pos0, pos1, mid]
+          middlePoint = refPts[2];
+        }
       }
 
       if (
@@ -116,10 +132,8 @@ export class RxnArrowResize extends Base {
         current.y = previousPos0.y;
       }
 
-      if (
-        tfx(anchor.x) === tfx(middlePoint?.x) &&
-        tfx(anchor.y) === tfx(middlePoint?.y)
-      ) {
+      // Curve handle adjustments (height/height2)
+      if (RxnArrow.isElliptical(item)) {
         const { angle } = reItem.getArrowParams(
           item.pos[0].x,
           item.pos[0].y,
@@ -129,19 +143,59 @@ export class RxnArrowResize extends Base {
         const angleInRadians = (angle * Math.PI) / 180;
         const cosAngle = Math.cos(angleInRadians);
         const sinAngle = Math.sin(angleInRadians);
-
         const diffX = current.x - anchor.x;
         const diffY = current.y - anchor.y;
-
         const diff = diffY * cosAngle - diffX * sinAngle;
-        if (item.height !== undefined) {
-          item.height -= diff;
+
+        // cp1 handle (cubic mode only) — adjusts height only
+        if (
+          cp1Point &&
+          tfx(anchor.x) === tfx(cp1Point.x) &&
+          tfx(anchor.y) === tfx(cp1Point.y)
+        ) {
+          if (item.height !== undefined) {
+            item.height -= diff;
+          }
+          const [, , newCp1] = reItem.getReferencePoints();
+          anchor.x = newCp1.x;
+          anchor.y = newCp1.y;
         }
 
-        const [, , newMiddlePoint] = reItem.getReferencePoints();
+        // mid handle — adjusts both heights (lazy-activates cubic on first drag)
+        if (
+          middlePoint &&
+          tfx(anchor.x) === tfx(middlePoint.x) &&
+          tfx(anchor.y) === tfx(middlePoint.y)
+        ) {
+          // Lazy activation: first mid drag in quadratic mode → activate cubic
+          if (item.height2 === undefined) {
+            item.height2 = item.height;
+          }
+          if (item.height !== undefined) {
+            item.height -= diff;
+          }
+          if (item.height2 !== undefined) {
+            item.height2 -= diff;
+          }
+          // After activation getReferencePoints returns 5 pts; mid is at index 3
+          const newRefPts = reItem.getReferencePoints();
+          anchor.x = newRefPts[3].x;
+          anchor.y = newRefPts[3].y;
+        }
 
-        anchor.y = newMiddlePoint.y;
-        anchor.x = newMiddlePoint.x;
+        // cp2 handle (cubic mode only) — adjusts height2 only
+        if (
+          cp2Point &&
+          tfx(anchor.x) === tfx(cp2Point.x) &&
+          tfx(anchor.y) === tfx(cp2Point.y)
+        ) {
+          if (item.height2 !== undefined) {
+            item.height2 -= diff;
+          }
+          const [, , , , newCp2] = reItem.getReferencePoints();
+          anchor.x = newCp2.x;
+          anchor.y = newCp2.y;
+        }
       }
     } else {
       if (this.isSnappingEnabled) {
@@ -152,6 +206,13 @@ export class RxnArrowResize extends Base {
 
     reItem.visel.translate(Scale.modelToCanvas(d, restruct.render.options));
     this.data.d = d.negated();
+
+    // Swap lpAttach so each execute() call toggles between old and new state
+    if ('newLpAttach' in this.data) {
+      const oldLpAttach = item.lpAttach;
+      item.lpAttach = this.data.newLpAttach ?? undefined;
+      this.data.newLpAttach = oldLpAttach;
+    }
 
     if (!this.data.noinvalidate) {
       Base.invalidateItem(restruct, 'rxnArrows', id, 1);
@@ -166,6 +227,7 @@ export class RxnArrowResize extends Base {
       this.data.anchor,
       this.data.noinvalidate,
       this.isSnappingEnabled,
+      this.data.newLpAttach,
     );
   }
 }

@@ -16,6 +16,7 @@ import {
 export class AtomRenderer extends BaseRenderer {
   private selectionElement?: D3SvgElementSelection<SVGEllipseElement, void>;
   private textElement?: D3SvgElementSelection<SVGTextElement, void>;
+  private chargeElement?: D3SvgElementSelection<SVGGElement, void>;
   private radicalElement?: D3SvgElementSelection<SVGGElement, void>;
   private cipLabelElement?: D3SvgElementSelection<SVGGElement, void>;
   private stereoLabelElement?: D3SvgElementSelection<SVGGElement, void>;
@@ -118,7 +119,7 @@ export class AtomRenderer extends BaseRenderer {
         .attr('cx', 0)
         .attr('cy', 0);
     } else {
-      const labelBbox = this.textElement?.node()?.getBBox();
+      const labelBbox = this.labelBoundingBox;
       const labelX = labelBbox?.x ?? 0;
       const labelWidth = labelBbox?.width ?? 8;
       const labelHeight = labelBbox?.height ?? 8;
@@ -140,9 +141,9 @@ export class AtomRenderer extends BaseRenderer {
    * Updates the width and height of the SelectionContour
    */
   private updateSelectionContour() {
-    if (!this.rootElement || !this.textElement) return;
+    if (!this.rootElement) return;
 
-    const labelBbox = this.textElement.node()?.getBBox();
+    const labelBbox = this.labelBoundingBox;
     if (!labelBbox) return;
 
     const labelX = labelBbox.x || 0;
@@ -308,6 +309,7 @@ export class AtomRenderer extends BaseRenderer {
     }
 
     const labelBboxes: DOMRect[] = [];
+    const chargeElementBbox = this.chargeElement?.node()?.getBBox();
     const radicalElementBbox = this.radicalElement?.node()?.getBBox();
 
     this.textElement
@@ -315,6 +317,10 @@ export class AtomRenderer extends BaseRenderer {
       .each(function (_atomRenderer, tspanIndex, tspans) {
         labelBboxes.push(tspans[tspanIndex].getBBox());
       });
+
+    if (chargeElementBbox) {
+      labelBboxes.push(chargeElementBbox);
+    }
 
     if (radicalElementBbox) {
       labelBboxes.push(radicalElementBbox);
@@ -324,7 +330,33 @@ export class AtomRenderer extends BaseRenderer {
   }
 
   public get labelBoundingBox() {
-    return this.textElement?.node()?.getBBox();
+    const labelBboxes = this.labelBBoxes;
+
+    if (labelBboxes.length === 0) {
+      return undefined;
+    }
+
+    const combinedBounds = labelBboxes.reduce(
+      (bounds, bbox) => ({
+        x: Math.min(bounds.x, bbox.x),
+        y: Math.min(bounds.y, bbox.y),
+        right: Math.max(bounds.right, bbox.x + bbox.width),
+        bottom: Math.max(bounds.bottom, bbox.y + bbox.height),
+      }),
+      {
+        x: labelBboxes[0].x,
+        y: labelBboxes[0].y,
+        right: labelBboxes[0].x + labelBboxes[0].width,
+        bottom: labelBboxes[0].y + labelBboxes[0].height,
+      },
+    );
+
+    return {
+      x: combinedBounds.x,
+      y: combinedBounds.y,
+      width: combinedBounds.right - combinedBounds.x,
+      height: combinedBounds.bottom - combinedBounds.y,
+    } as DOMRect;
   }
 
   public get shouldDisplayHydrogen() {
@@ -415,6 +447,8 @@ export class AtomRenderer extends BaseRenderer {
   public redrawLabel() {
     this.removeLabel();
     this.textElement = this.appendLabel();
+    this.chargeElement?.remove();
+    this.chargeElement = undefined;
     this.radicalElement?.remove();
     this.radicalElement = undefined;
     this.hoverElement?.remove();
@@ -427,9 +461,9 @@ export class AtomRenderer extends BaseRenderer {
     this.stereoTextElementBBox = undefined;
     this.badValenceElement?.remove();
     this.badValenceElement = undefined;
-    this.updateSelectionContour();
     this.appendAtomProperties();
     this.appendBadValenceWarning();
+    this.updateSelectionContour();
   }
 
   public appendSelection() {
@@ -475,6 +509,9 @@ export class AtomRenderer extends BaseRenderer {
   }
 
   private appendCharge() {
+    this.appendPositionedCharge();
+    return;
+
     if (this.atom.hasCharge) {
       const charge = this.atom.properties.charge as number;
 
@@ -487,6 +524,47 @@ export class AtomRenderer extends BaseRenderer {
         .attr('fill', this.labelColor)
         .attr('dy', -4);
     }
+  }
+
+  private appendPositionedCharge() {
+    if (!this.atom.hasCharge || !this.rootElement) {
+      return;
+    }
+
+    const labelBbox = this.textElement?.node()?.getBBox();
+    if (!labelBbox) {
+      return;
+    }
+
+    const charge = this.atom.properties.charge as number;
+    const chargeText =
+      (Math.abs(charge) > 1 ? Math.abs(charge) : '') +
+      (charge > 0 ? '+' : '\u2013');
+
+    this.chargeElement = this.rootElement.append('g');
+
+    const chargeTextElement = this.chargeElement
+      .append('text')
+      .text(chargeText)
+      .attr('fill', this.labelColor)
+      .attr('font-family', 'Arial')
+      .attr('font-size', '10px')
+      .attr('text-anchor', 'start')
+      .attr('pointer-events', 'none');
+
+    const chargeBBox = chargeTextElement.node()?.getBBox();
+    if (!chargeBBox) {
+      return;
+    }
+
+    const horizontalGap = 4;
+    const verticalGap = 3;
+    const desiredLeft = labelBbox.x + labelBbox.width + horizontalGap;
+    const desiredTop = labelBbox.y - chargeBBox.height * 0.2 - verticalGap;
+
+    chargeTextElement
+      .attr('x', desiredLeft)
+      .attr('y', desiredTop - chargeBBox.y);
   }
 
   private appendRadical() {

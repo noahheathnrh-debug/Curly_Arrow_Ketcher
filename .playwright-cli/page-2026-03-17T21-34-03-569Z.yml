@@ -1,0 +1,165 @@
+- generic [ref=e6]:
+  - application [ref=e8]:
+    - img [ref=e10]:
+      - generic [ref=e320]: O
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - button "Clear Canvas (Ctrl+Del)" [ref=e25] [cursor=pointer]:
+        - img [ref=e26]
+      - button "Open... (Ctrl+O)" [ref=e30] [cursor=pointer]:
+        - img [ref=e31]
+      - button "Save as... (Ctrl+S)" [ref=e33] [cursor=pointer]:
+        - img [ref=e34]
+      - generic [ref=e36]:
+        - button "Copy (Ctrl+C)" [disabled] [ref=e37]:
+          - img [ref=e38]
+        - button [ref=e40]:
+          - img [ref=e41]
+      - button "Paste (Ctrl+V)" [ref=e43] [cursor=pointer]:
+        - img [ref=e44]
+      - button "Cut (Ctrl+X)" [disabled] [ref=e46]:
+        - img [ref=e47]
+      - separator [ref=e49]
+      - button "Undo (Ctrl+Z)" [disabled] [ref=e50]:
+        - img [ref=e51]
+      - button "Redo (Ctrl+Shift+Z)" [disabled] [ref=e53]:
+        - img [ref=e54]
+      - separator [ref=e56]
+      - button "Aromatize (Alt+A)" [ref=e57] [cursor=pointer]:
+        - img [ref=e58]
+      - button "Dearomatize (Ctrl+Alt+A)" [ref=e60] [cursor=pointer]:
+        - img [ref=e61]
+      - button "Layout (Ctrl+L)" [ref=e63] [cursor=pointer]:
+        - img [ref=e64]
+      - button "Clean Up (Ctrl+Shift+L)" [ref=e67] [cursor=pointer]:
+        - img [ref=e68]
+      - button "Calculate CIP (Ctrl+P)" [ref=e70] [cursor=pointer]:
+        - img [ref=e71]
+      - button "Check Structure (Alt+S)" [ref=e74] [cursor=pointer]:
+        - img [ref=e75]
+      - button "Calculated Values (Alt+C)" [ref=e78] [cursor=pointer]:
+        - img [ref=e79]
+      - button "Add/Remove explicit hydrogens" [ref=e81] [cursor=pointer]:
+        - img [ref=e82]
+      - button "3D Viewer" [ref=e92] [cursor=pointer]:
+        - img [ref=e93]
+      - button "Show Lone Pairs" [ref=e98] [cursor=pointer]:
+        - img [ref=e99]
+    - generic [ref=e107]:
+      - generic "Switch to Macromolecule mode" [ref=e108]:
+        - button "Molecules" [ref=e109] [cursor=pointer]:
+          - img [ref=e110]
+          - generic [ref=e119]: Molecules
+          - img [ref=e120]
+      - separator [ref=e122]
+      - generic [ref=e123]:
+        - button "Settings" [ref=e124] [cursor=pointer]:
+          - img [ref=e125]
+        - button "Help (?)" [ref=e127] [cursor=pointer]:
+          - img [ref=e128]
+        - button "About" [ref=e130] [cursor=pointer]:
+          - img [ref=e131]
+        - button "Fullscreen mode" [ref=e135] [cursor=pointer]:
+          - img [ref=e136]
+      - separator [ref=e141]
+      - button "100%" [ref=e143] [cursor=pointer]:
+        - generic [ref=e144]: 100%
+        - img [ref=e145]
+  - generic [ref=e148]:
+    - generic [ref=e150]:
+      - button "Hand tool (Ctrl+Alt+H)" [ref=e151] [cursor=pointer]:
+        - img [ref=e152]
+      - generic [ref=e154]:
+        - button "Rectangle Selection (Shift+Tab)" [ref=e155] [cursor=pointer]:
+          - img [ref=e156]
+        - img [ref=e159]
+      - button "Erase (Del)" [ref=e161] [cursor=pointer]:
+        - img [ref=e162]
+    - generic [ref=e164]:
+      - generic [ref=e165]:
+        - button "Single Bond (1)" [ref=e166] [cursor=pointer]:
+          - img [ref=e167]
+        - img [ref=e169]
+      - button "Chain" [ref=e171] [cursor=pointer]:
+        - img [ref=e172]
+      - button "Stereochemistry (Alt+E)" [disabled] [ref=e174]:
+        - img [ref=e175]
+      - generic [ref=e177]:
+        - button "Charge Plus (Equal)" [ref=e178] [cursor=pointer]:
+          - img [ref=e179]
+        - img [ref=e182]
+      - button "Lone Pair Tool" [ref=e184] [cursor=pointer]:
+        - img [ref=e185]
+      - button "Curly Arrow Tool" [ref=e189] [cursor=pointer]:
+        - img [ref=e190]
+    - generic [ref=e194]:
+      - button "S-Group (Ctrl+G)" [ref=e195] [cursor=pointer]:
+        - img [ref=e196]
+      - generic [ref=e200]:
+        - button "R-Group Label Tool (Ctrl+R)" [ref=e201] [cursor=pointer]:
+          - img [ref=e202]
+        - img [ref=e206]
+      - button "Create a monomer (Ctrl+M)" [disabled] [ref=e208]:
+        - img [ref=e209]
+    - generic [ref=e211]:
+      - button "Reaction Plus Tool" [ref=e212] [cursor=pointer]:
+        - img [ref=e213]
+      - generic [ref=e215]:
+        - button "Arrow Open Angle Tool" [ref=e216] [cursor=pointer]:
+          - img [ref=e217]
+        - img [ref=e219]
+      - generic [ref=e221]:
+        - button "Reaction Mapping Tool" [ref=e222] [cursor=pointer]:
+          - img [ref=e223]
+        - img [ref=e227]
+    - generic [ref=e230]:
+      - generic [ref=e231]:
+        - button "Shape Ellipse" [ref=e232] [cursor=pointer]:
+          - img [ref=e233]
+        - img [ref=e236]
+      - button "Add text (Alt+T)" [ref=e238] [cursor=pointer]:
+        - img [ref=e239]
+      - button "Add Image" [ref=e241] [cursor=pointer]:
+        - img [ref=e242]
+  - generic [ref=e245]:
+    - button "Benzene (T)" [ref=e246] [cursor=pointer]:
+      - img [ref=e247]
+    - button "Cyclopentadiene (T)" [ref=e250] [cursor=pointer]:
+      - img [ref=e251]
+    - button "Cyclohexane (T)" [ref=e255] [cursor=pointer]:
+      - img [ref=e256]
+    - button "Cyclopentane (T)" [ref=e258] [cursor=pointer]:
+      - img [ref=e259]
+    - button "Cyclopropane (T)" [ref=e261] [cursor=pointer]:
+      - img [ref=e262]
+    - button "Cyclobutane (T)" [ref=e264] [cursor=pointer]:
+      - img [ref=e265]
+    - button "Cycloheptane (T)" [ref=e267] [cursor=pointer]:
+      - img [ref=e268]
+    - button "Cyclooctane (T)" [ref=e270] [cursor=pointer]:
+      - img [ref=e271]
+    - button "Structure Library (Shift+T)" [ref=e273] [cursor=pointer]:
+      - img [ref=e274]
+  - generic [ref=e281]:
+    - generic [ref=e283]:
+      - button "H" [ref=e285] [cursor=pointer]
+      - generic [ref=e286]:
+        - button "C" [ref=e287] [cursor=pointer]
+        - button "N" [ref=e288] [cursor=pointer]
+        - button "O" [ref=e289] [cursor=pointer]
+        - button "S" [ref=e290] [cursor=pointer]
+      - separator [ref=e291]
+      - generic [ref=e292]:
+        - button "P" [ref=e293] [cursor=pointer]
+        - button "F" [ref=e294] [cursor=pointer]
+        - button "Cl" [ref=e295] [cursor=pointer]
+        - button "Br" [ref=e296] [cursor=pointer]
+        - button "I" [ref=e297] [cursor=pointer]
+      - button "Periodic Table" [ref=e298] [cursor=pointer]:
+        - img [ref=e299]
+    - generic [ref=e307]:
+      - button "Any atom" [ref=e308] [cursor=pointer]:
+        - img [ref=e309]
+      - button "Extended Table" [ref=e313] [cursor=pointer]:
+        - img [ref=e314]
+  - textbox [active]

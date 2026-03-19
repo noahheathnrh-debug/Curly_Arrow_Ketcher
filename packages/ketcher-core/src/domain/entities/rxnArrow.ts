@@ -39,19 +39,37 @@ export enum RxnArrowMode {
   EllipticalArcFilledTriangle = 'elliptical-arc-arrow-filled-triangle',
   EllipticalArcOpenAngle = 'elliptical-arc-arrow-open-angle',
   EllipticalArcOpenHalfAngle = 'elliptical-arc-arrow-open-half-angle',
+  CurlyMechanism = 'curly-mechanism',
+  FishhookMechanism = 'fishhook-mechanism',
+}
+
+export interface LonePairAttachment {
+  atomId: number;
+  pairIdx: number;
+}
+
+export interface RadicalAttachment {
+  atomId: number;
+  radicalIdx: number;
 }
 
 export interface RxnArrowAttributes {
   mode: RxnArrowMode;
   pos?: Array<Point>;
   height?: number;
+  height2?: number;
   initiallySelected?: initiallySelectedType;
+  lpAttach?: LonePairAttachment;
+  raAttach?: RadicalAttachment;
 }
 
 export class RxnArrow extends BaseMicromoleculeEntity {
   mode: RxnArrowMode;
   pos: Array<Vec2>;
   height?: number;
+  height2?: number;
+  lpAttach?: LonePairAttachment;
+  raAttach?: RadicalAttachment;
 
   static isElliptical(arrow) {
     return [
@@ -59,6 +77,8 @@ export class RxnArrow extends BaseMicromoleculeEntity {
       RxnArrowMode.EllipticalArcFilledTriangle,
       RxnArrowMode.EllipticalArcOpenHalfAngle,
       RxnArrowMode.EllipticalArcOpenAngle,
+      RxnArrowMode.CurlyMechanism,
+      RxnArrowMode.FishhookMechanism,
     ].includes(arrow.mode);
   }
 
@@ -73,7 +93,13 @@ export class RxnArrow extends BaseMicromoleculeEntity {
       }
     }
     this.mode = attributes.mode;
-    const defaultHeight = 1;
+    this.lpAttach = attributes.lpAttach;
+    this.raAttach = attributes.raAttach;
+    this.height2 = attributes.height2;
+    const defaultHeight =
+      attributes.mode === RxnArrowMode.CurlyMechanism ||
+      attributes.mode === RxnArrowMode.FishhookMechanism
+        ? 0.25 : 1;
 
     if (RxnArrow.isElliptical(this)) {
       this.height = attributes.height ?? defaultHeight;

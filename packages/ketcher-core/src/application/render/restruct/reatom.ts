@@ -19,6 +19,7 @@ import {
   Bond,
   Box2Abs,
   FunctionalGroup,
+  RxnArrowMode,
   SGroup,
   StereoFlag,
   StereoLabel,
@@ -34,6 +35,7 @@ import {
 
 import ReObject from './reobject';
 import ReStruct from './restruct';
+import { calcLonePairAngles, getRadicalModelPositions } from './lonePairUtils';
 import { Render } from '../raphaelRender';
 import { Scale } from 'domain/helpers';
 import draw from '../draw';
@@ -82,6 +84,7 @@ class ReAtom extends ReObject {
   showLabel: boolean;
   showInfoLabel: boolean;
   hydrogenOnTheLeft: boolean;
+  cachedLabelHalfSize = 0;
   color: string;
   component: number;
   label?: ElemAttr;
@@ -592,16 +595,6 @@ class ReAtom extends ReObject {
         );
       }
 
-      if (this.a.radical !== 0) {
-        const radical = showRadical(this, render);
-        restruct.addReObjectPath(
-          LayerMap.data,
-          this.visel,
-          radical.path,
-          ps,
-          true,
-        );
-      }
       if (this.a.isotope !== null) {
         const isotope = showIsotope(this, render, leftMargin);
         leftMargin -= isotope.rbb.width + delta;
@@ -695,6 +688,33 @@ class ReAtom extends ReObject {
           true,
         );
       }
+
+      if (options.showLonePairs) {
+        const lonePairs = drawLonePairs(this, render, restruct, aid, label);
+        if (lonePairs) {
+          restruct.addReObjectPath(
+            LayerMap.data,
+            this.visel,
+            lonePairs,
+            ps,
+            true,
+          );
+        }
+      }
+
+      if (this.a.radical !== 0) {
+        const radicals = drawRadicals(this, render, restruct, aid, label);
+        if (radicals) {
+          restruct.addReObjectPath(
+            LayerMap.data,
+            this.visel,
+            radicals,
+            ps,
+            true,
+          );
+        }
+      }
+
       if (index) {
         /* eslint-disable no-mixed-operators */
         pathAndRBoxTranslate(
@@ -704,6 +724,48 @@ class ReAtom extends ReObject {
           0.3 * label.rbb.height,
         );
         /* eslint-enable no-mixed-operators */
+      }
+    }
+
+    if (!options.showLonePairs && this.a.revealedLonePairs > 0) {
+      const revealed = drawRevealedLonePairs(
+        this,
+        render,
+        restruct,
+        aid,
+        this.showLabel ? (label as ElemAttr) : null,
+      );
+      if (revealed) {
+        restruct.addReObjectPath(LayerMap.data, this.visel, revealed, ps, true);
+      }
+    }
+
+    // Always render the specific lone pairs that curly arrows originate from
+    if (!options.showLonePairs) {
+      const forcedIndices = new Set<number>();
+      restruct.rxnArrows.forEach((reArrow) => {
+        if (
+          reArrow.item.lpAttach?.atomId === aid &&
+          reArrow.item.mode === RxnArrowMode.CurlyMechanism
+        ) {
+          forcedIndices.add(reArrow.item.lpAttach.pairIdx);
+        }
+      });
+      // Remove indices already drawn by revealedLonePairs (0..revealedLonePairs-1)
+      for (let i = 0; i < this.a.revealedLonePairs; i++)
+        forcedIndices.delete(i);
+      if (forcedIndices.size > 0) {
+        const forced = drawForcedLonePairs(
+          this,
+          render,
+          restruct,
+          aid,
+          this.showLabel ? (label as ElemAttr) : null,
+          forcedIndices,
+        );
+        if (forced) {
+          restruct.addReObjectPath(LayerMap.data, this.visel, forced, ps, true);
+        }
       }
     }
 
@@ -1602,46 +1664,6 @@ function showHydroIndex(atom, render, implh, rightMargin): ElemAttr {
   return hydroIndex;
 }
 
-function showRadical(atom: ReAtom, render: Render): Omit<ElemAttr, 'text'> {
-  const ps: Vec2 = Scale.modelToCanvas(atom.a.pp, render.options);
-  const options = render.options;
-  const paper: any = render.paper;
-  const radical: any = {};
-  let hshift;
-  switch (atom.a.radical) {
-    case 1:
-      radical.path = paper.set();
-      hshift = 1.6 * options.lineWidth;
-      radical.path.push(
-        draw.radicalBullet(paper, ps.add(new Vec2(-hshift, 0)), options),
-        draw.radicalBullet(paper, ps.add(new Vec2(hshift, 0)), options),
-      );
-      radical.path.attr('fill', atom.color);
-      break;
-    case 2:
-      radical.path = paper.set();
-      radical.path.push(draw.radicalBullet(paper, ps, options));
-      radical.path.attr('fill', atom.color);
-      break;
-    case 3:
-      radical.path = paper.set();
-      hshift = 1.6 * options.lineWidth;
-      radical.path.push(
-        draw.radicalCap(paper, ps.add(new Vec2(-hshift, 0)), options),
-        draw.radicalCap(paper, ps.add(new Vec2(hshift, 0)), options),
-      );
-      radical.path.attr('stroke', atom.color);
-      break;
-    default:
-      break;
-  }
-  radical.rbb = util.relBox(radical.path.getBBox());
-  let vshift = -0.5 * (atom.label!.rbb.height + radical.rbb.height);
-  if (atom.a.radical === 3) vshift -= options.lineWidth / 2;
-  pathAndRBoxTranslate(radical.path, radical.rbb, 0, vshift);
-  return radical;
-}
-
 function showIsotope(
   atom: ReAtom,
   render: Render,
@@ -1678,32 +1700,122 @@ function showCharge(
   const ps = Scale.modelToCanvas(atom.a.pp, render.options);
   const options = render.options;
   const delta = 0.5 * options.lineWidth;
+  const chargeGap = Math.max(
+    options.lineWidth * 1.5,
+    options.fontszsubInPx * 0.18,
+  );
   const charge: any = {};
-  charge.text = '';
-  if (atom.a.charge !== null) {
-    const absCharge = Math.abs(atom.a.charge);
-    if (absCharge !== 1) charge.text = absCharge.toString();
-    if (atom.a.charge < 0) charge.text += '\u2013';
-    else charge.text += '+';
+  const circled = options.chargeDisplayStyle === 'circled';
+  const sizeFactor = Math.max(1, options.chargeSize ?? 6);
+
+  if (circled) {
+    const baseRadius =
+      options.fontszsubInPx * 0.38 * (sizeFactor / 6) * 0.75;
+    const lineLen = baseRadius * 0.55;
+    const strokeW = options.lineWidth * 0.4;
+    const isNeg = atom.a.charge !== null && atom.a.charge < 0;
+    const absCharge =
+      atom.a.charge !== null ? Math.abs(atom.a.charge) : 0;
+
+    const chargeSet = render.paper.set();
+
+    if (absCharge > 1) {
+      const numText = render.paper
+        .text(ps.x, ps.y, absCharge.toString())
+        .attr({
+          font: options.font,
+          'font-size': options.fontszsubInPx * (sizeFactor / 6) * 0.75,
+          fill: atom.color,
+        });
+      chargeSet.push(numText);
+    }
+
+    chargeSet.push(
+      render.paper.circle(ps.x, ps.y, baseRadius).attr({
+        stroke: atom.color,
+        'stroke-width': strokeW,
+        fill: 'none',
+      }),
+    );
+
+    chargeSet.push(
+      render.paper
+        .path(
+          'M' +
+            tfx(ps.x - lineLen) +
+            ',' +
+            tfx(ps.y) +
+            'L' +
+            tfx(ps.x + lineLen) +
+            ',' +
+            tfx(ps.y),
+        )
+        .attr({
+          stroke: atom.color,
+          'stroke-width': strokeW,
+          'stroke-linecap': 'round',
+        }),
+    );
+
+    if (!isNeg) {
+      chargeSet.push(
+        render.paper
+          .path(
+            'M' +
+              tfx(ps.x) +
+              ',' +
+              tfx(ps.y - lineLen) +
+              'L' +
+              tfx(ps.x) +
+              ',' +
+              tfx(ps.y + lineLen),
+          )
+          .attr({
+            stroke: atom.color,
+            'stroke-width': strokeW,
+            'stroke-linecap': 'round',
+          }),
+      );
+    }
+
+    charge.path = chargeSet;
+    const bbox = chargeSet.getBBox();
+    charge.rbb = util.relBox(bbox);
+
+    const xOff = rightMargin + 0.5 * charge.rbb.width + delta + chargeGap;
+    const yOff = -0.3 * atom.label!.rbb.height;
+    charge.path.translate(xOff, yOff);
+    charge.rbb.x += xOff;
+    charge.rbb.y += yOff;
   } else {
+    const fontSize = options.fontszsubInPx * (sizeFactor / 6);
     charge.text = '';
+    if (atom.a.charge !== null) {
+      const absCharge = Math.abs(atom.a.charge);
+      if (absCharge !== 1) charge.text = absCharge.toString();
+      if (atom.a.charge < 0) charge.text += '\u2013';
+      else charge.text += '+';
+    } else {
+      charge.text = '';
+    }
+
+    charge.path = render.paper.text(ps.x, ps.y, charge.text).attr({
+      font: options.font,
+      'font-size': fontSize,
+      fill: atom.color,
+    });
+    charge.rbb = util.relBox(charge.path.getBBox());
+    draw.recenterText(charge.path, charge.rbb);
+    /* eslint-disable no-mixed-operators */
+    pathAndRBoxTranslate(
+      charge.path,
+      charge.rbb,
+      rightMargin + 0.5 * charge.rbb.width + delta + chargeGap,
+      -0.3 * atom.label!.rbb.height,
+    );
+    /* eslint-enable no-mixed-operators */
   }
 
-  charge.path = render.paper.text(ps.x, ps.y, charge.text).attr({
-    font: options.font,
-    'font-size': options.fontszsubInPx,
-    fill: atom.color,
-  });
-  charge.rbb = util.relBox(charge.path.getBBox());
-  draw.recenterText(charge.path, charge.rbb);
-  /* eslint-disable no-mixed-operators */
-  pathAndRBoxTranslate(
-    charge.path,
-    charge.rbb,
-    rightMargin + 0.5 * charge.rbb.width + delta,
-    -0.3 * atom.label!.rbb.height,
-  );
-  /* eslint-enable no-mixed-operators */
   return charge;
 }
 
@@ -1848,6 +1960,216 @@ function showWarning(
     .attr({ stroke: '#F00' });
   warning.rbb = util.relBox(warning.path.getBBox());
   return warning;
+}
+
+function drawLonePairs(
+  atom: ReAtom,
+  render: Render,
+  restruct: ReStruct,
+  aid: number,
+  label: ElemAttr,
+): any | null {
+  const allAngles = calcLonePairAngles(
+    atom.a,
+    restruct.molecule,
+    aid,
+    atom.hydrogenOnTheLeft,
+  );
+  if (!allAngles || allAngles.length === 0) return null;
+
+  const { paper, options } = render;
+  const ps = Scale.modelToCanvas(atom.a.pp, options);
+  const sizeFactor = Math.max(1, options.lonePairSize ?? 4);
+  const dotRadius = options.lineWidth * 0.9 * (sizeFactor / 4);
+  const labelHalfSize =
+    0.5 * Math.max(label.rbb.width, label.rbb.height, options.fontszInPx);
+  atom.cachedLabelHalfSize = labelHalfSize;
+  const lpDist = options.lonePairDistance ?? 3;
+  const pairOffset = labelHalfSize + dotRadius * lpDist + options.lineWidth;
+  const dotSpacing = dotRadius * 1.8;
+
+  const lonePairSet = paper.set();
+  for (const angle of allAngles) {
+    const dirX = Math.cos(angle);
+    const dirY = Math.sin(angle);
+    const perpX = -dirY;
+    const perpY = dirX;
+
+    const cx = ps.x + dirX * pairOffset;
+    const cy = ps.y + dirY * pairOffset;
+
+    lonePairSet.push(
+      paper.circle(
+        tfx(cx + perpX * dotSpacing),
+        tfx(cy + perpY * dotSpacing),
+        dotRadius,
+      ),
+      paper.circle(
+        tfx(cx - perpX * dotSpacing),
+        tfx(cy - perpY * dotSpacing),
+        dotRadius,
+      ),
+    );
+  }
+
+  lonePairSet.attr({ fill: atom.color, stroke: 'none' });
+  return lonePairSet;
+}
+
+function drawRadicals(
+  atom: ReAtom,
+  render: Render,
+  restruct: ReStruct,
+  aid: number,
+  label: ElemAttr | null,
+): any | null {
+  const { paper, options } = render;
+  const labelHalfSize = label
+    ? 0.5 * Math.max(label.rbb.width, label.rbb.height, options.fontszInPx)
+    : options.fontszInPx * 0.5;
+  atom.cachedLabelHalfSize = labelHalfSize;
+  const positions = getRadicalModelPositions(
+    atom.a,
+    restruct.molecule,
+    aid,
+    options,
+    atom.hydrogenOnTheLeft,
+    labelHalfSize,
+  );
+
+  if (positions.length === 0) {
+    return null;
+  }
+
+  const sizeFactor = Math.max(1, options.lonePairSize ?? 4);
+  const dotRadius = options.lineWidth * 0.9 * (sizeFactor / 4);
+
+  const radicalSet = paper.set();
+
+  positions.forEach((position) => {
+    const canvasPosition = Scale.modelToCanvas(position, options);
+
+    radicalSet.push(
+      paper.circle(tfx(canvasPosition.x), tfx(canvasPosition.y), dotRadius),
+    );
+  });
+
+  radicalSet.attr({ fill: atom.color, stroke: 'none' });
+  return radicalSet.length > 0 ? radicalSet : null;
+}
+
+function drawRevealedLonePairs(
+  atom: ReAtom,
+  render: Render,
+  restruct: ReStruct,
+  aid: number,
+  label: ElemAttr | null,
+): any | null {
+  const allAngles = calcLonePairAngles(
+    atom.a,
+    restruct.molecule,
+    aid,
+    atom.hydrogenOnTheLeft,
+  );
+  if (!allAngles || allAngles.length === 0) return null;
+
+  const count = Math.min(atom.a.revealedLonePairs, allAngles.length);
+  if (count <= 0) return null;
+
+  const { paper, options } = render;
+  const atomPos = atom.a.pp;
+  const ps = Scale.modelToCanvas(atomPos, options);
+  const sizeFactor = Math.max(1, options.lonePairSize ?? 4);
+  const dotRadius = options.lineWidth * 0.9 * (sizeFactor / 4);
+  const labelHalfSize = label
+    ? 0.5 * Math.max(label.rbb.width, label.rbb.height, options.fontszInPx)
+    : options.fontszInPx * 0.5;
+  atom.cachedLabelHalfSize = labelHalfSize;
+  const lpDist = options.lonePairDistance ?? 3;
+  const pairOffset = labelHalfSize + dotRadius * lpDist + options.lineWidth;
+  const dotSpacing = dotRadius * 1.8;
+
+  const lonePairSet = paper.set();
+  for (let i = 0; i < count; i++) {
+    const angle = allAngles[i];
+    const dirX = Math.cos(angle);
+    const dirY = Math.sin(angle);
+    const perpX = -dirY;
+    const perpY = dirX;
+    const cx = ps.x + dirX * pairOffset;
+    const cy = ps.y + dirY * pairOffset;
+    lonePairSet.push(
+      paper.circle(
+        tfx(cx + perpX * dotSpacing),
+        tfx(cy + perpY * dotSpacing),
+        dotRadius,
+      ),
+      paper.circle(
+        tfx(cx - perpX * dotSpacing),
+        tfx(cy - perpY * dotSpacing),
+        dotRadius,
+      ),
+    );
+  }
+  lonePairSet.attr({ fill: atom.color, stroke: 'none' });
+  return lonePairSet.length > 0 ? lonePairSet : null;
+}
+
+// Draw only the specific lone pairs (by index) forced by curly arrow attachments
+function drawForcedLonePairs(
+  atom: ReAtom,
+  render: Render,
+  restruct: ReStruct,
+  aid: number,
+  label: ElemAttr | null,
+  indices: Set<number>,
+): any | null {
+  const allAngles = calcLonePairAngles(
+    atom.a,
+    restruct.molecule,
+    aid,
+    atom.hydrogenOnTheLeft,
+  );
+  if (!allAngles || allAngles.length === 0) return null;
+
+  const { paper, options } = render;
+  const atomPos = atom.a.pp;
+  const ps = Scale.modelToCanvas(atomPos, options);
+  const sizeFactor = Math.max(1, options.lonePairSize ?? 4);
+  const dotRadius = options.lineWidth * 0.9 * (sizeFactor / 4);
+  const labelHalfSize = label
+    ? 0.5 * Math.max(label.rbb.width, label.rbb.height, options.fontszInPx)
+    : options.fontszInPx * 0.5;
+  atom.cachedLabelHalfSize = labelHalfSize;
+  const lpDist = options.lonePairDistance ?? 3;
+  const pairOffset = labelHalfSize + dotRadius * lpDist + options.lineWidth;
+  const dotSpacing = dotRadius * 1.8;
+
+  const lonePairSet = paper.set();
+  indices.forEach((i) => {
+    if (i >= allAngles.length) return;
+    const angle = allAngles[i];
+    const dirX = Math.cos(angle);
+    const dirY = Math.sin(angle);
+    const perpX = -dirY;
+    const perpY = dirX;
+    const cx = ps.x + dirX * pairOffset;
+    const cy = ps.y + dirY * pairOffset;
+    lonePairSet.push(
+      paper.circle(
+        tfx(cx + perpX * dotSpacing),
+        tfx(cy + perpY * dotSpacing),
+        dotRadius,
+      ),
+      paper.circle(
+        tfx(cx - perpX * dotSpacing),
+        tfx(cy - perpY * dotSpacing),
+        dotRadius,
+      ),
+    );
+  });
+  lonePairSet.attr({ fill: atom.color, stroke: 'none' });
+  return lonePairSet.length > 0 ? lonePairSet : null;
 }
 
 function getAamText(atom) {

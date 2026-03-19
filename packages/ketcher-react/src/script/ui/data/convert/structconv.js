@@ -381,6 +381,10 @@ const bondCaptionMap = {
     type: Bond.PATTERN.TYPE.DATIVE,
     stereo: Bond.PATTERN.STEREO.NONE,
   },
+  oneelectron: {
+    type: Bond.PATTERN.TYPE.ONE_ELECTRON,
+    stereo: Bond.PATTERN.STEREO.NONE,
+  },
 };
 
 export function toBondType(caption) {

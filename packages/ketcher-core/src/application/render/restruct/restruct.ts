@@ -22,6 +22,7 @@ import {
   Pile,
   Pool,
   RGroupAttachmentPoint,
+  RxnArrowMode,
   SGroup,
   Struct,
   Vec2,
@@ -364,6 +365,15 @@ class ReStruct {
 
   markAtom(aid: number, mark: number): void {
     this.markItem('atoms', aid, mark);
+    // Cascade to any CurlyMechanism arrows whose start is pinned to this atom's lone pairs
+    this.rxnArrows.forEach((reArrow, arrowId) => {
+      if (
+        reArrow.item.lpAttach?.atomId === aid &&
+        reArrow.item.mode === RxnArrowMode.CurlyMechanism
+      ) {
+        this.markItem('rxnArrows', arrowId, mark);
+      }
+    });
   }
 
   markRgroupAttachmentPoint(rgAPid: number, mark: number): void {

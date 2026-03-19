@@ -20,6 +20,7 @@ import {
   ShowHydrogenLabels,
   ShowHydrogenLabelNames,
   defaultBondThickness,
+  ChargeDisplayStyle,
 } from 'ketcher-core';
 import Ajv, { SchemaObject } from 'ajv';
 
@@ -81,8 +82,13 @@ const render: {
   fontszsubUnit: ExtendedSchema;
   carbonExplicitly: ExtendedSchema;
   showCharge: ExtendedSchema;
+  chargeDisplayStyle: ExtendedSchema;
+  chargeSize: ExtendedSchema;
   showValence: ExtendedSchema;
   showHydrogenLabels: ExtendedSchema;
+  showLonePairs: ExtendedSchema;
+  lonePairSize: ExtendedSchema;
+  lonePairDistance: ExtendedSchema;
   aromaticCircle: ExtendedSchema;
   bondSpacing: ExtendedSchema;
   bondThickness: ExtendedSchema;
@@ -228,6 +234,19 @@ const render: {
     description: 'slider',
     default: true,
   },
+  chargeDisplayStyle: {
+    title: 'Charge display style',
+    enum: [ChargeDisplayStyle.Standard, ChargeDisplayStyle.Circled],
+    enumNames: ['Standard (+ \u2013)', 'Circled (\u229D \u229E)'],
+    default: ChargeDisplayStyle.Standard,
+  },
+  chargeSize: {
+    title: 'Charge size',
+    type: 'integer',
+    default: 6,
+    minimum: 1,
+    maximum: 12,
+  },
   showValence: {
     title: 'Display valence',
     type: 'boolean',
@@ -239,6 +258,26 @@ const render: {
     enum: Object.values(ShowHydrogenLabels),
     enumNames: Object.values(ShowHydrogenLabelNames),
     default: ShowHydrogenLabels.TerminalAndHetero,
+  },
+  showLonePairs: {
+    title: 'Show lone pairs',
+    type: 'boolean',
+    description: 'slider',
+    default: false,
+  },
+  lonePairSize: {
+    title: 'Lone pair size',
+    type: 'integer',
+    default: 4,
+    minimum: 1,
+    maximum: 10,
+  },
+  lonePairDistance: {
+    title: 'Lone pair distance',
+    type: 'integer',
+    default: 3,
+    minimum: 1,
+    maximum: 8,
   },
   // Bonds
   aromaticCircle: {

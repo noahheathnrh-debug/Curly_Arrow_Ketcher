@@ -16,6 +16,7 @@
 
 import isHidden from './isHidden';
 import { serverTransform } from '../state/server';
+import { fromToggleExplicitH, Action } from 'ketcher-core';
 
 const config = {
   layout: {
@@ -96,9 +97,66 @@ const config = {
   'explicit-hydrogens': {
     title: 'Add/Remove explicit hydrogens',
     action: {
-      thunk: serverTransform('toggleExplicitHydrogens'),
+      thunk: (dispatch, getState) => {
+        const editor = getState().editor;
+        const restruct = editor.render.ctab;
+        const molecule = restruct.molecule;
+
+        const hasExplicitHNeighbors = (atomId) =>
+          (molecule.atomGetNeighbors(atomId) ?? []).some(({ aid }) => {
+            const neiAtom = molecule.atoms.get(aid);
+            return neiAtom?.label === 'H' && neiAtom.sgs.size === 0;
+          });
+
+        if (!editor.isAllExplicitHShown) {
+          // Save which atoms already have explicit H (user per-atom choices)
+          const beforeSet = new Set();
+          molecule.atoms.forEach((_, atomId) => {
+            if (hasExplicitHNeighbors(atomId)) beforeSet.add(atomId);
+          });
+          editor.atomsWithExplicitHBeforeAllMode = beforeSet;
+
+          // Add H to atoms that don't have it yet
+          const atomsToAdd = [];
+          molecule.atoms.forEach((atom, atomId) => {
+            if (atom.implicitH > 0 && !beforeSet.has(atomId))
+              atomsToAdd.push(atomId);
+          });
+
+          if (atomsToAdd.length > 0) {
+            const combined = new Action();
+            atomsToAdd.forEach((atomId) => {
+              const action = fromToggleExplicitH(restruct, atomId);
+              if (action) combined.mergeWith(action);
+            });
+            editor.update(combined);
+          }
+
+          editor.isAllExplicitHShown = true;
+        } else {
+          // Remove only the bulk-added H (not user per-atom ones)
+          const beforeSet = editor.atomsWithExplicitHBeforeAllMode;
+
+          const atomsToRemove = [];
+          molecule.atoms.forEach((_, atomId) => {
+            if (hasExplicitHNeighbors(atomId) && !beforeSet.has(atomId))
+              atomsToRemove.push(atomId);
+          });
+
+          if (atomsToRemove.length > 0) {
+            const combined = new Action();
+            atomsToRemove.forEach((atomId) => {
+              const action = fromToggleExplicitH(restruct, atomId);
+              if (action) combined.mergeWith(action);
+            });
+            editor.update(combined);
+          }
+
+          editor.isAllExplicitHShown = false;
+          editor.atomsWithExplicitHBeforeAllMode = new Set();
+        }
+      },
     },
-    disabled: (editor, server, options) => !options.app.server,
     hidden: (options) => isHidden(options, 'explicit-hydrogens'),
   },
 };

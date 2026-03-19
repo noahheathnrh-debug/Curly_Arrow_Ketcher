@@ -15,7 +15,7 @@
  ***************************************************************************/
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { RxnArrow, RxnArrowMode, Vec2 } from 'domain/entities';
+import { LonePairAttachment, RadicalAttachment, RxnArrow, RxnArrowMode, Vec2 } from 'domain/entities';
 
 import Base from '../base';
 import { OperationType } from '../OperationType';
@@ -30,6 +30,9 @@ type RxnArrowAddData = {
   pos: Array<Vec2>;
   mode: RxnArrowMode;
   height?: number;
+  height2?: number;
+  lpAttach?: LonePairAttachment;
+  raAttach?: RadicalAttachment;
 };
 
 class RxnArrowAdd extends Base {
@@ -40,9 +43,12 @@ class RxnArrowAdd extends Base {
     mode: RxnArrowMode = RxnArrowMode.OpenAngle,
     id?: number,
     height?: number,
+    lpAttach?: LonePairAttachment,
+    raAttach?: RadicalAttachment,
+    height2?: number,
   ) {
     super(OperationType.RXN_ARROW_ADD);
-    this.data = { pos, mode, id, height };
+    this.data = { pos, mode, id, height, height2, lpAttach, raAttach };
   }
 
   execute(restruct: any): void {
@@ -50,6 +56,9 @@ class RxnArrowAdd extends Base {
     const item = new RxnArrow({
       mode: this.data.mode,
       height: this.data.height,
+      height2: this.data.height2,
+      lpAttach: this.data.lpAttach,
+      raAttach: this.data.raAttach,
     });
 
     if (this.data.id == null) {
@@ -71,6 +80,13 @@ class RxnArrowAdd extends Base {
     );
 
     Base.invalidateItem(restruct, 'rxnArrows', itemId, 1);
+    // The atom whose lone pair the arrow starts from must redraw to show that pair
+    if (this.data.lpAttach?.atomId != null) {
+      Base.invalidateItem(restruct, 'atoms', this.data.lpAttach.atomId, 1);
+    }
+    if (this.data.raAttach?.atomId != null) {
+      Base.invalidateItem(restruct, 'atoms', this.data.raAttach.atomId, 1);
+    }
   }
 
   invert(): Base {
@@ -83,6 +99,9 @@ interface RxnArrowDeleteData {
   pos?: Array<Vec2>;
   mode?: RxnArrowMode;
   height?: number;
+  height2?: number;
+  lpAttach?: LonePairAttachment;
+  raAttach?: RadicalAttachment;
 }
 
 class RxnArrowDelete extends Base {
@@ -104,6 +123,9 @@ class RxnArrowDelete extends Base {
     this.data.pos = item.pos;
     this.data.mode = item.mode;
     this.data.height = item.height;
+    this.data.height2 = item.height2;
+    this.data.lpAttach = item.lpAttach;
+    this.data.raAttach = item.raAttach;
     this.performed = true;
 
     restruct.markItemRemoved();
@@ -115,6 +137,14 @@ class RxnArrowDelete extends Base {
 
     struct.rxnArrows.delete(this.data.id);
 
+    // Redraw atom so it can drop the forced lone pair display
+    if (this.data.lpAttach?.atomId != null) {
+      Base.invalidateItem(restruct, 'atoms', this.data.lpAttach.atomId, 1);
+    }
+    if (this.data.raAttach?.atomId != null) {
+      Base.invalidateItem(restruct, 'atoms', this.data.raAttach.atomId, 1);
+    }
+
     KetcherLogger.log('RxnArrowDelete.execute(), end');
   }
 
@@ -124,6 +154,9 @@ class RxnArrowDelete extends Base {
       this.data.mode,
       this.data.id,
       this.data.height,
+      this.data.lpAttach,
+      this.data.raAttach,
+      this.data.height2,
     );
   }
 }

@@ -35,7 +35,7 @@ import {
   FragmentDeleteStereoAtom,
   SGroupAtomAdd,
 } from '../operations';
-import { atomGetAttr, atomGetDegree, atomGetSGroups } from './utils';
+import { atomForNewBond, atomGetAttr, atomGetDegree, atomGetSGroups } from './utils';
 import { fromRGroupFragment, fromUpdateIfThen } from './rgroup';
 import { removeAtomFromSgroupIfNeeded, removeSgroupIfNeeded } from './sgroup';
 
@@ -322,4 +322,54 @@ export function checkAtomValence(restruct, atomId) {
   action.addOp(new CalcImplicitH([atomId]));
 
   return action.perform(restruct);
+}
+
+/**
+ * Toggle explicit H atoms on a single atom.
+ * If the atom already has explicit H neighbors (bonded H atoms, not in sgroups),
+ * removes them. Otherwise, adds a bonded H atom for each implicit H.
+ * Returns null if there is nothing to do.
+ */
+export function fromToggleExplicitH(
+  restruct: ReStruct,
+  atomId: number,
+): Action | null {
+  const molecule = restruct.molecule;
+  const atom = molecule.atoms.get(atomId);
+  if (!atom) return null;
+
+  const action = new Action();
+
+  const hNeighbors = (molecule.atomGetNeighbors(atomId) ?? []).filter(
+    ({ aid }) => {
+      const neiAtom = molecule.atoms.get(aid);
+      return neiAtom?.label === 'H' && neiAtom.sgs.size === 0;
+    },
+  );
+
+  if (hNeighbors.length > 0) {
+    hNeighbors.forEach(({ aid, bid }) => {
+      action.addOp(new BondDelete(bid).perform(restruct));
+      action.addOp(new AtomDelete(aid).perform(restruct));
+    });
+  } else {
+    const hCount = atom.implicitH;
+    if (hCount <= 0) return null;
+
+    const fragmentId = atom.fragment;
+    for (let i = 0; i < hCount; i++) {
+      const hPos = atomForNewBond(restruct, atomId).pos;
+      const addOp = new AtomAdd({ label: 'H', fragment: fragmentId }, hPos);
+      action.addOp(addOp.perform(restruct));
+      const hAtomId = addOp.data.aid;
+      action.addOp(
+        new BondAdd(atomId, hAtomId, {
+          type: Bond.PATTERN.TYPE.SINGLE,
+        }).perform(restruct),
+      );
+    }
+  }
+
+  action.addOp(new CalcImplicitH([atomId]).perform(restruct));
+  return action;
 }

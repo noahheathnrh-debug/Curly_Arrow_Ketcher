@@ -14,7 +14,14 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { Box2Abs, RxnArrow, RxnArrowMode, Vec2 } from 'domain/entities';
+import {
+  Box2Abs,
+  LonePairAttachment,
+  RadicalAttachment,
+  RxnArrow,
+  RxnArrowMode,
+  Vec2,
+} from 'domain/entities';
 
 import { LayerMap } from './generalEnumTypes';
 import Raphael from '../raphael-ext';
@@ -25,11 +32,15 @@ import { Scale } from 'domain/helpers';
 import draw from '../draw';
 import util from '../util';
 import { tfx } from 'utilities';
+import { getLonePairModelPositions, getRadicalModelPositions } from './lonePairUtils';
 
 type Arrow = {
   pos: Array<Vec2>;
   mode: RxnArrowMode;
   height?: number;
+  height2?: number;
+  lpAttach?: LonePairAttachment;
+  raAttach?: RadicalAttachment;
 };
 
 type ArrowParams = {
@@ -67,11 +78,13 @@ class ReRxnArrow extends ReObject {
       // currently an elliptical arrow is highlighted if a pointer is close to one of the 3 virtual lines
       // that form a triangle from the arrow's 3 reference points
       // TODO: make a better detection (maybe rectangular, so it's similar to visual highlight/selection)
-      const [startPoint, endPoint, middlePoint] = this.getReferencePoints();
+      const refPts = this.getReferencePoints();
+      // For cubic mode [pos0, pos1, cp1, mid, cp2] use start+mid and mid+end segments
+      const midPt = refPts.length === 5 ? refPts[3] : refPts[2];
       dist = Math.min(
         dist,
-        point.calculateDistanceToLine([startPoint, middlePoint]),
-        point.calculateDistanceToLine([middlePoint, endPoint]),
+        point.calculateDistanceToLine([refPts[0], midPt]),
+        point.calculateDistanceToLine([midPt, refPts[1]]),
       );
     }
 
@@ -119,13 +132,26 @@ class ReRxnArrow extends ReObject {
     const refPoints: Array<Vec2> = [];
     const item = this.item;
     const [a, b] = item.pos;
-    const height = item.height;
     refPoints.push(new Vec2(a.x, a.y));
     refPoints.push(new Vec2(b.x, b.y));
 
     if (RxnArrow.isElliptical(item)) {
-      const middlePoint = findMiddlePoint(height!, a, b);
-      refPoints.push(middlePoint);
+      if (item.height2 !== undefined) {
+        // Cubic mode: 5 handles — [pos0, pos1, cp1, mid, cp2]
+        const { cp1, mid, cp2 } = computeCubicRefPoints(
+          a,
+          b,
+          item.height ?? 0,
+          item.height2,
+        );
+        refPoints.push(cp1);
+        refPoints.push(mid);
+        refPoints.push(cp2);
+      } else {
+        // Quadratic mode: 3 handles — [pos0, pos1, mid]
+        const middlePoint = findMiddlePoint(item.height!, a, b);
+        refPoints.push(middlePoint);
+      }
     }
     return refPoints;
   }
@@ -167,9 +193,54 @@ class ReRxnArrow extends ReObject {
       RxnArrow.isElliptical(item) && item.height
         ? item.height * options.microModeScale
         : 0;
+    const height2 =
+      RxnArrow.isElliptical(item) && item.height2 !== undefined
+        ? item.height2 * options.microModeScale
+        : undefined;
     const pos = item.pos.map((p) => {
       return Scale.modelToCanvas(p, options) || new Vec2();
     });
+
+    // Dynamically resolve the start point from the lone pair attachment
+    if (item.lpAttach && item.mode === RxnArrowMode.CurlyMechanism) {
+      const { atomId, pairIdx } = item.lpAttach;
+      const reAtom = render.ctab.atoms.get(atomId);
+      const modelAtom = render.ctab.molecule.atoms.get(atomId);
+      if (reAtom && modelAtom) {
+        const modelPositions = getLonePairModelPositions(
+          modelAtom,
+          render.ctab.molecule,
+          atomId,
+          render.options,
+          reAtom.hydrogenOnTheLeft,
+          reAtom.cachedLabelHalfSize || undefined,
+        );
+        if (modelPositions[pairIdx]) {
+          pos[0] = Scale.modelToCanvas(modelPositions[pairIdx], options);
+        }
+      }
+    }
+
+    // Dynamically resolve the start point from the radical attachment
+    if (item.raAttach && item.mode === RxnArrowMode.FishhookMechanism) {
+      const { atomId, radicalIdx } = item.raAttach;
+      const reAtom = render.ctab.atoms.get(atomId);
+      const modelAtom = render.ctab.molecule.atoms.get(atomId);
+      if (reAtom && modelAtom) {
+        const radPositions = getRadicalModelPositions(
+          modelAtom,
+          render.ctab.molecule,
+          atomId,
+          render.options,
+          reAtom.hydrogenOnTheLeft,
+          reAtom.cachedLabelHalfSize || undefined,
+        );
+        if (radPositions[radicalIdx]) {
+          pos[0] = Scale.modelToCanvas(radPositions[radicalIdx], options);
+        }
+      }
+    }
+
     const { length, angle } = this.getArrowParams(
       pos[0].x,
       pos[0].y,
@@ -189,7 +260,7 @@ class ReRxnArrow extends ReObject {
       case 'arrow':
         path = draw.arrow(
           render.paper,
-          { ...item, pos, height },
+          { ...item, pos, height, height2 },
           length,
           angle,
           options,
@@ -210,14 +281,57 @@ class ReRxnArrow extends ReObject {
 
   show(restruct: ReStruct, _id, options) {
     const path = this.generatePath(restruct.render, options, 'arrow');
-    path.node?.setAttribute('data-testid', 'rxn-arrow');
-    path.node?.setAttribute('data-arrowtype', this.item.mode + '-arrow');
-
     const offset = options.offset;
-    if (offset != null) path.translateAbs(offset.x, offset.y);
 
-    this.visel.add(path, Box2Abs.fromRelBox(util.relBox(path.getBBox())));
+    // paper.set() (used by CurlyMechanism) has no translateAbs; unwrap its items.
+    const isSet = (path as any).type === 'set';
+    const items: any[] = isSet ? (path as any).items : [path];
+
+    items[0]?.node?.setAttribute('data-testid', 'rxn-arrow');
+    items[0]?.node?.setAttribute('data-arrowtype', this.item.mode + '-arrow');
+
+    for (const p of items) {
+      if (offset != null) p.translateAbs(offset.x, offset.y);
+      this.visel.add(p, Box2Abs.fromRelBox(util.relBox(p.getBBox())));
+    }
   }
+}
+
+/**
+ * Compute the three cubic Bezier handle positions in model space.
+ * perpDir = rotate90CW(chordDir) = (cdy, -cdx) — this matches the positive-height
+ * convention used by findMiddlePoint (positive h arches "above" the chord on screen).
+ */
+function computeCubicRefPoints(
+  a: Vec2,
+  b: Vec2,
+  h1: number,
+  h2: number,
+): { cp1: Vec2; mid: Vec2; cp2: Vec2 } {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy);
+  if (len < 1e-9) {
+    return { cp1: new Vec2(a), mid: new Vec2(a), cp2: new Vec2(a) };
+  }
+  const cdx = dx / len;
+  const cdy = dy / len;
+  const pdx = cdy; // perpDir = (cdy, -cdx)
+  const pdy = -cdx;
+  return {
+    cp1: new Vec2(
+      a.x + cdx * (len / 3) + pdx * h1,
+      a.y + cdy * (len / 3) + pdy * h1,
+    ),
+    mid: new Vec2(
+      a.x + cdx * (len / 2) + pdx * ((h1 + h2) / 2),
+      a.y + cdy * (len / 2) + pdy * ((h1 + h2) / 2),
+    ),
+    cp2: new Vec2(
+      a.x + cdx * ((2 * len) / 3) + pdx * h2,
+      a.y + cdy * ((2 * len) / 3) + pdy * h2,
+    ),
+  };
 }
 
 function findMiddlePoint(height: number, a: Vec2, b: Vec2) {

@@ -28,6 +28,8 @@ interface ExternalFuncProps {
   onAnalyse: () => void;
   onMiew: () => void;
   onToggleExplicitHydrogens: () => void;
+  onToggleLonePairs: () => void;
+  showLonePairs: boolean;
   disabledButtons: string[];
   hiddenButtons: string[];
   indigoVerification: boolean;
@@ -45,6 +47,8 @@ export const ExternalFuncControls = ({
   onAnalyse,
   onMiew,
   onToggleExplicitHydrogens,
+  onToggleLonePairs,
+  showLonePairs,
   disabledButtons,
   indigoVerification,
   hiddenButtons,
@@ -128,11 +132,23 @@ export const ExternalFuncControls = ({
     .filter((button) => button !== firstButtonObj)
     .map((button) => getButtonElement(button));
 
+  const lonePairsButton = (
+    <TopToolbarIconButton
+      title="Show Lone Pairs"
+      onClick={onToggleLonePairs}
+      iconName="lone-pairs"
+      isHidden={hiddenButtons.includes('lone-pairs')}
+      isActive={showLonePairs}
+      key="lone-pairs"
+      testId="Show Lone Pairs button"
+    />
+  );
+
   if (isCollapsed) {
     return (
       <ElementWithDropdown
         topElement={getButtonElement(firstButtonObj)}
-        dropDownElements={collapsibleElements}
+        dropDownElements={[...collapsibleElements, lonePairsButton]}
       />
     );
   }
@@ -141,6 +157,7 @@ export const ExternalFuncControls = ({
     <>
       {firstButtonObj && getButtonElement(firstButtonObj)}
       {<>{collapsibleElements}</>}
+      {lonePairsButton}
     </>
   );
 };

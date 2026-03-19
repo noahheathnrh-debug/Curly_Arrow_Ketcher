@@ -64,6 +64,8 @@ export interface PanelProps {
   onAnalyse: VoidFunction;
   onMiew: VoidFunction;
   onToggleExplicitHydrogens: VoidFunction;
+  onToggleLonePairs: VoidFunction;
+  showLonePairs: boolean;
   onFullscreen: VoidFunction;
   onAbout: VoidFunction;
   onHelp: VoidFunction;
@@ -151,6 +153,8 @@ export const TopToolbar = ({
   onAnalyse,
   onMiew,
   onToggleExplicitHydrogens,
+  onToggleLonePairs,
+  showLonePairs,
   onFullscreen,
   onAbout,
   onHelp,
@@ -227,6 +231,8 @@ export const TopToolbar = ({
           onAnalyse={onAnalyse}
           onMiew={onMiew}
           onToggleExplicitHydrogens={onToggleExplicitHydrogens}
+          onToggleLonePairs={onToggleLonePairs}
+          showLonePairs={showLonePairs}
           disabledButtons={disabledButtons}
           hiddenButtons={hiddenButtons}
           shortcuts={shortcuts}

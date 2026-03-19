@@ -1077,6 +1077,14 @@ export class Struct {
 
     const atom = this.atoms.get(aid)!;
     const charge = atom.charge ?? 0;
+
+    // If implicitHCount is explicitly set, use it directly and skip all
+    // heuristic calculations (aromatic, valence, etc.)
+    if (atom.implicitHCount !== null) {
+      atom.implicitH = atom.implicitHCount;
+      return;
+    }
+
     const [conn, isAromatic] = this.calcConn(
       atom,
       includeAtomsInCollapsedSgroups,

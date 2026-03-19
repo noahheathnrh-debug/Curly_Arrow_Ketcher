@@ -249,6 +249,15 @@ const SettingsDialog = (props: Props) => {
       <fieldset>
         <Field name="carbonExplicitly" data-testid="carbon-explicitly" />
         <Field name="showCharge" data-testid="show-charge" />
+        <Field
+          name="chargeDisplayStyle"
+          component={Select}
+          options={getSelectOptionsFromSchema(
+            settingsProps?.chargeDisplayStyle,
+          )}
+          data-testid="charge-display-style"
+        />
+        <Field name="chargeSize" data-testid="charge-size" />
         <Field name="showValence" data-testid="show-valence" />
         <Field
           name="showHydrogenLabels"
@@ -258,6 +267,9 @@ const SettingsDialog = (props: Props) => {
           )}
           data-testid="show-hydrogen-labels"
         />
+        <Field name="showLonePairs" data-testid="show-lone-pairs" />
+        <Field name="lonePairSize" data-testid="lone-pair-size" />
+        <Field name="lonePairDistance" data-testid="lone-pair-distance" />
       </fieldset>
     ),
   };

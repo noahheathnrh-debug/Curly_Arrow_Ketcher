@@ -10,6 +10,11 @@ export enum MeasurementUnits {
   Inch = 'inch',
 }
 
+export enum ChargeDisplayStyle {
+  Standard = 'standard',
+  Circled = 'circled',
+}
+
 export enum UsageInMacromolecule {
   MonomerConnectionsModal,
   MonomerPreview,
@@ -42,6 +47,9 @@ export type RenderOptions = {
   showHalfBondIds: boolean;
   showLoopIds: boolean;
   showValenceWarnings: boolean;
+  showLonePairs: boolean;
+  lonePairSize: number;
+  lonePairDistance?: number;
   autoScale: boolean;
   autoScaleMargin: number;
   maxBondLength: number;
@@ -50,6 +58,8 @@ export type RenderOptions = {
   hideTerminalLabels: boolean;
   carbonExplicitly: boolean;
   showCharge: boolean;
+  chargeDisplayStyle: ChargeDisplayStyle;
+  chargeSize: number;
   showHydrogenLabels: string;
   showValence: boolean;
   aromaticCircle: boolean;
@@ -120,6 +130,7 @@ export interface ArrowItem {
   mode?: RxnArrowMode;
   pos: Vec2[];
   height: number;
+  height2?: number;
 }
 
 export type ViewBox = {

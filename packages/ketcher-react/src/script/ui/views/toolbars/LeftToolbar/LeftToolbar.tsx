@@ -174,8 +174,16 @@ const LeftToolbar = (props: Props) => {
             },
             { id: 'chain' },
             { id: 'enhanced-stereo' },
-            { id: 'charge-plus' },
-            { id: 'charge-minus' },
+            {
+              id: 'charge',
+              options: [
+                { id: 'charge-plus' },
+                { id: 'charge-minus' },
+                { id: 'radical' },
+              ],
+            },
+            { id: 'lone-pair' },
+            { id: 'curly-arrow' },
           ]}
           height={height}
           rest={rest}

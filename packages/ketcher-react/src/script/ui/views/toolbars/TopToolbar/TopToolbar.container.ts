@@ -22,6 +22,7 @@ import { onAction } from '../../../state';
 import action from 'src/script/ui/action/index';
 import { generateMenuShortcuts } from 'ketcher-core';
 import { removeStructAction } from 'src/script/ui/state/shared';
+import { saveSettings } from 'src/script/ui/state/options';
 import { createSelector } from 'reselect';
 
 const getActionState = (state) => state.actionState || {};
@@ -69,6 +70,7 @@ const mapStateToProps = (state: any) => {
     opened: state.toolbar.opened,
     indigoVerification: state.requestsStatuses.indigoVerification,
     disableableButtons,
+    showLonePairs: !!state.options?.settings?.showLonePairs,
   };
 };
 
@@ -119,6 +121,20 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     onHelp: () => dispatchAction('help'),
     onAbout: () => dispatchAction('about'),
     onToggleExplicitHydrogens: () => dispatchAction('explicit-hydrogens'),
+    onToggleLonePairs: () =>
+      dispatch(
+        onAction({
+          thunk: (_dispatch, getState) => {
+            const settings = getState().options.settings;
+            _dispatch(
+              saveSettings({
+                ...settings,
+                showLonePairs: !settings.showLonePairs,
+              }),
+            );
+          },
+        }),
+      ),
   };
 };
 

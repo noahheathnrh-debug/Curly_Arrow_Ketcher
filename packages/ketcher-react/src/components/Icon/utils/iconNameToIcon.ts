@@ -27,6 +27,7 @@ import BondDoubleAromaticIcon from '../../../assets/icons/files/bond-doublearoma
 import BondDoubleIcon from '../../../assets/icons/files/bond-double.svg';
 import BondDownIcon from '../../../assets/icons/files/bond-down.svg';
 import BondHydrogenIcon from '../../../assets/icons/files/bond-hydrogen.svg';
+import BondOneElectronIcon from '../../../assets/icons/files/bond-one-electron.svg';
 import BondSingleAromaticIcon from '../../../assets/icons/files/bond-singlearomatic.svg';
 import BondSingleDoubleIcon from '../../../assets/icons/files/bond-singledouble.svg';
 import BondSingleIcon from '../../../assets/icons/files/bond-single.svg';
@@ -37,6 +38,7 @@ import CapitalTIcon from '../../../assets/icons/files/capital-t.svg';
 import ChainIcon from '../../../assets/icons/files/chain.svg';
 import ChargeMinusIcon from '../../../assets/icons/files/charge-minus.svg';
 import ChargePlusIcon from '../../../assets/icons/files/charge-plus.svg';
+import RadicalToolIcon from '../../../assets/icons/files/radical.svg';
 import CheckIcon from '../../../assets/icons/files/check.svg';
 import CheckMarkIcon from '../../../assets/icons/files/checkmark.svg';
 import ChiralFlagIcon from '../../../assets/icons/files/chiral-flag.svg';
@@ -227,6 +229,10 @@ import VerticalDots from '../../../assets/icons/files/vertical-dots.svg';
 import ExpandIcon from '../../../assets/icons/files/expand.svg';
 import MinimizeExpansionIcon from '../../../assets/icons/files/minimize-expantion.svg';
 import ExplicitHydrogensIcon from '../../../assets/icons/files/explicit-hydrogens.svg';
+import LonePairsIcon from '../../../assets/icons/files/lone-pairs.svg';
+import LonePairToolIcon from '../../../assets/icons/files/lone-pair-tool.svg';
+import ReactionArrowCurlyMechanismIcon from '../../../assets/icons/files/reaction-arrow-curly-mechanism.svg';
+import CurlyArrowIcon from '../../../assets/icons/files/curly-arrow.svg';
 import FlexLayoutIcon from '../../../assets/icons/files/flex-layout-mode.svg';
 import SnakeLayoutIcon from '../../../assets/icons/files/snake-layout-mode.svg';
 import SequenceLayoutIcon from '../../../assets/icons/files/sequence-layout-mode.svg';
@@ -309,6 +315,7 @@ export const iconNameToIcon = {
   'bond-aromatic': BondAromaticIcon,
   'bond-crossed': BondCrossedIcon,
   'bond-hydrogen': BondHydrogenIcon,
+  'bond-oneelectron': BondOneElectronIcon,
   'bond-dative': BondDative,
   'bond-double': BondDoubleIcon,
   'bond-doublearomatic': BondDoubleAromaticIcon,
@@ -323,6 +330,7 @@ export const iconNameToIcon = {
   chain: ChainIcon,
   'charge-minus': ChargeMinusIcon,
   'charge-plus': ChargePlusIcon,
+  radical: RadicalToolIcon,
   check: CheckIcon,
   'check-mark': CheckMarkIcon,
   'chiral-flag': ChiralFlagIcon,
@@ -373,6 +381,8 @@ export const iconNameToIcon = {
     ReactionArrowEllipticalArcArrowOpenAngle,
   'reaction-arrow-elliptical-arc-arrow-open-half-angle':
     ReactionArrowEllipticalArcArrowOpenHalfAngle,
+  'reaction-arrow-curly-mechanism': ReactionArrowCurlyMechanismIcon,
+  'curly-arrow': CurlyArrowIcon,
   'reaction-arrow-open-angle': ReactionArrowOpenAngleIcon,
   'reaction-arrow-filled-triangle': ReactionArrowFilledTriangle,
   'reaction-arrow-filled-bow': ReactionArrowFilledBow,
@@ -485,6 +495,8 @@ export const iconNameToIcon = {
   expand: ExpandIcon,
   'minimize-expansion': MinimizeExpansionIcon,
   'explicit-hydrogens': ExplicitHydrogensIcon,
+  'lone-pairs': LonePairsIcon,
+  'lone-pair': LonePairToolIcon,
   'flex-layout-mode': FlexLayoutIcon,
   'snake-layout-mode': SnakeLayoutIcon,
   'sequence-layout-mode': SequenceLayoutIcon,

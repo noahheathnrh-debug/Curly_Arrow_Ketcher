@@ -1,0 +1,69 @@
+
+> ketcher-core@3.14.0-rc.1 test:unit
+> jest packages/ketcher-core/__tests__/application/render/restruct/lonePairUtils.test.ts
+
+FAIL __tests__/application/render/restruct/lonePairUtils.test.ts
+  calcNonBondingLayout
+    √ gives radicals left/right priority and leaves lone pairs on vertical slots (2 ms)
+    × prefers the hydrogen side for isolated radicals when hydrogen is on the right (1 ms)
+    × prefers the hydrogen side for isolated radicals when hydrogen is on the left
+    √ still produces radical slots for atoms without lone-pair element data (1 ms)
+  getLonePairModelPositions
+    √ omits slots occupied by radicals from lone-pair attachment positions (1 ms)
+  getRadicalModelPositions
+    √ places the radical on its own slot center instead of half of a lone pair (1 ms)
+
+  ● calcNonBondingLayout › prefers the hydrogen side for isolated radicals when hydrogen is on the right
+
+    expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 3.141592653589793
+    Received: 1.2566370614359172
+
+    Expected precision:    1
+    Expected difference: < 0.05
+    Received difference:   1.8849555921538759
+
+    [0m [90m 78 |[39m     [36mwhile[39m (angle [33m>[39m [33mMath[39m[33m.[39m[33mPI[39m) angle [33m-=[39m [35m2[39m [33m*[39m [33mMath[39m[33m.[39m[33mPI[39m[33m;[39m
+     [90m 79 |[39m     [36mwhile[39m (angle [33m<[39m [33m-[39m[33mMath[39m[33m.[39m[33mPI[39m) angle [33m+=[39m [35m2[39m [33m*[39m [33mMath[39m[33m.[39m[33mPI[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 80 |[39m     expect([33mMath[39m[33m.[39mabs(angle))[33m.[39mtoBeCloseTo([33mMath[39m[33m.[39m[33mPI[39m[33m,[39m [35m1[39m)[33m;[39m
+     [90m    |[39m                             [31m[1m^[22m[39m
+     [90m 81 |[39m   })[33m;[39m
+     [90m 82 |[39m
+     [90m 83 |[39m   it([32m'prefers the hydrogen side for isolated radicals when hydrogen is on the left'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (__tests__/application/render/restruct/lonePairUtils.test.ts:80:29)
+
+  ● calcNonBondingLayout › prefers the hydrogen side for isolated radicals when hydrogen is on the left
+
+    expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 3.141592653589793
+    Received: 2.5132741228718345
+
+    Expected precision:    1
+    Expected difference: < 0.05
+    Received difference:   0.6283185307179586
+
+    [0m [90m 101 |[39m     [36mif[39m ([33m![39mlayout) [36mreturn[39m[33m;[39m
+     [90m 102 |[39m     [90m// Left preference (PI). 1 item on 2PI gap -> PI.[39m
+    [31m[1m>[22m[39m[90m 103 |[39m     expect(layout[33m.[39mradicalAngles[[35m0[39m])[33m.[39mtoBeCloseTo([33mMath[39m[33m.[39m[33mPI[39m[33m,[39m [35m1[39m)[33m;[39m
+     [90m     |[39m                                     [31m[1m^[22m[39m
+     [90m 104 |[39m   })[33m;[39m
+     [90m 105 |[39m
+     [90m 106 |[39m   it([32m'still produces radical slots for atoms without lone-pair element data'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (__tests__/application/render/restruct/lonePairUtils.test.ts:103:37)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 4 passed, 6 total
+Snapshots:   0 total
+Time:        3.293 s, estimated 7 s
+Ran all test suites matching /packages\\ketcher-core\\__tests__\\application\\render\\restruct\\lonePairUtils.test.ts/i.
+npm error Lifecycle script `test:unit` failed with error:
+npm error code 1
+npm error path C:\ketcher\packages\ketcher-core
+npm error workspace ketcher-core@3.14.0-rc.1
+npm error location C:\ketcher\packages\ketcher-core
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c jest packages/ketcher-core/__tests__/application/render/restruct/lonePairUtils.test.ts

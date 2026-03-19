@@ -1,0 +1,5 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Curved (quadratic bezier) mechanism arrow with filled bow arrowhead -->
+  <path d="M8 32 Q24 8 38 24 L34 20 L33 25 L38 24Z" fill="currentColor"/>
+  <path d="M8 32 Q24 8 38 24" stroke="currentColor" stroke-width="2" fill="none"/>
+</svg>

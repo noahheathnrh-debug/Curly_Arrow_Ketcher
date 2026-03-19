@@ -16,6 +16,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
+  fromToggleExplicitH,
   CoordinateTransformation,
   fromImageResize,
   fromItemsFuse,
@@ -32,6 +33,7 @@ import {
   isControlKey,
   ReSGroup,
   ReStruct,
+  RxnArrowMode,
   SGroup,
   Vec2,
   vectorUtils,
@@ -44,7 +46,6 @@ import SGroupTool from '../sgroup';
 import { Editor } from '../../Editor';
 import { dropAndMerge } from '../helper/dropAndMerge';
 import { getGroupIdsFromItemArrays } from '../helper/getGroupIdsFromItems';
-import { updateSelectedAtoms } from '../../../ui/state/modal/atoms';
 import { updateSelectedBonds } from '../../../ui/state/modal/bonds';
 import { filterNotInContractedSGroup } from '../helper/filterNotInCollapsedSGroup';
 import { Tool } from '../Tool';
@@ -60,7 +61,6 @@ import { MultitailArrowMoveTool } from '../arrow/multitailArrowMoveTool';
 import { ReactionArrowMoveTool } from '../arrow/reactionArrowMoveTool';
 import {
   getNewSelectedItems,
-  getSelectedAtoms,
   getSelectedBonds,
   onSelectionEnd,
   onSelectionLeave,
@@ -157,6 +157,14 @@ class SelectTool implements Tool {
         event,
         ci as ReactionArrowClosestItem,
       );
+    } else if (
+      ci.map === 'rxnArrows' &&
+      !ci.ref &&
+      this.editor.render.ctab.rxnArrows.get(ci.id)?.item.mode ===
+        RxnArrowMode.CurlyMechanism
+    ) {
+      // CurlyMechanism arrows cannot be freely dragged; selection still applies
+      this.dragCtx = null;
     } else {
       this.dragCtx = {
         item: ci,
@@ -505,13 +513,8 @@ class SelectTool implements Tool {
     const selection = this.editor.selection();
 
     if (ci.map === 'atoms') {
-      const atoms = getSelectedAtoms(selection, molecule);
-      const changeAtomPromise = editor.event.elementEdit.dispatch(atoms);
-      updateSelectedAtoms({
-        atoms: selection?.atoms || [],
-        editor,
-        changeAtomPromise,
-      });
+      const action = fromToggleExplicitH(struct, ci.id);
+      if (action) editor.update(action);
     } else if (ci.map === 'bonds') {
       const bonds = getSelectedBonds(selection, molecule);
       const changeBondPromise = editor.event.bondEdit.dispatch(bonds);

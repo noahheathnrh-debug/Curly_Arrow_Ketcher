@@ -1,0 +1,6 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Curved mechanism arrow shaft -->
+  <path d="M8 32 Q24 8 36 22" stroke="currentColor" stroke-width="2" fill="none"/>
+  <!-- Filled arrowhead -->
+  <path d="M36 22 L31 18 L32 24 L37 28Z" fill="currentColor"/>
+</svg>

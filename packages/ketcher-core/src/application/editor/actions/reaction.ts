@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 import { ReStruct } from 'application/render';
-import { Vec2 } from 'domain/entities';
+import { LonePairAttachment, RadicalAttachment, Vec2 } from 'domain/entities';
 import {
   RxnArrowAdd,
   RxnArrowDelete,
@@ -26,9 +26,19 @@ import {
 
 import { Action } from './action';
 
-export function fromArrowAddition(restruct, pos, mode) {
+export function fromArrowAddition(
+  restruct,
+  pos,
+  mode,
+  lpAttach?: LonePairAttachment,
+  raAttach?: RadicalAttachment,
+  height?: number,
+  height2?: number,
+) {
   const action = new Action();
-  action.addOp(new RxnArrowAdd(pos, mode));
+  action.addOp(
+    new RxnArrowAdd(pos, mode, undefined, height, lpAttach, raAttach, height2),
+  );
   return action.perform(restruct);
 }
 
@@ -39,10 +49,19 @@ export function fromArrowResizing(
   current: Vec2,
   anchor: Vec2 | null,
   isSnappingEnabled: boolean,
+  newLpAttach?: LonePairAttachment | null,
 ) {
   const action = new Action();
   action.addOp(
-    new RxnArrowResize(id, d, current, anchor, false, isSnappingEnabled),
+    new RxnArrowResize(
+      id,
+      d,
+      current,
+      anchor,
+      false,
+      isSnappingEnabled,
+      newLpAttach,
+    ),
   );
   return action.perform(restruct);
 }

@@ -914,6 +914,16 @@ function getBondPath(
         isSnapping,
       );
       break;
+    case Bond.PATTERN.TYPE.ONE_ELECTRON:
+      newHalfBonds = util.updateHalfBondCoordinates(hb1, hb2, xShiftPlus1);
+      path = draw.bondOneElectron(
+        render.paper,
+        newHalfBonds[0],
+        newHalfBonds[1],
+        render.options,
+        isSnapping,
+      );
+      break;
     case Bond.PATTERN.TYPE.DATIVE:
       path = draw.bondDative(
         render.paper,

@@ -4,6 +4,7 @@ import useAtomEdit from '../hooks/useAtomEdit';
 import useAtomStereo from '../hooks/useAtomStereo';
 import useDelete from '../hooks/useDelete';
 import useMarkAs from '../hooks/useMarkAs';
+import useToggleImplicitH from '../hooks/useToggleImplicitH';
 import { AtomContextMenuProps, MenuItemsProps } from '../contextMenu.types';
 import { updateSelectedAtoms } from 'src/script/ui/state/modal/atoms';
 import { useAppContext } from 'src/hooks';
@@ -102,6 +103,7 @@ const AtomMenuItems: FC<MenuItemsProps<AtomContextMenuProps>> = (props) => {
   const [handleEdit] = useAtomEdit();
   const [handleStereo, stereoDisabled] = useAtomStereo();
   const handleDelete = useDelete();
+  const handleToggleImplicitH = useToggleImplicitH();
   const {
     handler: handleMarkAs,
     isVisible: markAsIsVisible,
@@ -149,6 +151,23 @@ const AtomMenuItems: FC<MenuItemsProps<AtomContextMenuProps>> = (props) => {
 
   const onlyOneAtomSelected = props.propsFromTrigger?.atomIds?.length === 1;
   const selectedAtomId = props.propsFromTrigger?.atomIds?.[0];
+
+  const firstAtom =
+    selectedAtomId !== undefined
+      ? editor.render.ctab.molecule.atoms.get(selectedAtomId)
+      : undefined;
+
+  const molecule = editor.render.ctab.molecule;
+  const hasExplicitH =
+    selectedAtomId !== undefined &&
+    (molecule.atomGetNeighbors(selectedAtomId) ?? []).some(({ aid }) => {
+      const neiAtom = molecule.atoms.get(aid);
+      return neiAtom?.label === 'H' && neiAtom.sgs.size === 0;
+    });
+  const canAddExplicitH =
+    !hasExplicitH && (firstAtom?.implicitH ?? 0) > 0;
+  const showToggleH = hasExplicitH || canAddExplicitH;
+  const toggleHLabel = hasExplicitH ? 'Remove Explicit H' : 'Add Explicit H';
   const isAtomSuperatomLeavingGroup = Atom.isSuperatomLeavingGroupAtom(
     struct,
     selectedAtomId,
@@ -290,6 +309,15 @@ const AtomMenuItems: FC<MenuItemsProps<AtomContextMenuProps>> = (props) => {
         onHighlight={highlightAtomWithColor}
         disabled={disabledForMonomerCreation}
       />
+      {showToggleH && (
+        <Item
+          {...props}
+          data-testid="Toggle Implicit H-option"
+          onClick={handleToggleImplicitH}
+        >
+          <span className={styles.contextMenuText}>{toggleHLabel}</span>
+        </Item>
+      )}
       <Separator />
       <Item {...props} data-testid="Delete-option" onClick={handleDelete}>
         <Icon name="deleteMenu" className={styles.icon} />

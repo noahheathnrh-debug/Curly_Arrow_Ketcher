@@ -1,0 +1,33 @@
+FAIL packages/ketcher-core/__tests__/application/render/restruct/lonePairUtils.test.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    This usually means that you are trying to import a file which Jest cannot parse, e.g. it's not plain JavaScript.
+
+    By default, if Jest sees a Babel config, it will use that to transform your files, ignoring "node_modules".
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/en/ecmascript-modules for how to enable it.
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/en/configuration.html
+
+    Details:
+
+    C:\ketcher\packages\ketcher-core\__tests__\application\render\restruct\lonePairUtils.test.ts:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,global,jest){import { calcNonBondingLayout, getLonePairModelPositions, getRadicalModelPositions } from 'application/render/restruct/lonePairUtils';
+                                                                                             ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1350:14)
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        1.19 s
+Ran all test suites matching /packages\\ketcher-core\\__tests__\\application\\render\\restruct\\lonePairUtils.test.ts/i.

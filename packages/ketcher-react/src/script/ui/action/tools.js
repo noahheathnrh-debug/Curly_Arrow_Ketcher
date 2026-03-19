@@ -96,6 +96,21 @@ const toolActions = {
     action: { tool: 'charge', opts: -1 },
     hidden: (options) => isHidden(options, 'charge-minus'),
   },
+  radical: {
+    title: 'Radical Tool',
+    action: { tool: 'radical' },
+    hidden: (options) => isHidden(options, 'radical'),
+  },
+  'lone-pair': {
+    title: 'Lone Pair Tool',
+    action: { tool: 'lonepair' },
+    hidden: (options) => isHidden(options, 'lone-pair'),
+  },
+  'curly-arrow': {
+    title: 'Curly Arrow Tool',
+    action: { tool: 'curlyarrow' },
+    hidden: (options) => isHidden(options, 'curly-arrow'),
+  },
   'transform-rotate': {
     title: 'Rotate Tool',
     action: { tool: 'rotate' },

@@ -252,6 +252,7 @@ export const bond = {
         'singlearomatic',
         'doublearomatic',
         'dative',
+        'oneelectron',
       ],
       enumNames: [
         '',
@@ -269,6 +270,7 @@ export const bond = {
         'Single/Aromatic',
         'Double/Aromatic',
         'Dative',
+        'One-Electron',
       ],
       default: 'single',
     },
