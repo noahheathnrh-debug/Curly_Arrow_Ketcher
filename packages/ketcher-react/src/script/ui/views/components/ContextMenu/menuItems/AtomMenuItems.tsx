@@ -171,8 +171,7 @@ const AtomMenuItems: FC<MenuItemsProps<AtomContextMenuProps>> = (props) => {
       const neiAtom = molecule.atoms.get(aid);
       return neiAtom?.label === 'H' && neiAtom.sgs.size === 0;
     });
-  const canAddExplicitH =
-    !hasExplicitH && (firstAtom?.implicitH ?? 0) > 0;
+  const canAddExplicitH = !hasExplicitH && (firstAtom?.implicitH ?? 0) > 0;
   const showToggleH = hasExplicitH || canAddExplicitH;
   const toggleHLabel = hasExplicitH ? 'Remove Explicit H' : 'Add Explicit H';
   const isAtomSuperatomLeavingGroup = Atom.isSuperatomLeavingGroupAtom(

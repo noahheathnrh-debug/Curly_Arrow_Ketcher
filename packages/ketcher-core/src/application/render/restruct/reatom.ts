@@ -1849,24 +1849,20 @@ function showCharge(
   const sizeFactor = Math.max(1, options.chargeSize ?? 6);
 
   if (circled) {
-    const baseRadius =
-      options.fontszsubInPx * 0.38 * (sizeFactor / 6) * 0.75;
+    const baseRadius = options.fontszsubInPx * 0.38 * (sizeFactor / 6) * 0.75;
     const lineLen = baseRadius * 0.55;
     const strokeW = options.lineWidth * 0.4;
     const isNeg = atom.a.charge !== null && atom.a.charge < 0;
-    const absCharge =
-      atom.a.charge !== null ? Math.abs(atom.a.charge) : 0;
+    const absCharge = atom.a.charge !== null ? Math.abs(atom.a.charge) : 0;
 
     const chargeSet = render.paper.set();
 
     if (absCharge > 1) {
-      const numText = render.paper
-        .text(ps.x, ps.y, absCharge.toString())
-        .attr({
-          font: options.font,
-          'font-size': options.fontszsubInPx * (sizeFactor / 6) * 0.75,
-          fill: atom.color,
-        });
+      const numText = render.paper.text(ps.x, ps.y, absCharge.toString()).attr({
+        font: options.font,
+        'font-size': options.fontszsubInPx * (sizeFactor / 6) * 0.75,
+        fill: atom.color,
+      });
       chargeSet.push(numText);
     }
 
@@ -1882,13 +1878,13 @@ function showCharge(
       render.paper
         .path(
           'M' +
-            tfx(ps.x - lineLen) +
+            toFixed(ps.x - lineLen) +
             ',' +
-            tfx(ps.y) +
+            toFixed(ps.y) +
             'L' +
-            tfx(ps.x + lineLen) +
+            toFixed(ps.x + lineLen) +
             ',' +
-            tfx(ps.y),
+            toFixed(ps.y),
         )
         .attr({
           stroke: atom.color,
@@ -1902,13 +1898,13 @@ function showCharge(
         render.paper
           .path(
             'M' +
-              tfx(ps.x) +
+              toFixed(ps.x) +
               ',' +
-              tfx(ps.y - lineLen) +
+              toFixed(ps.y - lineLen) +
               'L' +
-              tfx(ps.x) +
+              toFixed(ps.x) +
               ',' +
-              tfx(ps.y + lineLen),
+              toFixed(ps.y + lineLen),
           )
           .attr({
             stroke: atom.color,
@@ -2140,13 +2136,13 @@ function drawLonePairs(
 
     lonePairSet.push(
       paper.circle(
-        tfx(cx + perpX * dotSpacing),
-        tfx(cy + perpY * dotSpacing),
+        toFixed(cx + perpX * dotSpacing),
+        toFixed(cy + perpY * dotSpacing),
         dotRadius,
       ),
       paper.circle(
-        tfx(cx - perpX * dotSpacing),
-        tfx(cy - perpY * dotSpacing),
+        toFixed(cx - perpX * dotSpacing),
+        toFixed(cy - perpY * dotSpacing),
         dotRadius,
       ),
     );
@@ -2190,7 +2186,11 @@ function drawRadicals(
     const canvasPosition = Scale.modelToCanvas(position, options);
 
     radicalSet.push(
-      paper.circle(tfx(canvasPosition.x), tfx(canvasPosition.y), dotRadius),
+      paper.circle(
+        toFixed(canvasPosition.x),
+        toFixed(canvasPosition.y),
+        dotRadius,
+      ),
     );
   });
 
@@ -2240,13 +2240,13 @@ function drawRevealedLonePairs(
     const cy = ps.y + dirY * pairOffset;
     lonePairSet.push(
       paper.circle(
-        tfx(cx + perpX * dotSpacing),
-        tfx(cy + perpY * dotSpacing),
+        toFixed(cx + perpX * dotSpacing),
+        toFixed(cy + perpY * dotSpacing),
         dotRadius,
       ),
       paper.circle(
-        tfx(cx - perpX * dotSpacing),
-        tfx(cy - perpY * dotSpacing),
+        toFixed(cx - perpX * dotSpacing),
+        toFixed(cy - perpY * dotSpacing),
         dotRadius,
       ),
     );
@@ -2297,13 +2297,13 @@ function drawForcedLonePairs(
     const cy = ps.y + dirY * pairOffset;
     lonePairSet.push(
       paper.circle(
-        tfx(cx + perpX * dotSpacing),
-        tfx(cy + perpY * dotSpacing),
+        toFixed(cx + perpX * dotSpacing),
+        toFixed(cy + perpY * dotSpacing),
         dotRadius,
       ),
       paper.circle(
-        tfx(cx - perpX * dotSpacing),
-        tfx(cy - perpY * dotSpacing),
+        toFixed(cx - perpX * dotSpacing),
+        toFixed(cy - perpY * dotSpacing),
         dotRadius,
       ),
     );

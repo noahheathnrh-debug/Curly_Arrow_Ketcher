@@ -9,7 +9,7 @@ import {
   fromMultipleMove,
   assert,
   getLonePairModelPositions,
-  LonePairAttachment,
+  type LonePairAttachment,
   RxnArrowMode,
   Vec2,
 } from 'ketcher-core';

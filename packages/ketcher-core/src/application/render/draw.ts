@@ -1848,7 +1848,9 @@ function arrowCurlyMechanism(
     const by = start.y - arrowHeadLength * ty;
 
     shaftPath = svgPath(
-      `M${tfx(start.x)},${tfx(start.y)}C${tfx(cp1X)},${tfx(cp1Y)},${tfx(cp2X)},${tfx(cp2Y)},${tfx(bx)},${tfx(by)}`,
+      `M${toFixed(start.x)},${toFixed(start.y)}C${toFixed(cp1X)},${toFixed(
+        cp1Y,
+      )},${toFixed(cp2X)},${toFixed(cp2Y)},${toFixed(bx)},${toFixed(by)}`,
     )
       .rotate(arrowAngle, start.x, start.y)
       .toString();
@@ -1871,17 +1873,25 @@ function arrowCurlyMechanism(
     const by = start.y - arrowHeadLength * ty;
 
     shaftPath = svgPath(
-      `M${tfx(start.x)},${tfx(start.y)}Q${tfx(cpX)},${tfx(cpY)},${tfx(bx)},${tfx(by)}`,
+      `M${toFixed(start.x)},${toFixed(start.y)}Q${toFixed(cpX)},${toFixed(
+        cpY,
+      )},${toFixed(bx)},${toFixed(by)}`,
     )
       .rotate(arrowAngle, start.x, start.y)
       .toString();
   }
 
   const headPath = svgPath(
-    `M${tfx(endX)},${tfx(start.y)}` +
-      `L${tfx(endX - arrowHeadLength * tx + arrowHeadWidth * px)},${tfx(start.y - arrowHeadLength * ty + arrowHeadWidth * py)}` +
-      `L${tfx(endX - (arrowHeadLength - arrowHeadAttr) * tx)},${tfx(start.y - (arrowHeadLength - arrowHeadAttr) * ty)}` +
-      `L${tfx(endX - arrowHeadLength * tx - arrowHeadWidth * px)},${tfx(start.y - arrowHeadLength * ty - arrowHeadWidth * py)}Z`,
+    `M${toFixed(endX)},${toFixed(start.y)}` +
+      `L${toFixed(endX - arrowHeadLength * tx + arrowHeadWidth * px)},${toFixed(
+        start.y - arrowHeadLength * ty + arrowHeadWidth * py,
+      )}` +
+      `L${toFixed(endX - (arrowHeadLength - arrowHeadAttr) * tx)},${toFixed(
+        start.y - (arrowHeadLength - arrowHeadAttr) * ty,
+      )}` +
+      `L${toFixed(endX - arrowHeadLength * tx - arrowHeadWidth * px)},${toFixed(
+        start.y - arrowHeadLength * ty - arrowHeadWidth * py,
+      )}Z`,
   )
     .rotate(arrowAngle, start.x, start.y)
     .toString();
@@ -1940,7 +1950,9 @@ function arrowFishhookMechanism(
     const by = start.y - arrowHeadLength * ty;
 
     shaftPath = svgPath(
-      `M${tfx(start.x)},${tfx(start.y)}C${tfx(cp1X)},${tfx(cp1Y)},${tfx(cp2X)},${tfx(cp2Y)},${tfx(bx)},${tfx(by)}`,
+      `M${toFixed(start.x)},${toFixed(start.y)}C${toFixed(cp1X)},${toFixed(
+        cp1Y,
+      )},${toFixed(cp2X)},${toFixed(cp2Y)},${toFixed(bx)},${toFixed(by)}`,
     )
       .rotate(arrowAngle, start.x, start.y)
       .toString();
@@ -1963,7 +1975,9 @@ function arrowFishhookMechanism(
     const by = start.y - arrowHeadLength * ty;
 
     shaftPath = svgPath(
-      `M${tfx(start.x)},${tfx(start.y)}Q${tfx(cpX)},${tfx(cpY)},${tfx(bx)},${tfx(by)}`,
+      `M${toFixed(start.x)},${toFixed(start.y)}Q${toFixed(cpX)},${toFixed(
+        cpY,
+      )},${toFixed(bx)},${toFixed(by)}`,
     )
       .rotate(arrowAngle, start.x, start.y)
       .toString();
@@ -1971,9 +1985,13 @@ function arrowFishhookMechanism(
 
   // Half-bow head: only the +px wing (single-headed fishhook)
   const headPath = svgPath(
-    `M${tfx(endX)},${tfx(start.y)}` +
-      `L${tfx(endX - arrowHeadLength * tx + arrowHeadWidth * px)},${tfx(start.y - arrowHeadLength * ty + arrowHeadWidth * py)}` +
-      `L${tfx(endX - arrowHeadLength * tx)},${tfx(start.y - arrowHeadLength * ty)}Z`,
+    `M${toFixed(endX)},${toFixed(start.y)}` +
+      `L${toFixed(endX - arrowHeadLength * tx + arrowHeadWidth * px)},${toFixed(
+        start.y - arrowHeadLength * ty + arrowHeadWidth * py,
+      )}` +
+      `L${toFixed(endX - arrowHeadLength * tx)},${toFixed(
+        start.y - arrowHeadLength * ty,
+      )}Z`,
   )
     .rotate(arrowAngle, start.x, start.y)
     .toString();

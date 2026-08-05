@@ -102,12 +102,12 @@ const config: ServerConfig = {
   'explicit-hydrogens': {
     title: 'Add/Remove explicit hydrogens',
     action: {
-      thunk: (dispatch, getState) => {
+      thunk: (_dispatch, getState) => {
         const editor = getState().editor;
         const restruct = editor.render.ctab;
         const molecule = restruct.molecule;
 
-        const hasExplicitHNeighbors = (atomId) =>
+        const hasExplicitHNeighbors = (atomId: number) =>
           (molecule.atomGetNeighbors(atomId) ?? []).some(({ aid }) => {
             const neiAtom = molecule.atoms.get(aid);
             return neiAtom?.label === 'H' && neiAtom.sgs.size === 0;
@@ -115,14 +115,14 @@ const config: ServerConfig = {
 
         if (!editor.isAllExplicitHShown) {
           // Save which atoms already have explicit H (user per-atom choices)
-          const beforeSet = new Set();
+          const beforeSet = new Set<number>();
           molecule.atoms.forEach((_, atomId) => {
             if (hasExplicitHNeighbors(atomId)) beforeSet.add(atomId);
           });
           editor.atomsWithExplicitHBeforeAllMode = beforeSet;
 
           // Add H to atoms that don't have it yet
-          const atomsToAdd = [];
+          const atomsToAdd: number[] = [];
           molecule.atoms.forEach((atom, atomId) => {
             if (atom.implicitH > 0 && !beforeSet.has(atomId))
               atomsToAdd.push(atomId);
@@ -142,7 +142,7 @@ const config: ServerConfig = {
           // Remove only the bulk-added H (not user per-atom ones)
           const beforeSet = editor.atomsWithExplicitHBeforeAllMode;
 
-          const atomsToRemove = [];
+          const atomsToRemove: number[] = [];
           molecule.atoms.forEach((_, atomId) => {
             if (hasExplicitHNeighbors(atomId) && !beforeSet.has(atomId))
               atomsToRemove.push(atomId);

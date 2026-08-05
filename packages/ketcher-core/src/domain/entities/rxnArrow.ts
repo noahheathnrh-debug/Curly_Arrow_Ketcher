@@ -102,7 +102,8 @@ export class RxnArrow extends BaseMicromoleculeEntity {
     const defaultHeight =
       attributes.mode === RxnArrowMode.CurlyMechanism ||
       attributes.mode === RxnArrowMode.FishhookMechanism
-        ? 0.25 : 1;
+        ? 0.25
+        : 1;
 
     if (RxnArrow.isElliptical(this)) {
       this.height = attributes.height ?? defaultHeight;

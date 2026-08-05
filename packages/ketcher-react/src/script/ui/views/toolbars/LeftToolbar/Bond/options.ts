@@ -36,7 +36,11 @@ const bondQuery: ToolbarItem[] = makeItems([
   'bond-singlearomatic',
   'bond-doublearomatic',
 ]);
-const bondSpecial: ToolbarItem[] = makeItems(['bond-dative', 'bond-hydrogen', 'bond-oneelectron']);
+const bondSpecial: ToolbarItem[] = makeItems([
+  'bond-dative',
+  'bond-hydrogen',
+  'bond-oneelectron',
+]);
 
 const groups = [bondCommon, bondStereo, bondQuery, bondSpecial];
 const groupOptions = groups.flat();

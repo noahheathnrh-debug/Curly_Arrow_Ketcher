@@ -18,7 +18,7 @@ import { Box2Abs } from 'domain/entities/box2Abs';
 import {
   type LonePairAttachment,
   type RadicalAttachment,
-  type RxnArrowMode,
+  RxnArrowMode,
   RxnArrow,
 } from 'domain/entities/rxnArrow';
 import { Vec2 } from 'domain/entities/vec2';
@@ -32,7 +32,10 @@ import { Scale } from 'domain/helpers';
 import draw from '../draw';
 import util from '../util';
 import { toFixed } from 'utilities';
-import { getLonePairModelPositions, getRadicalModelPositions } from './lonePairUtils';
+import {
+  getLonePairModelPositions,
+  getRadicalModelPositions,
+} from './lonePairUtils';
 
 type Arrow = {
   pos: Array<Vec2>;

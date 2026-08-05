@@ -88,6 +88,7 @@ type LeftToolbarItemVariant =
   | 'bond-special'
   | 'bond-any'
   | 'bond-hydrogen'
+  | 'bond-oneelectron'
   | 'bond-aromatic'
   | 'bond-singledouble'
   | 'bond-singlearomatic'

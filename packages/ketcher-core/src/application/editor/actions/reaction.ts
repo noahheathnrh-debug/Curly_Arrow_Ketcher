@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 import type { ReStruct } from 'application/render';
-import { LonePairAttachment, RadicalAttachment } from 'domain/entities';
+import type { LonePairAttachment, RadicalAttachment } from 'domain/entities';
 import type { Vec2 } from 'domain/entities/vec2';
 import {
   RxnArrowAdd,

@@ -15,11 +15,15 @@
  ***************************************************************************/
 
 import { Atom } from 'domain/entities/atom';
+import { Bond } from 'domain/entities/bond';
 import { MonomerMicromolecule } from 'domain/entities/monomerMicromolecule';
 import { RGroup } from 'domain/entities/rgroup';
 import {
   AtomAdd,
   AtomAttr,
+  AtomDelete,
+  BondAdd,
+  BondDelete,
   CalcImplicitH,
   FragmentAdd,
   FragmentAddStereoAtom,
@@ -27,7 +31,7 @@ import {
   FragmentDeleteStereoAtom,
   SGroupAtomAdd,
 } from '../operations';
-import { atomForNewBond, atomGetAttr, atomGetDegree, atomGetSGroups } from './utils';
+import { atomForNewBond, atomGetAttr, atomGetSGroups } from './utils';
 import { fromRGroupFragment, fromUpdateIfThen } from './rgroup';
 import { fromBondStereoUpdate } from './bondStereo';
 
@@ -239,7 +243,7 @@ export function fromToggleExplicitH(
       const hPos = atomForNewBond(restruct, atomId).pos;
       const addOp = new AtomAdd({ label: 'H', fragment: fragmentId }, hPos);
       action.addOp(addOp.perform(restruct));
-      const hAtomId = addOp.data.aid;
+      const hAtomId = addOp.data.aid!;
       action.addOp(
         new BondAdd(atomId, hAtomId, {
           type: Bond.PATTERN.TYPE.SINGLE,
