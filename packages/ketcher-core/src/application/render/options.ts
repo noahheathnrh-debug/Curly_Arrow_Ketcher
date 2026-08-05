@@ -17,8 +17,7 @@
 import { Vec2 } from 'domain/entities/vec2';
 import utils from '../editor/shared/utils';
 import { ShowHydrogenLabels } from './restruct/showHydrogenLabels';
-import { ChargeDisplayStyle } from './render.types';
-import type { RenderOptions } from './render.types';
+import { ChargeDisplayStyle, type RenderOptions } from './render.types';
 import {
   SELECTION_COLOR,
   SELECTION_HOVERED_COLOR,

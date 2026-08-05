@@ -18,25 +18,29 @@ import {
   fromArrowAddition,
   getLonePairModelPositions,
   getRadicalModelPositions,
-  LonePairAttachment,
-  RadicalAttachment,
+  type LonePairAttachment,
+  type RadicalAttachment,
   RxnArrowMode,
   CoordinateTransformation,
   Vec2,
   Scale,
+  type Render,
 } from 'ketcher-core';
-import Editor from '../Editor';
-import { Tool } from './Tool';
+import type Editor from '../Editor';
+import type { Tool } from './Tool';
+
+type RaphaelArtifact = { remove: () => void; [key: string]: unknown };
 
 class CurlyArrowTool implements Tool {
   private readonly editor: Editor;
   private dragCtx: {
     p0: Vec2;
-    previewEl: any;
+    previewEl: RaphaelArtifact | null;
     lpAttach: LonePairAttachment | null;
     raAttach: RadicalAttachment | null;
   } | null = null;
-  private hoverEl: any = null;
+
+  private hoverEl: RaphaelArtifact | null = null;
 
   constructor(editor: Editor) {
     this.editor = editor;
@@ -262,7 +266,7 @@ class CurlyArrowTool implements Tool {
       const AVOID_R = 0.55;
 
       // Count collisions for a given (h1, h2) pair
-      function countAtomCollisions(_h1: number, _h2: number): number {
+      const countAtomCollisions = (_h1: number, _h2: number): number => {
         let n = 0;
         for (const [atomId, atom] of molecule.atoms) {
           if (atomId === sourceAtomId || atomId === destAtomId) continue;
@@ -277,7 +281,7 @@ class CurlyArrowTool implements Tool {
           }
         }
         return n;
-      }
+      };
 
       // Pick the side with fewer collisions
       const scorePos = countAtomCollisions(h1, h2);
@@ -382,16 +386,19 @@ class CurlyArrowTool implements Tool {
    * - else → cursor model position
    */
   private _getEndPoint(
-    ci: any,
-    molecule: any,
+    ci: { map?: string; id?: number } | null,
+    molecule: {
+      atoms: Map<number, { pp: Vec2 }>;
+      bonds: Map<number, { begin: number; end: number }>;
+    },
     event: PointerEvent,
-    render: any,
+    render: Render,
     p0: Vec2,
   ): Vec2 {
     if (ci && ci.map === 'atoms') {
-      const atom = molecule.atoms.get(ci.id);
+      const atom = molecule.atoms.get(ci.id as number);
       if (atom) {
-        const reAtom = render.ctab.atoms.get(ci.id);
+        const reAtom = render.ctab.atoms.get(ci.id as number);
         const halfSizePx =
           reAtom?.cachedLabelHalfSize ?? render.options.fontszInPx * 0.5;
         const scale = render.options.microModeScale;
@@ -409,7 +416,7 @@ class CurlyArrowTool implements Tool {
       }
     }
     if (ci && ci.map === 'bonds') {
-      const bond = molecule.bonds.get(ci.id);
+      const bond = molecule.bonds.get(ci.id as number);
       if (bond) {
         const a1 = molecule.atoms.get(bond.begin);
         const a2 = molecule.atoms.get(bond.end);
@@ -420,7 +427,7 @@ class CurlyArrowTool implements Tool {
   }
 
   /** Draw highlight circles at each lone pair model position. */
-  private _drawLpHover(positions: Vec2[], render: any): any {
+  private _drawLpHover(positions: Vec2[], render: Render): RaphaelArtifact {
     const paper = render.paper;
     const options = render.options;
     const sizeFactor = Math.max(1, options.lonePairSize ?? 4);
@@ -442,7 +449,7 @@ class CurlyArrowTool implements Tool {
   }
 
   /** Draw a highlight circle at a bond midpoint. */
-  private _drawDotHover(modelPos: Vec2, render: any): any {
+  private _drawDotHover(modelPos: Vec2, render: Render): RaphaelArtifact {
     const paper = render.paper;
     const options = render.options;
     const c = Scale.modelToCanvas(modelPos, options);

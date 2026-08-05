@@ -32,9 +32,23 @@ interface Obstacle {
   width: number;
 }
 
+type LonePairStruct = {
+  atoms: Map<number, NonBondingAtom>;
+  bonds: Map<number, { begin: number; end: number }>;
+};
+
+type LonePairOptions = {
+  microModeScale?: number;
+  scale?: number;
+  lonePairSize?: number;
+  lineWidth: number;
+  lonePairDistance?: number;
+  fontszInPx: number;
+};
+
 function getObstacles(
   atom: NonBondingAtom,
-  struct: any,
+  struct: LonePairStruct,
   aid: number,
   hydrogenOnTheLeft?: boolean,
 ): Obstacle[] {
@@ -42,7 +56,7 @@ function getObstacles(
   const BOND_HALF_WIDTH = 0.2;
   const HYDROGEN_HALF_WIDTH = 0.6;
 
-  struct.bonds.forEach((bond: any) => {
+  struct.bonds.forEach((bond) => {
     if (bond.begin === aid || bond.end === aid) {
       const neighborId = bond.begin === aid ? bond.end : bond.begin;
       const neighbor = struct.atoms.get(neighborId);
@@ -86,9 +100,9 @@ function findGaps(
 
     if (start < 0) {
       intervals.push({ start: start + 2 * Math.PI, end: 2 * Math.PI });
-      intervals.push({ start: 0, end: end });
+      intervals.push({ start: 0, end });
     } else if (end > 2 * Math.PI) {
-      intervals.push({ start: start, end: 2 * Math.PI });
+      intervals.push({ start, end: 2 * Math.PI });
       intervals.push({ start: 0, end: end - 2 * Math.PI });
     } else {
       intervals.push({ start, end });
@@ -214,7 +228,7 @@ function getLonePairCount(atom: NonBondingAtom) {
 
 export function calcNonBondingLayout(
   atom: NonBondingAtom,
-  struct: any,
+  struct: LonePairStruct,
   aid: number,
   hydrogenOnTheLeft?: boolean,
 ): NonBondingLayout | null {
@@ -273,7 +287,7 @@ export function calcNonBondingLayout(
  */
 export function calcLonePairAngles(
   atom: NonBondingAtom,
-  struct: any,
+  struct: LonePairStruct,
   aid: number,
   hydrogenOnTheLeft?: boolean,
 ): number[] | null {
@@ -290,10 +304,10 @@ export function calcLonePairAngles(
  * px (label.rbb-derived); falls back to fontszInPx * 0.5 when unavailable.
  */
 export function getLonePairModelPositions(
-  atom: any,
-  struct: any,
+  atom: NonBondingAtom,
+  struct: LonePairStruct,
   aid: number,
-  options: any,
+  options: LonePairOptions,
   hydrogenOnTheLeft?: boolean,
   labelHalfSizePx?: number,
 ): Vec2[] {
@@ -322,10 +336,10 @@ export function getLonePairModelPositions(
 }
 
 export function getRadicalModelPositions(
-  atom: any,
-  struct: any,
+  atom: NonBondingAtom,
+  struct: LonePairStruct,
   aid: number,
-  options: any,
+  options: LonePairOptions,
   hydrogenOnTheLeft?: boolean,
   labelHalfSizePx?: number,
 ): Vec2[] {

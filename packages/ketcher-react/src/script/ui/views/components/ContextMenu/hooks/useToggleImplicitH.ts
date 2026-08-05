@@ -1,8 +1,11 @@
 import { fromToggleExplicitH, ketcherProvider } from 'ketcher-core';
 import { useCallback } from 'react';
 import { useAppContext } from 'src/hooks';
-import Editor from 'src/script/editor';
-import { AtomContextMenuProps, ItemEventParams } from '../contextMenu.types';
+import type Editor from 'src/script/editor';
+import type {
+  AtomContextMenuProps,
+  ItemEventParams,
+} from '../contextMenu.types';
 
 type Params = ItemEventParams<AtomContextMenuProps>;
 

@@ -243,7 +243,7 @@ export function fromToggleExplicitH(
       const hPos = atomForNewBond(restruct, atomId).pos;
       const addOp = new AtomAdd({ label: 'H', fragment: fragmentId }, hPos);
       action.addOp(addOp.perform(restruct));
-      const hAtomId = addOp.data.aid!;
+      const hAtomId = addOp.data.aid as number;
       action.addOp(
         new BondAdd(atomId, hAtomId, {
           type: Bond.PATTERN.TYPE.SINGLE,

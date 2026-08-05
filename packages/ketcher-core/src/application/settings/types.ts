@@ -42,6 +42,11 @@ export interface Settings {
   // Atoms
   readonly carbonExplicitly: boolean;
   readonly showCharge: boolean;
+  readonly chargeDisplayStyle: 'standard' | 'circled';
+  readonly chargeSize: number;
+  readonly showLonePairs: boolean;
+  readonly lonePairSize: number;
+  readonly lonePairDistance: number;
   readonly showValence: boolean;
   readonly showHydrogenLabels:
     | 'off'

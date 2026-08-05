@@ -39,6 +39,11 @@ export const DEFAULT_SETTINGS: Settings = {
   // Atoms
   carbonExplicitly: false,
   showCharge: true,
+  chargeDisplayStyle: 'standard', // 'standard', 'circled'
+  chargeSize: 6,
+  showLonePairs: false,
+  lonePairSize: 4,
+  lonePairDistance: 3,
   showValence: true,
   showHydrogenLabels: 'Terminal and Hetero', // 'off', 'Hetero', 'Terminal', 'Terminal and Hetero', 'On'
 
@@ -174,6 +179,11 @@ export const SCHEMA = {
     ignoreChiralFlag: { type: 'boolean' },
     carbonExplicitly: { type: 'boolean' },
     showCharge: { type: 'boolean' },
+    chargeDisplayStyle: { enum: ['standard', 'circled'] },
+    chargeSize: { type: 'number', minimum: 1, maximum: 12 },
+    showLonePairs: { type: 'boolean' },
+    lonePairSize: { type: 'number', minimum: 1, maximum: 10 },
+    lonePairDistance: { type: 'number', minimum: 1, maximum: 8 },
     showValence: { type: 'boolean' },
     showHydrogenLabels: {
       enum: ['off', 'Hetero', 'Terminal', 'Terminal and Hetero', 'On'],
