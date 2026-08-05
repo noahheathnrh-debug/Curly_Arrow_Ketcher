@@ -17,8 +17,6 @@
 import { Vec2, radicalElectrons } from 'domain/entities';
 import { Elements } from 'domain/constants';
 
-
-
 type NonBondingAtom = {
   label: string;
   charge?: number | null;
@@ -51,7 +49,10 @@ function getObstacles(
 
       if (neighbor) {
         obstacles.push({
-          angle: Math.atan2(neighbor.pp.y - atom.pp.y, neighbor.pp.x - atom.pp.x),
+          angle: Math.atan2(
+            neighbor.pp.y - atom.pp.y,
+            neighbor.pp.x - atom.pp.x,
+          ),
           width: BOND_HALF_WIDTH,
         });
       }
@@ -68,7 +69,9 @@ function getObstacles(
   return obstacles;
 }
 
-function findGaps(obstacles: Obstacle[]): { start: number; end: number; size: number }[] {
+function findGaps(
+  obstacles: Obstacle[],
+): { start: number; end: number; size: number }[] {
   if (obstacles.length === 0) {
     return [{ start: 0, end: 2 * Math.PI, size: 2 * Math.PI }];
   }
@@ -118,7 +121,10 @@ function findGaps(obstacles: Obstacle[]): { start: number; end: number; size: nu
     merged.pop();
   }
 
-  if (merged.length === 1 && merged[0].end - merged[0].start >= 2 * Math.PI - 1e-6) {
+  if (
+    merged.length === 1 &&
+    merged[0].end - merged[0].start >= 2 * Math.PI - 1e-6
+  ) {
     return [];
   }
 

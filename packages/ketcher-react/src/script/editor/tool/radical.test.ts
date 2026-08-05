@@ -1,8 +1,5 @@
 import { Atom } from 'ketcher-core';
-import {
-  findDeletableHydrogenNeighbor,
-  getNextRadicalState,
-} from './radical';
+import { findDeletableHydrogenNeighbor, getNextRadicalState } from './radical';
 
 describe('radical tool helpers', () => {
   it('cycles radical states in the expected order', () => {

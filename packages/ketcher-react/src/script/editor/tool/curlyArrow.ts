@@ -218,13 +218,15 @@ class CurlyArrowTool implements Tool {
       // Adaptive default height: scales with chord length.
       // Cap at dist*0.25 to keep end-tangent ≤ 45° from chord so the
       // arrowhead visually faces the target even for very short arrows.
-      let h1 = Math.max(0.05, Math.min(0.6, Math.min(dist * 0.25, 0.4 / Math.sqrt(dist))));
+      let h1 = Math.max(
+        0.05,
+        Math.min(0.6, Math.min(dist * 0.25, 0.4 / Math.sqrt(dist))),
+      );
       let h2 = h1;
 
       // Tangent exit: when starting from a lone pair or radical, exit radially
       // from the atom center so the arrow doesn't look like it bends abruptly.
-      const sourceAtomId =
-        lpAttach?.atomId ?? raAttach?.atomId ?? null;
+      const sourceAtomId = lpAttach?.atomId ?? raAttach?.atomId ?? null;
       if (sourceAtomId !== null) {
         const sourceAtom = molecule.atoms.get(sourceAtomId);
         if (sourceAtom) {
@@ -238,36 +240,37 @@ class CurlyArrowTool implements Tool {
             const perpDy = -chordDx;
             const exitAlong =
               (exDx / exLen) * chordDx + (exDy / exLen) * chordDy;
-            const exitPerp =
-              (exDx / exLen) * perpDx + (exDy / exLen) * perpDy;
+            const exitPerp = (exDx / exLen) * perpDx + (exDy / exLen) * perpDy;
             if (Math.abs(exitAlong) > 0.1) {
-              h1 = (dist / 3) * exitPerp / exitAlong;
+              h1 = ((dist / 3) * exitPerp) / exitAlong;
             } else {
               h1 = exitPerp >= 0 ? dist * 0.4 : -dist * 0.4;
             }
             // Cap h1 so a nearly-parallel exit doesn't produce a huge loop
             h1 = Math.max(-dist * 0.7, Math.min(dist * 0.7, h1));
-            const h2Mag = Math.max(0.05, Math.min(0.6, Math.min(dist * 0.25, 0.4 / Math.sqrt(dist))));
-            h2 = h1 < 0 ? -h2Mag : h2Mag;   // same sign as h1 → C-curve, not S
+            const h2Mag = Math.max(
+              0.05,
+              Math.min(0.6, Math.min(dist * 0.25, 0.4 / Math.sqrt(dist))),
+            );
+            h2 = h1 < 0 ? -h2Mag : h2Mag; // same sign as h1 → C-curve, not S
           }
         }
       }
 
       // Auto-routing: side-selection then iterative repulsion.
-      const destAtomId =
-        ci?.map === 'atoms' ? (ci.id as number) : null;
+      const destAtomId = ci?.map === 'atoms' ? (ci.id as number) : null;
       const AVOID_R = 0.55;
 
       // Count collisions for a given (h1, h2) pair
-      function countAtomCollisions(
-        _h1: number,
-        _h2: number,
-      ): number {
+      function countAtomCollisions(_h1: number, _h2: number): number {
         let n = 0;
         for (const [atomId, atom] of molecule.atoms) {
           if (atomId === sourceAtomId || atomId === destAtomId) continue;
           for (let ti = 0; ti <= 20; ti++) {
-            if (Vec2.dist(sampleCubicBezier(p0, p1, _h1, _h2, ti / 20), atom.pp) < AVOID_R) {
+            if (
+              Vec2.dist(sampleCubicBezier(p0, p1, _h1, _h2, ti / 20), atom.pp) <
+              AVOID_R
+            ) {
               n++;
               break;
             }
@@ -279,7 +282,10 @@ class CurlyArrowTool implements Tool {
       // Pick the side with fewer collisions
       const scorePos = countAtomCollisions(h1, h2);
       const scoreNeg = countAtomCollisions(-h1, -h2);
-      if (scoreNeg < scorePos) { h1 = -h1; h2 = -h2; }
+      if (scoreNeg < scorePos) {
+        h1 = -h1;
+        h2 = -h2;
+      }
 
       // Iterative repulsion locked to the chosen side
       const pushSign = h1 >= 0 ? 1 : -1;
@@ -294,7 +300,7 @@ class CurlyArrowTool implements Tool {
             if (d < AVOID_R) {
               const repulse = (AVOID_R - d) * 1.5;
               if (t < 0.5) h1 += pushSign * repulse;
-              else         h2 += pushSign * repulse;
+              else h2 += pushSign * repulse;
               collided = true;
               break;
             }
@@ -389,8 +395,10 @@ class CurlyArrowTool implements Tool {
         const halfSizePx =
           reAtom?.cachedLabelHalfSize ?? render.options.fontszInPx * 0.5;
         const scale = render.options.microModeScale;
-        const dotR = render.options.lineWidth * 0.9 *
-                     (Math.max(1, render.options.lonePairSize ?? 4) / 4);
+        const dotR =
+          render.options.lineWidth *
+          0.9 *
+          (Math.max(1, render.options.lonePairSize ?? 4) / 4);
         const atomRadius = (halfSizePx + dotR) / scale;
         const dir = p0.sub(atom.pp);
         const dirLen = dir.length();
