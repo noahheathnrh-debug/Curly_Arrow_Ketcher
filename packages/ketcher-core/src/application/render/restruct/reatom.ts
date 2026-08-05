@@ -14,45 +14,42 @@
  * limitations under the License.
  ***************************************************************************/
 
-import {
-  Atom,
-  Bond,
-  Box2Abs,
-  FunctionalGroup,
-  RxnArrowMode,
-  SGroup,
-  StereoFlag,
-  StereoLabel,
-  Struct,
-  Vec2,
-} from 'domain/entities';
+import { Atom, StereoLabel } from 'domain/entities/atom';
+import { Bond } from 'domain/entities/bond';
+import { FunctionalGroup } from 'domain/entities/functionalGroup';
+import type { SGroup } from 'domain/entities/sgroup';
+import type { Struct } from 'domain/entities/struct';
+import { Box2Abs } from 'domain/entities/box2Abs';
+import { StereoFlag } from 'domain/entities/fragment';
+import { RxnArrowMode } from 'domain/entities/rxnArrow';
+import { Vec2 } from 'domain/entities/vec2';
 import { ElementColor, Elements } from 'domain/constants';
 import {
   LayerMap,
-  StereLabelStyleType,
+  StereoLabelStyleType,
   StereoColoringType,
 } from './generalEnumTypes';
 
 import ReObject from './reobject';
-import ReStruct from './restruct';
+import type ReStruct from './restruct';
 import { calcLonePairAngles, getRadicalModelPositions } from './lonePairUtils';
-import { Render } from '../raphaelRender';
+import type { Render } from '../raphaelRender';
 import { Scale } from 'domain/helpers';
 import draw from '../draw';
 import util from '../util';
-import { tfx } from 'utilities';
-import {
+import { assert, toFixed } from 'utilities';
+import type {
   RenderOptions,
   RenderOptionStyles,
-  UsageInMacromolecule,
 } from 'application/render/render.types';
+import { UsageInMacromolecule } from 'application/render/render.constants';
 import { MonomerMicromolecule } from 'domain/entities/monomerMicromolecule';
-import { AttachmentPointName, attachmentPointNames } from 'domain/types';
+import { type AttachmentPointName, attachmentPointNames } from 'domain/types';
 import { getAttachmentPointLabel } from 'domain/helpers/attachmentPointCalculations';
 import { VALENCE_MAP } from 'application/render/restruct/constants';
 import { SUPERATOM_CLASS_TEXT } from 'application/render/restruct/resgroup';
-import assert from 'assert';
 import { getAttachmentPointTooltip } from 'domain/helpers/attachmentPointTooltips';
+import { ShowHydrogenLabels } from './showHydrogenLabels';
 
 interface ElemAttr {
   text: string;
@@ -62,14 +59,6 @@ interface ElemAttr {
 
 const StereoLabelMinOpacity = 0.3;
 const MAX_LABEL_LENGTH = 8;
-
-export enum ShowHydrogenLabels {
-  Off = 'off',
-  Hetero = 'Hetero',
-  Terminal = 'Terminal',
-  TerminalAndHetero = 'Terminal and Hetero',
-  On = 'all',
-}
 
 export enum ShowHydrogenLabelNames {
   Off = 'Off',
@@ -318,7 +307,8 @@ class ReAtom extends ReObject {
   getSelectionContour(render: Render, highlightPadding = 0) {
     const hasLabel =
       (this.a.pseudo?.length > 1 && !getQueryAttrsText(this)) ||
-      (this.showLabel && this.a.implicitH !== 0);
+      (this.showLabel && this.a.implicitH !== 0) ||
+      this.a.atomList !== null;
 
     return hasLabel
       ? this.getLabeledSelectionContour(render, highlightPadding)
@@ -456,6 +446,16 @@ class ReAtom extends ReObject {
       atomSymbolShift = Math.max(atomSymbolShift, shift);
     }
 
+    // A wide/multi-part label (e.g. an atom list, or several combined
+    // properties like isotope+charge+valence) can otherwise compute a shift
+    // larger than the bond itself, pushing the endpoint past the other atom
+    // and making the bond look detached from the structure (#3508). Never
+    // consume more than half the bond, so the two endpoints can't cross.
+    if (bondLen) {
+      const maxShift = Math.max(bondLen / 2 - 3 * renderOptions.lineWidth, 0);
+      atomSymbolShift = Math.min(atomSymbolShift, maxShift);
+    }
+
     if (atomSymbolShift > 0) {
       return atomPosition.addScaled(
         direction,
@@ -487,21 +487,27 @@ class ReAtom extends ReObject {
         functionalGroups,
       )
     ) {
-      const isPositionAtom =
-        sgroup?.getContractedPosition(restruct.molecule).atomId === aid;
+      const { atomId: contractedAtomId, position: contractedPosition } =
+        sgroup!.getContractedPosition(restruct.molecule);
+      const isPositionAtom = contractedAtomId === aid;
       if (isPositionAtom) {
+        // contractedPosition is geometric center for regular SGroups;
+        // MonomerMicromolecule.getContractedPosition overrides it to sgroup.pp.
         const position = Scale.modelToCanvas(
-          sgroup instanceof MonomerMicromolecule
-            ? (sgroup.pp as Vec2)
-            : this.a.pp,
+          contractedPosition,
           render.options,
         );
         const fontFamily = options.font.substr(
           options.font.indexOf(' ') + 1,
           options.font.length,
         );
+        const superatomClass = sgroup?.data?.class as
+          | keyof typeof SUPERATOM_CLASS_TEXT
+          | undefined;
         const sGroupName =
-          sgroup.data.name ?? SUPERATOM_CLASS_TEXT[sgroup.data.class] ?? '';
+          sgroup?.data?.name ??
+          (superatomClass ? SUPERATOM_CLASS_TEXT[superatomClass] : '') ??
+          '';
         const path = render.paper
           .text(position.x, position.y, sGroupName)
           .attr({
@@ -510,9 +516,11 @@ class ReAtom extends ReObject {
             'font-family': fontFamily,
           });
 
-        path.node?.setAttribute('data-sgroup-id', sgroup.id);
+        path.node?.setAttribute('data-testid', 's-group-label');
+        path.node?.setAttribute('data-label-text', sGroupName);
+        path.node?.setAttribute('data-sgroup-id', sgroup?.id);
         path.node?.setAttribute('data-sgroup-name', sGroupName);
-        path.node?.setAttribute('data-sgroup-type', sgroup.type);
+        path.node?.setAttribute('data-sgroup-type', sgroup?.type);
 
         restruct.addReObjectPath(
           LayerMap.data,
@@ -614,7 +622,7 @@ class ReAtom extends ReObject {
         (options.usageInMacromolecule === undefined && !sgroup);
       // can not use Atom.isSuperatomLeavingGroupAtom here, because in preview model there is no sgroups
       const isLeavingGroupAtom =
-        this.a.rglabel !== null && this.a.rglabel !== '0';
+        this.a.rglabel !== null && this.a.rglabel !== 0;
 
       const shouldHideHydrogenInPreview = isPreviewMode && isLeavingGroupAtom;
 
@@ -622,7 +630,7 @@ class ReAtom extends ReObject {
         !isHydrogen &&
         !this.a.alias &&
         implh > 0 &&
-        displayHydrogen(this, options.showHydrogenLabels) &&
+        displayHydrogen(struct, this, options.showHydrogenLabels) &&
         !shouldHideHydrogenInPreview
       ) {
         const data = showHydrogen(this, render, implh, {
@@ -770,8 +778,17 @@ class ReAtom extends ReObject {
     }
 
     if (render.monomerCreationState) {
-      const { assignedAttachmentPoints, problematicAttachmentPoints } =
-        render.monomerCreationState;
+      const {
+        assignedAttachmentPoints: allAssignedAttachmentPoints,
+        visibleAssignedAttachmentPoints,
+        problematicAttachmentPoints,
+        problematicAtoms,
+        connectionAttachmentPoints,
+      } = render.monomerCreationState;
+      // When visibleAssignedAttachmentPoints is set, only that subset is drawn;
+      // otherwise all assigned attachment points are shown.
+      const assignedAttachmentPoints =
+        visibleAssignedAttachmentPoints ?? allAssignedAttachmentPoints;
       const restruct = render.ctab;
       const struct = restruct.molecule;
       const aid = struct.atoms.keyOf(this.a);
@@ -811,6 +828,19 @@ class ReAtom extends ReObject {
 
         if (style) {
           const path = this.makeHighlightePlate(restruct, style, -4);
+          restruct.addReObjectPath(LayerMap.atom, this.visel, path);
+        }
+
+        if (problematicAtoms?.has(aid)) {
+          const path = this.makeHighlightePlate(
+            restruct,
+            {
+              fill: 'none',
+              stroke: '#F40724',
+              'stroke-width': '2px',
+            },
+            -4,
+          );
           restruct.addReObjectPath(LayerMap.atom, this.visel, path);
         }
 
@@ -898,10 +928,13 @@ class ReAtom extends ReObject {
 
           labelGroup.forEach((element) => {
             element.node?.setAttribute(
-              'data-attachment-point-name',
+              'data-attachment-point-alias',
               attachmentPointName,
             );
-            element.node?.setAttribute('data-testid', attachmentPointName);
+            element.node?.setAttribute(
+              'data-testid',
+              'monomer-attachment-point',
+            );
           });
 
           // Add hover handlers
@@ -980,6 +1013,78 @@ class ReAtom extends ReObject {
             ps,
             false,
           );
+        }
+
+        // Render connection (readonly) attachment points — blue circle around
+        // the connection atom, same visual style as regular attachment atoms
+        // but without an R-label. Hover syncs with the panel row.
+        if (connectionAttachmentPoints) {
+          const isConnectionAtom = Array.from(
+            connectionAttachmentPoints.values(),
+          ).some(([connectionAtomId]) => connectionAtomId === aid);
+
+          if (isConnectionAtom) {
+            // Draw the same blue outline ring used for regular attachment atoms
+            const ringPath = this.makeHighlightePlate(
+              restruct,
+              {
+                fill: 'none',
+                stroke: '#4da3f8',
+                'stroke-width': '2px',
+              },
+              -4,
+            );
+            restruct.addReObjectPath(LayerMap.atom, this.visel, ringPath);
+
+            // Invisible hit-area circle for hover detection, centred on the
+            // atom's screen-space position (ps is already computed above)
+            const hitArea = render.paper.circle(ps.x, ps.y, 10).attr({
+              fill: '#4da3f8',
+              stroke: 'none',
+              opacity: 0,
+              cursor: 'pointer',
+            });
+
+            // Find the AP name(s) for this connection atom to drive panel sync
+            const connectionApNames = Array.from(
+              connectionAttachmentPoints.entries(),
+            )
+              .filter(([, [caid]]) => caid === aid)
+              .map(([apName]) => apName);
+
+            hitArea.hover(
+              () => {
+                hitArea.attr({ opacity: 0.15 });
+                connectionApNames.forEach((apName) => {
+                  window.dispatchEvent(
+                    new CustomEvent<AttachmentPointName>(
+                      'highlightAttachmentPointControls',
+                      { detail: apName },
+                    ),
+                  );
+                });
+              },
+              () => {
+                hitArea.attr({ opacity: 0 });
+                connectionApNames.forEach((apName) => {
+                  window.dispatchEvent(
+                    new CustomEvent<AttachmentPointName>(
+                      'resetHighlightAttachmentPointControls',
+                      { detail: apName },
+                    ),
+                  );
+                });
+              },
+            );
+
+            restruct.addReObjectPath(
+              LayerMap.data,
+              this.visel,
+              hitArea,
+              ps,
+              false,
+            );
+          }
         }
       }
     }
@@ -1071,17 +1176,24 @@ class ReAtom extends ReObject {
     const highlights = restruct.molecule.highlights;
     let isHighlighted = false;
     let highlightColor = '';
+    let highlightOutline = false;
     highlights.forEach((highlight) => {
       const hasCurrentHighlight = highlight.atoms?.includes(aid);
       isHighlighted = isHighlighted || hasCurrentHighlight;
       if (hasCurrentHighlight) {
         highlightColor = highlight.color;
+        highlightOutline = highlight.outline;
       }
     });
 
-    // Drawing highlight
-    if (isHighlighted) {
-      const style = { fill: highlightColor, stroke: 'none' };
+    // Drawing highlight. Outline highlights (#9441) are drawn as a single
+    // merged contour by ReStruct.showHighlightOutlines, so skip them here;
+    // only filled (active-tab) highlights are drawn per-atom.
+    if (isHighlighted && !highlightOutline) {
+      const style: RenderOptionStyles = {
+        fill: highlightColor,
+        stroke: 'none',
+      };
 
       const path = this.makeHighlightePlate(restruct, style);
       restruct.addReObjectPath(LayerMap.hovering, this.visel, path);
@@ -1258,7 +1370,9 @@ class ReAtom extends ReObject {
     let angles: Array<number> = [];
     this.a.neighbors.forEach((halfBondId) => {
       const halfBond = struct.halfBonds.get(halfBondId);
-      halfBond && angles.push(halfBond.ang);
+      if (halfBond) {
+        angles.push(halfBond.ang);
+      }
     });
     angles = angles.sort((a, b) => a - b);
     const largeAngles: Array<number> = [];
@@ -1349,15 +1463,15 @@ function shouldDisplayStereoLabel(
   }
 
   switch (labelStyle) {
-    case StereLabelStyleType.Off:
+    case StereoLabelStyleType.Off:
       return false;
-    case StereLabelStyleType.On:
+    case StereoLabelStyleType.On:
       return true;
-    case StereLabelStyleType.Classic:
+    case StereoLabelStyleType.Classic:
       return !!(
         flag === StereoFlag.Mixed || stereoLabelType === StereoLabel.Or
       );
-    case StereLabelStyleType.IUPAC:
+    case StereoLabelStyleType.IUPAC:
       return !!(
         flag === StereoFlag.Mixed && stereoLabelType !== StereoLabel.Abs
       );
@@ -1369,13 +1483,17 @@ function shouldDisplayStereoLabel(
 function isLabelVisible(restruct, options, atom: ReAtom) {
   const isAttachmentPointAtom = Boolean(atom.a.attachmentPoints);
   const isCarbon = atom.a.label.toLowerCase() === 'c';
+  const visibleNeighbors = getVisibleNeighborHalfBondIds(
+    restruct.molecule,
+    atom,
+  );
   const visibleTerminal =
     options.showHydrogenLabels !== ShowHydrogenLabels.Off &&
     options.showHydrogenLabels !== ShowHydrogenLabels.Hetero;
 
   const neighborsLength =
-    atom.a.neighbors.length === 0 ||
-    (atom.a.neighbors.length < 2 && visibleTerminal);
+    visibleNeighbors.length === 0 ||
+    (visibleNeighbors.length < 2 && visibleTerminal);
 
   if (isAttachmentPointAtom && isCarbon) {
     return false;
@@ -1397,9 +1515,9 @@ function isLabelVisible(restruct, options, atom: ReAtom) {
 
   if (shouldBeVisible) return true;
 
-  if (atom.a.neighbors.length === 2) {
-    const nei1 = atom.a.neighbors[0];
-    const nei2 = atom.a.neighbors[1];
+  if (visibleNeighbors.length === 2) {
+    const nei1 = visibleNeighbors[0];
+    const nei2 = visibleNeighbors[1];
     const hb1 = restruct.molecule.halfBonds.get(nei1);
     const hb2 = restruct.molecule.halfBonds.get(nei2);
     const bond1 = restruct.bonds.get(hb1.bid);
@@ -1418,20 +1536,28 @@ function isLabelVisible(restruct, options, atom: ReAtom) {
   return false;
 }
 
-function displayHydrogen(atom: ReAtom, hydrogenLabels: ShowHydrogenLabels) {
+function displayHydrogen(
+  struct: Struct,
+  atom: ReAtom,
+  hydrogenLabels: ShowHydrogenLabels,
+) {
+  const visibleNeighbors = getVisibleNeighborHalfBondIds(struct, atom);
+
   return (
     hydrogenLabels === ShowHydrogenLabels.On ||
     (hydrogenLabels === ShowHydrogenLabels.Terminal &&
-      atom.a.neighbors.length < 2) ||
+      visibleNeighbors.length < 2) ||
     (hydrogenLabels === ShowHydrogenLabels.Hetero &&
       atom.label?.text.toLowerCase() !== 'c') ||
     (hydrogenLabels === ShowHydrogenLabels.TerminalAndHetero &&
-      (atom.a.neighbors.length < 2 || atom.label?.text.toLowerCase() !== 'c'))
+      (visibleNeighbors.length < 2 || atom.label?.text.toLowerCase() !== 'c'))
   );
 }
 
 function shouldHydrogenBeOnLeft(struct, atom) {
-  if (atom.a.neighbors.length === 0) {
+  const visibleNeighbors = getVisibleNeighborHalfBondIds(struct, atom);
+
+  if (visibleNeighbors.length === 0) {
     if (atom.a.label === 'D' || atom.a.label === 'T') {
       return false;
     } else {
@@ -1440,14 +1566,28 @@ function shouldHydrogenBeOnLeft(struct, atom) {
     }
   }
 
-  if (atom.a.neighbors.length === 1) {
-    const neighbor = atom.a.neighbors[0];
+  if (visibleNeighbors.length === 1) {
+    const neighbor = visibleNeighbors[0];
     const neighborDirection = struct.halfBonds.get(neighbor).dir;
 
     return neighborDirection.x > 0;
   }
 
   return false;
+}
+
+function getVisibleNeighborHalfBondIds(struct: Struct, atom: ReAtom): number[] {
+  return atom.a.neighbors.filter((neighborHalfBondId) => {
+    const halfBond = struct.halfBonds.get(neighborHalfBondId);
+
+    if (!halfBond) {
+      return false;
+    }
+
+    const bond = struct.bonds.get(halfBond.bid);
+
+    return !bond || !Bond.isBondToHiddenLeavingGroup(struct, bond);
+  });
 }
 
 function getOnlyQueryAttributesCustomQuery(atom: Atom) {
@@ -1951,10 +2091,10 @@ function showWarning(
   warning.path = render.paper
     .path(
       'M{0},{1}L{2},{3}',
-      tfx(ps.x + leftMargin),
-      tfx(y),
-      tfx(ps.x + rightMargin),
-      tfx(y),
+      toFixed(ps.x + leftMargin),
+      toFixed(y),
+      toFixed(ps.x + rightMargin),
+      toFixed(y),
     )
     .attr(render.options.lineattr)
     .attr({ stroke: '#F00' });
@@ -2258,7 +2398,13 @@ export function checkIsSmartPropertiesExist(atom) {
     'aromaticity',
     'customQuery',
   ];
-  return smartsSpecificProperties.some((name) => atom.queryProperties?.[name]);
+  return (
+    atom.implicitHCount !== null ||
+    smartsSpecificProperties.some((name) => {
+      const value = atom.queryProperties?.[name];
+      return Boolean(value) || value === 0;
+    })
+  );
 }
 
 export function getAtomCustomQuery(atom, includeOnlyQueryAttributes?: boolean) {

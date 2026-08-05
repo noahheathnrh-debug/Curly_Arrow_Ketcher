@@ -14,11 +14,11 @@
  * limitations under the License.
  ***************************************************************************/
 
-import Form, { Field } from '../../../component/form/form/form';
-import { StereoLabel, Struct } from 'ketcher-core';
+import Form, { type FormState, Field } from '../../../component/form/form/form';
+import type { ComponentType, FC } from 'react';
+import { type Struct, StereoLabel } from 'ketcher-core';
 
 import { Dialog } from '../../../views/components';
-import { FC } from 'react';
 import classes from './enhancedStereo.module.less';
 import { connect } from 'react-redux';
 import { range } from 'lodash';
@@ -27,13 +27,10 @@ interface EnhancedStereoResult {
   andNumber: number;
   orNumber: number;
   type: StereoLabel;
+  [key: string]: unknown;
 }
 
-interface EnhancedStereoFormState {
-  result: EnhancedStereoResult;
-  valid: boolean;
-  errors: string[];
-}
+type EnhancedStereoFormState = FormState<EnhancedStereoResult>;
 
 interface EnhancedStereoProps {
   className: string;
@@ -44,7 +41,7 @@ interface EnhancedStereoProps {
 
 interface EnhancedStereoCallProps {
   onCancel: () => void;
-  onOk: (res: any) => void;
+  onOk: (res: unknown) => void;
 }
 
 type Props = EnhancedStereoProps & EnhancedStereoCallProps;
@@ -199,7 +196,14 @@ function maxOfOrs(stereLabels): number {
   return numbers.length === 0 ? 0 : Math.max(...numbers);
 }
 
-export default connect((state: any) => ({
+interface State {
+  modal: { form: EnhancedStereoFormState };
+  editor: { struct: () => Struct };
+}
+
+const ConnectedEnhancedStereo = connect((state: State) => ({
   formState: state.modal.form || { result: {}, valid: false },
   struct: state.editor.struct(),
 }))(EnhancedStereo);
+
+export default ConnectedEnhancedStereo as unknown as ComponentType<EnhancedStereoCallProps>;

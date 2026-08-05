@@ -16,10 +16,10 @@ export function useIndigoVersionToRedux() {
           dispatch(
             setAppMeta({
               ...app,
-              indigoVersion: info.indigoVersion || '',
+              indigoVersion: info.indigoVersion ?? '',
             }),
           );
-        } catch (e) {
+        } catch (_e) {
           // ignore
         }
       }

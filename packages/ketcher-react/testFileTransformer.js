@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path');
+import path from 'path';
 
-module.exports = {
+export default {
   process(src, filename) {
     const customComponentName = 'icon-' + path.basename(filename);
-    return `module.exports = ${JSON.stringify(customComponentName)};`;
+    return { code: `module.exports = ${JSON.stringify(customComponentName)};` };
   },
 };

@@ -14,10 +14,10 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { Point, Vec2 } from './vec2';
+import { type Point, Vec2 } from './vec2';
 import {
+  type initiallySelectedType,
   BaseMicromoleculeEntity,
-  initiallySelectedType,
 } from 'domain/entities/BaseMicromoleculeEntity';
 
 export enum RxnArrowMode {
@@ -61,6 +61,7 @@ export interface RxnArrowAttributes {
   initiallySelected?: initiallySelectedType;
   lpAttach?: LonePairAttachment;
   raAttach?: RadicalAttachment;
+  arrowId?: number;
 }
 
 export class RxnArrow extends BaseMicromoleculeEntity {
@@ -70,6 +71,7 @@ export class RxnArrow extends BaseMicromoleculeEntity {
   height2?: number;
   lpAttach?: LonePairAttachment;
   raAttach?: RadicalAttachment;
+  arrowId?: number;
 
   static isElliptical(arrow) {
     return [
@@ -85,6 +87,7 @@ export class RxnArrow extends BaseMicromoleculeEntity {
   constructor(attributes: RxnArrowAttributes) {
     super(attributes?.initiallySelected);
     this.pos = [];
+    this.arrowId = attributes.arrowId;
 
     if (attributes.pos) {
       for (let i = 0; i < attributes.pos.length; i++) {

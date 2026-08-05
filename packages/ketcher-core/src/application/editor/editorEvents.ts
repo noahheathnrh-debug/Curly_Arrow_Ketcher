@@ -1,6 +1,6 @@
 import { Subscription } from 'subscription';
-import { ToolEventHandlerName } from 'application/editor/tools/Tool';
-import { CoreEditor } from 'application/editor/Editor';
+import type { ToolEventHandlerName } from 'application/editor/tools/Tool';
+import type { CoreEditor } from 'application/editor/Editor';
 import ZoomTool from 'application/editor/tools/Zoom';
 import { SequenceType } from 'domain/entities/monomer-chains/types';
 import { ToolName } from 'application/editor/tools/types';
@@ -34,6 +34,7 @@ export interface IEditorEvents {
   mouseUpMonomer: Subscription;
   rightClickSequence: Subscription;
   rightClickCanvas: Subscription;
+  rightClickCanvasSequence: Subscription;
   rightClickPolymerBond: Subscription;
   rightClickSelectedMonomers: Subscription;
   keyDown: Subscription;
@@ -64,6 +65,7 @@ export interface IEditorEvents {
   pasteFromClipboard: Subscription;
   deleteSelectedStructure: Subscription;
   selectEntities: Subscription;
+  modelChange: Subscription;
   toggleMacromoleculesPropertiesVisibility: Subscription;
   modifyAminoAcids: Subscription;
   setEditorLineLength: Subscription;
@@ -80,7 +82,7 @@ export interface IEditorEvents {
   flipVertical: Subscription;
 }
 
-function createEditorEvents(): IEditorEvents {
+export function createEditorEvents(): IEditorEvents {
   return {
     selectMonomer: new Subscription(),
     selectPreset: new Subscription(),
@@ -110,6 +112,7 @@ function createEditorEvents(): IEditorEvents {
     mouseUpMonomer: new Subscription(),
     rightClickSequence: new Subscription(),
     rightClickCanvas: new Subscription(),
+    rightClickCanvasSequence: new Subscription(),
     rightClickPolymerBond: new Subscription(),
     rightClickSelectedMonomers: new Subscription(),
     keyDown: new Subscription(),
@@ -140,6 +143,7 @@ function createEditorEvents(): IEditorEvents {
     pasteFromClipboard: new Subscription(),
     deleteSelectedStructure: new Subscription(),
     selectEntities: new Subscription(),
+    modelChange: new Subscription(),
     toggleMacromoleculesPropertiesVisibility: new Subscription(),
     modifyAminoAcids: new Subscription(),
     setEditorLineLength: new Subscription(),
@@ -156,13 +160,6 @@ function createEditorEvents(): IEditorEvents {
     flipVertical: new Subscription(),
   };
 }
-
-export const editorEvents: IEditorEvents = createEditorEvents();
-
-export function resetEditorEvents() {
-  Object.assign(editorEvents, createEditorEvents());
-}
-
 export const renderersEvents: ToolEventHandlerName[] = [
   'mouseOverPolymerBond',
   'mouseLeavePolymerBond',
@@ -179,6 +176,7 @@ export const renderersEvents: ToolEventHandlerName[] = [
   'mouseUpMonomer',
   'rightClickSequence',
   'rightClickCanvas',
+  'rightClickCanvasSequence',
   'rightClickPolymerBond',
   'rightClickSelectedMonomers',
   'editSequence',
@@ -214,19 +212,19 @@ const selectBondTool = (editor: CoreEditor, toolName: ToolName) => {
 
 export const hotkeysConfiguration = {
   RNASequenceType: {
-    shortcut: ['Control+Alt+r'],
+    shortcut: ['Mod+Alt+r'],
     handler: (editor: CoreEditor) => {
       editor.events.changeSequenceTypeEnterMode.dispatch(SequenceType.RNA);
     },
   },
   DNASequenceType: {
-    shortcut: ['Control+Alt+d'],
+    shortcut: ['Mod+Alt+d'],
     handler: (editor: CoreEditor) => {
       editor.events.changeSequenceTypeEnterMode.dispatch(SequenceType.DNA);
     },
   },
   PEPTIDESequenceTYpe: {
-    shortcut: ['Control+Alt+p'],
+    shortcut: ['Mod+Alt+p'],
     handler: (editor: CoreEditor) => {
       editor.events.changeSequenceTypeEnterMode.dispatch(SequenceType.PEPTIDE);
     },
@@ -262,14 +260,22 @@ export const hotkeysConfiguration = {
   erase: {
     shortcut: ['Delete', 'Backspace'],
     handler: (editor: CoreEditor) => {
-      // TODO create an ability to stop event propagation from mode event handlers to keyboard shortcuts handlers
-      // Sequence mode handles Delete/Backspace itself (even when not editing),
-      // so skip tool switching here.
-      if (editor.isSequenceMode) return;
       const hasSelectedEntities =
         editor.drawingEntitiesManager.selectedEntities.length > 0;
+
+      // Select hovered entities so the erase tool deletes them
+      if (!hasSelectedEntities) {
+        const hoveredEntities =
+          editor.drawingEntitiesManager.allEntities.filter(
+            ([, entity]) => entity.hovered,
+          );
+        hoveredEntities.forEach(([, entity]) => entity.turnOnSelection());
+      }
+
+      const hasEntitiesToDelete =
+        editor.drawingEntitiesManager.selectedEntities.length > 0;
       editor.events.selectTool.dispatch([ToolName.erase]);
-      if (hasSelectedEntities) {
+      if (hasEntitiesToDelete) {
         editor.events.selectTool.dispatch([ToolName.selectRectangle]);
       }
     },

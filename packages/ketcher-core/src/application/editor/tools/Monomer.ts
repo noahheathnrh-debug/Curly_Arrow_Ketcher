@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***************************************************************************/
-import { BaseTool } from 'application/editor/tools/Tool';
-import { BaseMonomer, AmbiguousMonomer, Vec2 } from 'domain/entities';
-import { CoreEditor, EditorHistory } from 'application/editor/internal';
+import type { BaseTool } from 'application/editor/tools/Tool';
+import { type BaseMonomer, AmbiguousMonomer, Vec2 } from 'domain/entities';
+import type { CoreEditor } from 'application/editor/Editor';
+import { EditorHistory } from 'application/editor/internal';
 import {
-  BaseMonomerRenderer,
+  type BaseMonomerRenderer,
   AmbiguousMonomerRenderer,
 } from 'application/render/renderers';
-import { MonomerOrAmbiguousType } from 'domain/types';
+import type { MonomerOrAmbiguousType } from 'domain/types';
+import type { Command } from 'domain/entities/Command';
 import { monomerFactory } from '../operations/monomer/monomerFactory';
-import assert from 'assert';
+import { assert } from 'utilities';
 import { Coordinates } from '../shared/coordinates';
 import { isAmbiguousMonomerLibraryItem } from 'domain/helpers/monomers';
 
@@ -49,7 +51,7 @@ class MonomerTool implements BaseTool {
 
   mousedown() {
     assert(this.monomerPreviewRenderer);
-    let modelChanges;
+    let modelChanges: Command;
     const position = Coordinates.canvasToModel(
       new Vec2(
         this.editor.lastCursorPositionOfCanvas.x,

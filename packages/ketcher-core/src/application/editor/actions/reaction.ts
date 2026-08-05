@@ -14,8 +14,9 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { ReStruct } from 'application/render';
-import { LonePairAttachment, RadicalAttachment, Vec2 } from 'domain/entities';
+import type { ReStruct } from 'application/render';
+import { LonePairAttachment, RadicalAttachment } from 'domain/entities';
+import type { Vec2 } from 'domain/entities/vec2';
 import {
   RxnArrowAdd,
   RxnArrowDelete,

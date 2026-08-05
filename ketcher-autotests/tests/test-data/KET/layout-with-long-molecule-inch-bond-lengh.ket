@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -91,7 +92,8 @@
                     -2.5852600372918655,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -194,7 +196,7 @@
         ],
         "stereoFlagPosition": {
             "x": -0.29392517097614856,
-            "y": 0.0852599779757357,
+            "y": 0.08525993843164903,
             "z": 0
         }
     },

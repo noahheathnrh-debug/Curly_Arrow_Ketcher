@@ -14,43 +14,54 @@
  * limitations under the License.
  ***************************************************************************/
 
-import {
-  Atom,
-  Bond,
-  FunctionalGroup,
-  HalfBond,
-  SGroup,
-  Struct,
-  Vec2,
-} from 'domain/entities';
+import type { Atom } from 'domain/entities/atom';
+import { Bond } from 'domain/entities/bond';
+import { FunctionalGroup } from 'domain/entities/functionalGroup';
+import type { HalfBond } from 'domain/entities/halfBond';
+import type { SGroup } from 'domain/entities/sgroup';
+import type { Struct } from 'domain/entities/struct';
+import { Vec2 } from 'domain/entities/vec2';
 import { LayerMap, StereoColoringType } from './generalEnumTypes';
 import { getColorFromStereoLabel } from './reatom';
 
 import ReObject from './reobject';
-import ReStruct from './restruct';
-import { Render } from '../raphaelRender';
+import type ReStruct from './restruct';
+import type { Render } from '../raphaelRender';
 import { Scale } from 'domain/helpers';
 import draw from '../draw';
 import util from '../util';
 import { MonomerMicromolecule } from 'domain/entities/monomerMicromolecule';
-import { RenderOptions, RenderOptionStyles } from '../render.types';
+import type {
+  RelativeBox,
+  RenderOptions,
+  RenderOptionStyles,
+} from '../render.types';
 import { isNumber } from 'lodash';
-import { Visel } from 'application/render';
-import { Coordinates } from 'application/editor';
+import Visel from './visel';
+import { Coordinates } from 'application/editor/shared/coordinates';
+import type { Element, RaphaelPaper, RaphaelSet } from 'raphael';
+
+type FragmentSelectionPreviewOptions = {
+  disabled?: boolean;
+};
+
+// A bond's rendered path is a single Element for most bond types, or a
+// RaphaelSet (paper.set([...])) for aromatic bonds.
+type BondPath = Element | RaphaelSet;
 
 class ReBond extends ReObject {
   b: Bond;
   doubleBondShift: number;
-  path: any;
+  path: BondPath;
   neihbid1 = -1;
   neihbid2 = -1;
   boldStereo?: boolean;
   rbb?: { x: number; y: number; width: number; height: number };
   cip?: {
     // Raphael paths
-    path: any;
-    text: any;
-    rectangle: any;
+    path: RaphaelSet;
+    text: Element;
+    rectangle: Element;
   };
 
   constructor(bond: Bond) {
@@ -73,7 +84,11 @@ class ReBond extends ReObject {
       : atomId;
   }
 
-  static bondRecalc(bond: ReBond, restruct: ReStruct, options: any): void {
+  static bondRecalc(
+    bond: ReBond,
+    restruct: ReStruct,
+    options: RenderOptions,
+  ): void {
     const render = restruct.render;
     const sgroup1 = restruct.molecule.getGroupFromAtomId(bond.b.begin);
     const sgroup2 = restruct.molecule.getGroupFromAtomId(bond.b.end);
@@ -96,14 +111,14 @@ class ReBond extends ReObject {
     let p1: Vec2;
     let p2: Vec2;
 
-    if (sgroup1 instanceof MonomerMicromolecule && sgroup1 !== sgroup2) {
-      p1 = sgroup1.isContracted() ? (sgroup1.pp as Vec2) : beginAtom.a.pp;
+    if (sgroup1?.isContracted() && sgroup1 !== sgroup2) {
+      p1 = sgroup1.getContractedPosition(restruct.molecule).position;
     } else {
       p1 = beginAtom.a.pp;
     }
 
-    if (sgroup2 instanceof MonomerMicromolecule && sgroup1 !== sgroup2) {
-      p2 = sgroup2.isContracted() ? (sgroup2.pp as Vec2) : endAtom.a.pp;
+    if (sgroup2?.isContracted() && sgroup1 !== sgroup2) {
+      p2 = sgroup2.getContractedPosition(restruct.molecule).position;
     } else {
       p2 = endAtom.a.pp;
     }
@@ -296,7 +311,11 @@ class ReBond extends ReObject {
     );
   }
 
-  makeSelectionPlate(restruct: ReStruct, _: any, options: any) {
+  makeSelectionPlate(
+    restruct: ReStruct,
+    _paper: RaphaelPaper,
+    options: RenderOptions,
+  ) {
     if (this.isPlateShouldBeHidden(restruct, options)) {
       return null;
     }
@@ -336,7 +355,7 @@ class ReBond extends ReObject {
     return rect.attr(highlightStyle);
   }
 
-  show(restruct: ReStruct, bid: number, options: any): void {
+  show(restruct: ReStruct, bid: number, options: RenderOptions): void {
     // eslint-disable-line max-statements
     const render = restruct.render;
     const struct = restruct.molecule;
@@ -387,7 +406,9 @@ class ReBond extends ReObject {
       null,
       true,
     );
-    const reactingCenter: any = {};
+    const reactingCenter: { path: Element | null; rbb?: RelativeBox } = {
+      path: null,
+    };
     reactingCenter.path = getReactingCenterPath(render, this, hb1, hb2);
     if (reactingCenter.path) {
       reactingCenter.rbb = util.relBox(reactingCenter.path.getBBox());
@@ -399,7 +420,9 @@ class ReBond extends ReObject {
         true,
       );
     }
-    const topology: any = {};
+    const topology: { path: Element | null; rbb?: RelativeBox } = {
+      path: null,
+    };
     topology.path = getBondMark(render, this, hb1, hb2);
     if (topology.path) {
       topology.rbb = util.relBox(topology.path.getBBox());
@@ -472,17 +495,21 @@ class ReBond extends ReObject {
     const highlights = restruct.molecule.highlights;
     let isHighlighted = false;
     let highlightColor = '';
+    let highlightOutline = false;
     highlights.forEach((highlight) => {
       const hasCurrentHighlight = highlight.bonds?.includes(bid);
       isHighlighted = isHighlighted || hasCurrentHighlight;
       if (hasCurrentHighlight) {
         highlightColor = highlight.color;
+        highlightOutline = highlight.outline;
       }
     });
 
-    // Drawing highlight
-    if (isHighlighted) {
-      const style = {
+    // Drawing highlight. Outline highlights (#9441) are drawn as a single
+    // merged contour by ReStruct.showHighlightOutlines, so skip them here;
+    // only filled (active-tab) highlights are drawn per-bond.
+    if (isHighlighted && !highlightOutline) {
+      const style: RenderOptionStyles = {
         fill: highlightColor,
         stroke: 'none',
       };
@@ -554,6 +581,7 @@ class ReBond extends ReObject {
   public drawFragmentSelectionPreview(
     render: Render,
     atomIdToDrawArrows: number,
+    options?: FragmentSelectionPreviewOptions,
   ) {
     this.hovering?.node?.remove();
 
@@ -608,6 +636,9 @@ class ReBond extends ReObject {
     );
     backgroundRect.rotate(this.b.angle, atom1Position.x, atom1Position.y);
 
+    // Use gray color for blocked directions, blue for available directions
+    const strokeColor = options?.disabled ? '#9ab5b8' : '#365CFF';
+
     const contour = render.paper
       .rect(
         atom1Position.x,
@@ -616,7 +647,7 @@ class ReBond extends ReObject {
         contourSize.y,
         contourBorderRadius,
       )
-      .attr({ fill: 'none', stroke: '#365CFF', 'stroke-width': 0.7 });
+      .attr({ fill: 'none', stroke: strokeColor, 'stroke-width': 0.7 });
 
     render.ctab.addReObjectPath(LayerMap.additionalInfo, newVisel, contour);
     // TODO find another way instead of this.visel.paths[0] to move by Z only bond skeleton without selection, hover etc
@@ -662,7 +693,7 @@ class ReBond extends ReObject {
             }`,
         )
         .attr({
-          stroke: '#365CFF',
+          stroke: strokeColor,
           'stroke-width': 2,
         });
 
@@ -689,23 +720,31 @@ function findIncomingStereoUpBond(
     const neibond = restruct.bonds.get(hb.bid);
 
     if (!neibond) return false;
+
     const singleUp =
       neibond.b.type === Bond.PATTERN.TYPE.SINGLE &&
       neibond.b.stereo === Bond.PATTERN.STEREO.UP;
 
     if (singleUp) {
+      if (Bond.isBondToHiddenLeavingGroup(restruct.molecule, neibond.b)) {
+        return false;
+      }
       return (
         neibond.b.end === hb.begin ||
         (neibond.boldStereo && includeBoldStereoBond)
       );
     }
 
-    return !!(
+    if (
       neibond.b.type === Bond.PATTERN.TYPE.DOUBLE &&
       neibond.b.stereo === Bond.PATTERN.STEREO.NONE &&
       includeBoldStereoBond &&
       neibond.boldStereo
-    );
+    ) {
+      return !Bond.isBondToHiddenLeavingGroup(restruct.molecule, neibond.b);
+    }
+
+    return false;
   });
 }
 
@@ -721,15 +760,22 @@ function findIncomingUpBonds(
     return pos < 0 ? -1 : atom.neighbors[pos];
   });
 
-  bond.neihbid1 = restruct.atoms.get(bond.b.begin)?.showLabel
-    ? -1
-    : halfbonds[0];
-  bond.neihbid2 = restruct.atoms.get(bond.b.end)?.showLabel ? -1 : halfbonds[1];
+  // Keep bold stereo rendering independent from endpoint label visibility:
+  // half-bond coordinates are already shifted away from visible labels.
+  bond.neihbid1 =
+    restruct.atoms.get(bond.b.begin)?.showLabel && !bond.boldStereo
+      ? -1
+      : halfbonds[0];
+  bond.neihbid2 =
+    restruct.atoms.get(bond.b.end)?.showLabel && !bond.boldStereo
+      ? -1
+      : halfbonds[1];
 }
 
-function checkStereoBold(bid0, bond, restruct) {
+function checkStereoBold(bid0: number, bond: ReBond, restruct: ReStruct): void {
   const halfbonds = [bond.b.begin, bond.b.end].map((aid) => {
     const atom = restruct.molecule.atoms.get(aid);
+    if (!atom) return -1;
     const pos = findIncomingStereoUpBond(atom, bid0, false, restruct);
     return pos < 0 ? -1 : atom.neighbors[pos];
   });
@@ -742,8 +788,8 @@ function getBondPath(
   hb1: HalfBond,
   hb2: HalfBond,
   isSnapping: boolean,
-) {
-  let path: any = null;
+): BondPath | null {
+  let path: BondPath | null = null;
   const render = restruct.render;
   const struct = restruct.molecule;
   const shiftA = !restruct.atoms.get(hb1.begin)?.showLabel;
@@ -955,8 +1001,23 @@ function getBondSingleUpPath(
   // eslint-disable-line max-params
   const a = hb1.p;
   const b = hb2.p;
-  const n = hb1.norm;
   const options = render.options;
+  // Prefer the stored half-bond normal; fall back to a normal derived from
+  // the actual rendered endpoints when hb1.norm is degenerate.
+  // Root cause fixed in struct.ts: halfBondUpdate now runs before
+  // atomAddNeighbor so hb.norm is always populated. This fallback is kept
+  // as a safety net for any future re-init path that skips halfBondUpdate.
+  const DEGENERATE_LENGTH = 1e-4;
+  let n = hb1.norm;
+  if (!n || n.length() < DEGENERATE_LENGTH) {
+    const renderedDir = b.sub(a);
+    if (renderedDir.length() < DEGENERATE_LENGTH) {
+      // Both the stored normal and the rendered direction are degenerate —
+      // the bond has zero length; skip drawing to avoid a zero-width wedge.
+      return null;
+    }
+    n = renderedDir.normalized().rotateSC(1, 0);
+  }
   const bsp = 0.7 * options.stereoBond;
   let b2 = b.addScaled(n, bsp);
   let b3 = b.addScaled(n, -bsp);
@@ -983,7 +1044,7 @@ function getBondSingleUpPath(
 }
 
 function getStereoBondColor(
-  options: any,
+  options: RenderOptions,
   bond: ReBond,
   struct: Struct,
 ): string {
@@ -1123,7 +1184,7 @@ export function getBondLineShift(cos: number, sin: number): number {
 function stereoUpBondGetCoordinates(
   hb: HalfBond,
   neihbid: number,
-  bondSpace: any,
+  bondSpace: number,
   struct: Struct,
 ): [Vec2, Vec2] {
   const neihb = struct.halfBonds.get(neihbid);
@@ -1533,18 +1594,19 @@ function getBondMark(
   if (bond.b.type === Bond.PATTERN.TYPE.TRIPLE) fixed += options.bondSpace;
   const p = c.add(new Vec2(n.x * (s.x + fixed), n.y * (s.y + fixed)));
   const path = draw.bondMark(render.paper, p, mark, options);
-  tooltip &&
+  if (tooltip) {
     path.node.childNodes[0].setAttribute(
       'data-tooltip',
       util.escapeHtml(tooltip),
     );
+  }
 
   return path;
 }
 
 function getIdsPath(
   bid: number,
-  paper: any,
+  paper: RaphaelPaper,
   hb1: HalfBond,
   hb2: HalfBond,
   bondIdxOff: number,

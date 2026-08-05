@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { Monomer, PresetType } from '@utils/types';
+import { RNABuilder, type RNABuilderLocators } from './library/RNABuilder';
 import {
   FavoriteStarSymbol,
   LibraryTab,
@@ -8,19 +9,20 @@ import {
   rnaSectionArea,
   rnaTabPresetsSection,
 } from '../constants/library/Constants';
-import { RNABuilder } from './library/RNABuilder';
 import { ContextMenu } from '../common/ContextMenu';
 import { getCoordinatesOfTheMiddleOfTheCanvas } from '../../utils/clicks';
 import { waitForRender } from '../../utils/common/loaders/waitForRender';
 import { moveMouseAway } from '../../utils/moveMouseAway';
-import { KETCHER_CANVAS } from '../constants/canvas/Constants';
 import { Preset } from '../constants/monomers/Presets';
+import { getVisibleCanvas } from '@utils/canvas';
 
 type PresetsSectionLocators = {
   newPresetsButton: Locator;
 };
 
 type RNATabLocators = {
+  rnaAccordion: Locator;
+  rnaEditor: Locator & RNABuilderLocators;
   presetsSection: Locator & PresetsSectionLocators;
   sugarsSection: Locator;
   basesSection: Locator;
@@ -29,6 +31,7 @@ type RNATabLocators = {
 };
 
 type LibraryLocators = {
+  libraryBody: Locator;
   searchEditbox: Locator;
   hideLibraryButton: Locator;
   showLibraryButton: Locator;
@@ -52,6 +55,11 @@ export const Library = (page: Page) => {
   const rnaTab: Locator & RNATabLocators = Object.assign(
     page.getByTestId(LibraryTab.RNA),
     {
+      rnaAccordion: page.getByTestId('rna-accordion'),
+      rnaEditor: Object.assign(
+        page.getByTestId('rna-editor'),
+        RNABuilder(page),
+      ),
       presetsSection,
       sugarsSection: page.getByTestId(RNASection.Sugars),
       basesSection: page.getByTestId(RNASection.Bases),
@@ -61,6 +69,7 @@ export const Library = (page: Page) => {
   );
 
   const locators: LibraryLocators = {
+    libraryBody: page.getByTestId('monomer-library'),
     searchEditbox: page.getByTestId('monomer-library-input'),
     hideLibraryButton: page.getByTestId('hide-monomer-library'),
     showLibraryButton: page.getByTestId('show-monomer-library'),
@@ -303,15 +312,14 @@ export const Library = (page: Page) => {
       coordinates: { x: number; y: number; fromCenter?: boolean },
       selectOnFavoritesTab = false,
     ) {
-      const canvas = await page
-        .getByTestId(KETCHER_CANVAS)
-        .filter({ has: page.locator(':visible') })
-        .boundingBox();
-      if (!canvas) {
+      const canvas = await getVisibleCanvas(page);
+      const canvasBB = await canvas.boundingBox();
+
+      if (!canvasBB) {
         throw new Error('Unable to get boundingBox for canvas');
       }
-      let x = canvas.x + coordinates.x;
-      let y = canvas.y + coordinates.y;
+      let x = canvasBB.x + coordinates.x;
+      let y = canvasBB.y + coordinates.y;
 
       if (coordinates.fromCenter) {
         const centerOfCanvas = await getCoordinatesOfTheMiddleOfTheCanvas(page);

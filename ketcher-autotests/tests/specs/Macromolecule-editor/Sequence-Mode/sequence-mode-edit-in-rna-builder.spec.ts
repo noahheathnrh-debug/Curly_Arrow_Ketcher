@@ -29,6 +29,7 @@ import { ContextMenu } from '@tests/pages/common/ContextMenu';
 import { MacromoleculesTopToolbar } from '@tests/pages/macromolecules/MacromoleculesTopToolbar';
 import { LayoutMode } from '@tests/pages/constants/macromoleculesTopToolbar/Constants';
 import { MonomerPreviewTooltip } from '@tests/pages/macromolecules/canvas/MonomerPreviewTooltip';
+import { UpdateSequenceDialog } from '@tests/pages/macromolecules/library/UpdateSequenceDialog';
 
 test.describe('Sequence mode edit in RNA Builder', () => {
   test.beforeEach(async ({ page }) => {
@@ -104,7 +105,6 @@ test.describe('Sequence mode edit in RNA Builder', () => {
     const endY = 100;
     await selectRectangleArea(page, startX, startY, endX, endY);
     const symbolT = getSymbolLocator(page, { symbolAlias: 'T' }).nth(2);
-    await symbolT.click();
     await modifyInRnaBuilder(page, symbolT);
 
     // should see uploaded data to RNA Builder and disabled "Update" button
@@ -115,7 +115,7 @@ test.describe('Sequence mode edit in RNA Builder', () => {
     await takeRNABuilderScreenshot(page, { hideMonomerPreview: true });
     await Library(page).rnaBuilder.save();
     // Click 'Yes' in modal
-    await page.getByText('Yes').click();
+    await UpdateSequenceDialog(page).yes();
     await takePageScreenshot(page);
   });
 
@@ -143,7 +143,6 @@ test.describe('Sequence mode edit in RNA Builder', () => {
     await selectRectangleArea(page, startX, startY, endX, endY);
     await takeEditorScreenshot(page);
     const symbolT = getSymbolLocator(page, { symbolAlias: 'T' }).first();
-    await symbolT.click();
     await modifyInRnaBuilder(page, symbolT);
     // should see uploaded nucleotides data to RNA Builder and disabled "Update" button
     await takeRNABuilderScreenshot(page);
@@ -153,7 +152,7 @@ test.describe('Sequence mode edit in RNA Builder', () => {
     await Library(page).rnaBuilder.save();
     // should see modal to apply or cancel modification
     await takeEditorScreenshot(page);
-    await page.getByText('Yes').click();
+    await UpdateSequenceDialog(page).yes();
     // should see updated nucleotides in chain
     await takeEditorScreenshot(page, { hideMonomerPreview: true });
   });
@@ -322,7 +321,7 @@ test.describe('Modify nucleotides from sequence in RNA builder', () => {
     await takeRNABuilderScreenshot(page);
     await Library(page).selectMonomer(Phosphate.sP_);
     await Library(page).rnaBuilder.save();
-    await page.getByText('Yes').click();
+    await UpdateSequenceDialog(page).yes();
     await takeEditorScreenshot(page);
     await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Snake);
     await moveMouseAway(page);

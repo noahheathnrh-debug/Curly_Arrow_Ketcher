@@ -14,10 +14,10 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { Command } from 'domain/entities/Command';
-import { CoreEditor } from './Editor';
-import assert from 'assert';
-import { ketcherProvider } from 'application/utils';
+import type { Command } from 'domain/entities/Command';
+import type { CoreEditor } from './Editor';
+import { assert } from 'utilities';
+import { ketcherProvider } from 'application/ketcherProvider';
 const HISTORY_SIZE = 32; // put me to options
 
 export type HistoryOperationType = 'undo' | 'redo';
@@ -29,7 +29,7 @@ export class EditorHistory {
 
   private static _instance: object | null = null;
 
-  private constructor(editor: CoreEditor) {
+  constructor(editor: CoreEditor) {
     this.editor = editor;
     this.historyPointer = 0;
   }
@@ -62,6 +62,12 @@ export class EditorHistory {
       this.historyPointer = this.historyStack.length;
     }
     ketcherProvider.getKetcher(this.editor.ketcherId)?.changeEvent.dispatch();
+    // Fire a dedicated model-change signal only when something actually
+    // changed, so a no-op command doesn't trigger needless macromolecule
+    // properties recalculation.
+    if (command.operations.length > 0) {
+      this.editor.events.modelChange.dispatch();
+    }
   }
 
   undo() {
@@ -77,6 +83,9 @@ export class EditorHistory {
     const turnOffSelectionCommand =
       this.editor?.drawingEntitiesManager.unselectAllDrawingEntities();
     this.editor?.renderersContainer.update(turnOffSelectionCommand);
+    // Dispatch after the model has been reverted so subscribers observe the
+    // up-to-date structure.
+    this.editor.events.modelChange.dispatch();
   }
 
   redo() {
@@ -92,6 +101,9 @@ export class EditorHistory {
     const turnOffSelectionCommand =
       this.editor?.drawingEntitiesManager.unselectAllDrawingEntities();
     this.editor?.renderersContainer.update(turnOffSelectionCommand);
+    // Dispatch after the model has been re-applied so subscribers observe the
+    // up-to-date structure.
+    this.editor.events.modelChange.dispatch();
   }
 
   public get previousCommand() {

@@ -14,18 +14,18 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { ReRGroup, ReStruct } from '../../../render';
+import { type ReStruct, ReRGroup } from '../../../render';
 
-import { BaseOperation } from '../base';
+import { BaseOperation } from '../BaseOperation';
 import { OperationType } from '../OperationType';
-import { RGroup } from 'domain/entities';
+import { RGroup } from 'domain/entities/rgroup';
 
 export class RGroupFragment extends BaseOperation {
-  rgid_new: any;
-  rg_new: any;
+  readonly rgid_new: any;
+  readonly rg_new: any;
   rgid_old: any;
   rg_old: any;
-  frid: any;
+  readonly frid: any;
 
   constructor(rgroupId: any, fragmentId: any, rg?: any) {
     super(OperationType.R_GROUP_FRAGMENT);
@@ -84,5 +84,14 @@ export class RGroupFragment extends BaseOperation {
 
   invert() {
     return new RGroupFragment(this.rgid_old, this.frid, this.rg_old);
+  }
+
+  isDummy(restruct?: ReStruct) {
+    if (!restruct) return false;
+    const currentRgid = RGroup.findRGroupByFragment(
+      restruct.molecule.rgroups,
+      this.frid,
+    );
+    return currentRgid === this.rgid_new;
   }
 }

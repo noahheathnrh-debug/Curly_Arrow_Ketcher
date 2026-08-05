@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -76,7 +77,8 @@
                     0
                 ],
                 "cip": "S",
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -102,7 +104,8 @@
                     0
                 ],
                 "cip": "S",
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -215,7 +218,12 @@
                 ],
                 "stereo": 4
             }
-        ]
+        ],
+        "stereoFlagPosition": {
+            "x": 12.709029428484213,
+            "y": 5.831842090773211,
+            "z": 0
+        }
     },
     "mol1": {
         "type": "molecule",
@@ -244,7 +252,8 @@
                     0
                 ],
                 "cip": "S",
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -254,7 +263,8 @@
                     0
                 ],
                 "cip": "R",
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -348,6 +358,11 @@
                 ],
                 "stereo": 6
             }
-        ]
+        ],
+        "stereoFlagPosition": {
+            "x": 20.199339671384582,
+            "y": 5.107685752263139,
+            "z": 0
+        }
     }
 }

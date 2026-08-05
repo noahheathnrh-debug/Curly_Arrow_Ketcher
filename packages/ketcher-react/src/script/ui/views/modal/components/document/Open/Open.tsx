@@ -14,8 +14,8 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { BaseCallProps, BaseProps } from '../../../modal.types';
-import { FC, useEffect, useMemo, useState } from 'react';
+import type { BaseCallProps, BaseProps } from '../../../modal.types';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { Dialog, LoadingCircles } from '../../../../components';
 import classes from './Open.module.less';
 import Recognize from '../../process/Recognize/Recognize';
@@ -29,7 +29,6 @@ interface OpenProps {
   errorHandler: (err: string) => void;
   isRecognizeDisabled: boolean;
   isAnalyzingFile: boolean;
-  ignoreChiralFlag: boolean;
 }
 
 type Props = OpenProps &
@@ -89,9 +88,6 @@ const Open: FC<Props> = (props) => {
     errorHandler,
     isAnalyzingFile,
     isRecognizeDisabled,
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    ignoreChiralFlag,
-    /* eslint-enable @typescript-eslint/no-unused-vars */
     ...rest
   } = props;
 
@@ -116,6 +112,13 @@ const Open: FC<Props> = (props) => {
   }, [server]);
 
   const onFileLoad = (files) => {
+    if ((window as any).isKetcherFullscreenBeforeFilePicker) {
+      document.documentElement.requestFullscreen?.().catch(() => {
+        // Restore fullscreen if it was active before file picker opened
+      });
+      (window as any).isKetcherFullscreenBeforeFilePicker = false;
+    }
+
     setIsLoading(true);
     const onLoad = (fileContent) => {
       if (fileContent.isPPTX) {

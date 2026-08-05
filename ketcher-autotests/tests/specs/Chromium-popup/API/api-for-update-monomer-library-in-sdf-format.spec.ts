@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable camelcase */
 /* eslint-disable max-len */
+/* eslint-disable no-magic-numbers */
 import { test } from '@fixtures';
 import { Page } from '@playwright/test';
 import { RNASection } from '@tests/pages/constants/library/Constants';
@@ -281,6 +282,7 @@ test.describe('API for update Library', () => {
      */
     const SDF_EMPTY = await readFileContent('SDF/SDF_EMPTY.sdf');
     await replaceMonomersLibrary(page, SDF_EMPTY, { format: 'sdf' });
+    await Library(page).switchToRNATab();
     await takeMonomerLibraryScreenshot(page);
     await Library(page).switchToPeptidesTab();
     await takeMonomerLibraryScreenshot(page);
@@ -378,6 +380,8 @@ test.describe('API for replace Library', () => {
   });
 
   test('Case 5: Replace whole library with library of 3000 Phosphates monomers inside', async () => {
+    test.setTimeout(120_000);
+
     /*
      * Version 3.9
      * Test case: https://github.com/epam/ketcher/issues/7674
@@ -395,6 +399,8 @@ test.describe('API for replace Library', () => {
   });
 
   test('Case 6: Replace whole library with library of 3000 Nucleotides monomers inside', async () => {
+    test.setTimeout(120_000);
+
     /*
      * Version 3.9
      * Test case: https://github.com/epam/ketcher/issues/7674

@@ -25,9 +25,9 @@ import {
   fromMultipleMove,
   CoordinateTransformation,
 } from 'ketcher-core';
-import Editor from '../Editor';
+import type Editor from '../Editor';
 import { MODES } from 'src/constants';
-import { getAngleFromEvent, getBondFlipSign } from './template';
+import { getAngleFromEvent, getBondFlipSign } from './template.helpers';
 
 const PREVIEW_DELAY = 300;
 type ClosestItemType = { map: string; id: number; dist: number };
@@ -48,6 +48,12 @@ class TemplatePreview {
   private floatingPreview: {
     atoms: number[];
     bonds: number[];
+    rxnArrows: number[];
+    rxnPluses: number[];
+    texts: number[];
+    images: number[];
+    simpleObjects: number[];
+    multitailArrows: number[];
   } | null;
 
   private position: Vec2;
@@ -141,12 +147,30 @@ class TemplatePreview {
   private moveFloatingPreview() {
     const dist = this.position.sub(this.previousPosition);
     this.previousPosition = this.position;
-    fromMultipleMove(this.restruct, this.floatingPreview, dist);
+    fromMultipleMove(
+      this.restruct,
+      {
+        ...this.floatingPreview,
+        enhancedFlags: this.getFloatingPreviewFragmentIds(),
+      },
+      dist,
+    );
     this.editor.render.update(false, null);
   }
 
+  private getFloatingPreviewFragmentIds(): number[] {
+    const fragmentIds = new Set<number>();
+    this.floatingPreview?.atoms.forEach((atomId) => {
+      const atom = this.struct.atoms.get(atomId);
+      if (atom) {
+        fragmentIds.add(atom.fragment);
+      }
+    });
+    return Array.from(fragmentIds);
+  }
+
   private showFloatingPreview(position: Vec2) {
-    [this.floatingPreviewAction, this.floatingPreview] = fromTemplateOnCanvas(
+    [this.floatingPreviewAction, , this.floatingPreview] = fromTemplateOnCanvas(
       this.restruct,
       this.template,
       position,
@@ -196,8 +220,7 @@ class TemplatePreview {
         shouldFlip,
         true,
         true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ) as Promise<any>;
+      );
 
       promise.then(([action, pasteItems]) => {
         if (!this.isModeFunctionalGroup) {

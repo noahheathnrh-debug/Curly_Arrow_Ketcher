@@ -1,9 +1,13 @@
-import {
+import type {
   MonomerItemType,
   Entities,
   MonomerOrAmbiguousType,
 } from 'domain/types';
-import { IKetMonomerGroupTemplate } from 'application/formatters';
+import type {
+  IKetMonomerGroupTemplate,
+  IKetTemplateConnection,
+  IKetIdtAliases,
+} from 'application/formatters/types/ket';
 
 interface ToolEventHandler {
   click?(event: Event): void;
@@ -52,6 +56,8 @@ interface ToolEventHandler {
 
   rightClickCanvas?(event: Event): void;
 
+  rightClickCanvasSequence?(event: Event): void;
+
   rightClickPolymerBond?(event: Event): void;
 
   rightClickSelectedMonomers?(event: Event): void;
@@ -91,20 +97,28 @@ interface ToolEventHandler {
   selectEntities?(event: Event): void;
 }
 
+export type RnaPhosphatePosition = 'left' | 'right';
+
 export interface IRnaPreset {
   name?: string;
   nameInList?: string;
   base?: MonomerItemType;
   sugar?: MonomerItemType;
   phosphate?: MonomerItemType;
+  phosphatePosition?: 'left' | 'right';
   default?: boolean;
   favorite?: boolean;
+  readonly idtAliases?: IKetIdtAliases;
+  readonly aliasAxoLabs?: string;
   editedName?: boolean;
+  connections?: IKetTemplateConnection[];
 }
 
 export interface IRnaLabeledPreset
-  extends Omit<IRnaPreset, 'base' | 'sugar' | 'phosphate'>,
-    Pick<IKetMonomerGroupTemplate, 'templates'> {}
+  extends Omit<IRnaPreset, 'base' | 'sugar' | 'phosphate' | 'connections'>,
+    Pick<IKetMonomerGroupTemplate, 'templates' | 'connections'> {
+  connections?: IKetTemplateConnection[];
+}
 
 export type LabeledNodesWithPositionInSequence = {
   type: Entities;
@@ -124,6 +138,8 @@ export interface Tool extends ToolEventHandler {
   isSelectionRunning?(): boolean;
 
   isNotActiveTool?: boolean;
+
+  readonly name?: string;
 }
 
 export interface BaseTool extends Tool {

@@ -14,13 +14,13 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { ReStruct } from 'application/render';
-import assert from 'assert';
-import { LonePairAttachment, RxnArrow, Vec2 } from 'domain/entities';
+import type { ReStruct } from 'application/render';
+import { type LonePairAttachment, RxnArrow } from 'domain/entities/rxnArrow';
+import { Vec2 } from 'domain/entities/vec2';
 import { Scale } from 'domain/helpers';
-import { tfx } from 'utilities';
+import { assert, toFixed } from 'utilities';
 import { OperationType } from '../OperationType';
-import Base from '../base';
+import Base from '../BaseOperation';
 
 export const ARROW_MAX_SNAPPING_ANGLE = Math.PI / 36; // 5°
 
@@ -33,8 +33,8 @@ interface RxnArrowResizeData {
   newLpAttach?: LonePairAttachment | null;
 }
 export class RxnArrowResize extends Base {
-  data: RxnArrowResizeData;
-  isSnappingEnabled: boolean;
+  readonly data: RxnArrowResizeData;
+  readonly isSnappingEnabled: boolean;
 
   constructor(
     id: number,
@@ -66,9 +66,9 @@ export class RxnArrowResize extends Base {
     if (anchor) {
       const previousPos0 = item.pos[0].get_xy0();
       const previousPos1 = item.pos[1].get_xy0();
+      let middlePoint: Vec2 | undefined;
 
       // Resolve current handle positions (cubic vs quadratic mode)
-      let middlePoint: Vec2 | undefined;
       let cp1Point: Vec2 | undefined;
       let cp2Point: Vec2 | undefined;
       if (RxnArrow.isElliptical(item)) {
@@ -91,8 +91,8 @@ export class RxnArrowResize extends Base {
          *
          * more details: ./RxnArrowResize.doc.png
          */
-        tfx(anchor.x) === tfx(item.pos[1].x) &&
-        tfx(anchor.y) === tfx(item.pos[1].y)
+        toFixed(anchor.x) === toFixed(item.pos[1].x) &&
+        toFixed(anchor.y) === toFixed(item.pos[1].y)
       ) {
         if (this.isSnappingEnabled) {
           const currentArrowVector = current.sub(item.pos[0]);
@@ -116,8 +116,8 @@ export class RxnArrowResize extends Base {
          *
          * more details: ./RxnArrowResize.doc.png
          */
-        tfx(anchor.x) === tfx(item.pos[0].x) &&
-        tfx(anchor.y) === tfx(item.pos[0].y)
+        toFixed(anchor.x) === toFixed(item.pos[0].x) &&
+        toFixed(anchor.y) === toFixed(item.pos[0].y)
       ) {
         if (this.isSnappingEnabled) {
           const currentArrowVector = current.sub(item.pos[1]);
@@ -150,8 +150,8 @@ export class RxnArrowResize extends Base {
         // cp1 handle (cubic mode only) — adjusts height only
         if (
           cp1Point &&
-          tfx(anchor.x) === tfx(cp1Point.x) &&
-          tfx(anchor.y) === tfx(cp1Point.y)
+          toFixed(anchor.x) === toFixed(cp1Point.x) &&
+          toFixed(anchor.y) === toFixed(cp1Point.y)
         ) {
           if (item.height !== undefined) {
             item.height -= diff;
@@ -164,8 +164,8 @@ export class RxnArrowResize extends Base {
         // mid handle — adjusts both heights (lazy-activates cubic on first drag)
         if (
           middlePoint &&
-          tfx(anchor.x) === tfx(middlePoint.x) &&
-          tfx(anchor.y) === tfx(middlePoint.y)
+          toFixed(anchor.x) === toFixed(middlePoint.x) &&
+          toFixed(anchor.y) === toFixed(middlePoint.y)
         ) {
           // Lazy activation: first mid drag in quadratic mode → activate cubic
           if (item.height2 === undefined) {
@@ -186,8 +186,8 @@ export class RxnArrowResize extends Base {
         // cp2 handle (cubic mode only) — adjusts height2 only
         if (
           cp2Point &&
-          tfx(anchor.x) === tfx(cp2Point.x) &&
-          tfx(anchor.y) === tfx(cp2Point.y)
+          toFixed(anchor.x) === toFixed(cp2Point.x) &&
+          toFixed(anchor.y) === toFixed(cp2Point.y)
         ) {
           if (item.height2 !== undefined) {
             item.height2 -= diff;
@@ -229,6 +229,11 @@ export class RxnArrowResize extends Base {
       this.isSnappingEnabled,
       this.data.newLpAttach,
     );
+  }
+
+  isDummy() {
+    const { d } = this.data;
+    return d.x === 0 && d.y === 0;
   }
 }
 

@@ -15,6 +15,11 @@
  ***************************************************************************/
 
 import {
+  type Struct,
+  type BondAttributes,
+  type AtomAttributes,
+  type Render,
+  type Pool,
   Bond,
   Vec2,
   bondChangingAction,
@@ -23,40 +28,69 @@ import {
   FunctionalGroup,
   SGroup,
   fromOneBondDeletion,
-  Struct,
   vectorUtils,
   Atom,
   CoordinateTransformation,
+  getOrThrow,
+  entityNotFoundMessage,
 } from 'ketcher-core';
 
-import Editor from '../Editor';
-import { Tool } from './Tool';
+import type Editor from '../Editor';
+import type { Tool } from './Tool';
 import { isBondingWithMacroMolecule } from './helper/isMacroMolecule';
+import type {
+  BondActionParams,
+  BondItemRef,
+  BondToolDragContext,
+} from './bond.types';
 
 class BondTool implements Tool {
+  private static readonly DRAG_START_THRESHOLD_PX = 10;
+
   private readonly editor: Editor;
   private readonly atomProps: { label: string };
-  private readonly bondProps: any;
-  private dragCtx: any;
+  private readonly bondProps: Partial<BondAttributes>;
+  private dragCtx?: BondToolDragContext;
   isNotActiveTool: boolean | undefined;
 
-  constructor(editor, bondProps) {
+  constructor(editor: Editor, bondProps: Partial<BondAttributes>) {
     this.editor = editor;
     this.atomProps = { label: 'C' };
     this.bondProps = bondProps;
-    if (editor.selection()?.bonds) {
-      const action = fromBondsAttrs(
-        editor.render.ctab,
-        editor.selection().bonds,
-        bondProps,
-      );
+    const selection = editor.selection();
+    if (selection?.bonds) {
+      const struct = editor.render.ctab;
+      const molecule = struct.molecule;
+      const functionalGroups = molecule.functionalGroups;
+      const selectedBonds = selection.bonds;
+
+      if (functionalGroups.size) {
+        const fgIds = new Set<number>();
+        for (const bondId of selectedBonds) {
+          const fgId = FunctionalGroup.findFunctionalGroupByBond(
+            molecule,
+            functionalGroups,
+            bondId,
+          );
+          if (fgId !== null) {
+            fgIds.add(fgId);
+          }
+        }
+        if (fgIds.size) {
+          this.editor.event.removeFG.dispatch({ fgIds: [...fgIds] });
+          this.isNotActiveTool = true;
+          return;
+        }
+      }
+
+      const action = fromBondsAttrs(struct, selectedBonds, bondProps);
       editor.update(action);
       editor.selection(null);
       this.isNotActiveTool = true;
     }
   }
 
-  mousedown(event) {
+  mousedown(event: PointerEvent) {
     if (this.dragCtx) return;
     if (isBondingWithMacroMolecule(this.editor, event)) {
       return;
@@ -127,176 +161,34 @@ class BondTool implements Tool {
     const rnd = this.editor.render;
     this.editor.hover(null);
     this.editor.selection(null);
+
+    const item: BondItemRef | undefined =
+      attachmentAtomId !== undefined
+        ? { map: 'atoms', id: attachmentAtomId }
+        : ci ?? undefined;
+
     this.dragCtx = {
       xy0: CoordinateTransformation.pageToModel(event, rnd),
-      item:
-        attachmentAtomId === undefined
-          ? ci
-          : {
-              map: 'atoms',
-              id: attachmentAtomId,
-            },
+      pageX0: event.clientX,
+      pageY0: event.clientY,
+      hasStartedDragging: false,
     };
-
-    if (!this.dragCtx.item)
-      // ci.type == 'Canvas'
-      delete this.dragCtx.item;
+    if (item) {
+      // ci.type == 'Canvas' when item is absent
+      this.dragCtx.item = item;
+    }
     return true;
   }
 
-  mousemove(event) {
-    const struct = this.editor.render.ctab;
-    const molecule = struct.molecule;
-    const functionalGroups = molecule.functionalGroups;
-    const editor = this.editor;
-    const rnd = editor.render;
+  mousemove(event: PointerEvent) {
     if (isBondingWithMacroMolecule(this.editor, event)) {
       return true;
     }
-    if ('dragCtx' in this) {
-      const dragCtx = this.dragCtx;
-      const hasItem = 'item' in dragCtx;
-
-      const pos = CoordinateTransformation.pageToModel(event, rnd);
-      let angle = vectorUtils.calcAngle(dragCtx.xy0, pos);
-      if (!event.ctrlKey) angle = vectorUtils.fracAngle(angle, null);
-
-      const degrees = vectorUtils.degrees(angle);
-      this.editor.event.message.dispatch({ info: degrees + 'º' });
-
-      if (!hasItem || dragCtx.item?.map === 'atoms') {
-        if ('action' in dragCtx) dragCtx.action.perform(rnd.ctab);
-        let beginAtom;
-        let endAtom;
-        let beginPos;
-        let endPos;
-        if (hasItem && dragCtx.item?.map === 'atoms') {
-          // first mousedown event intersect with any atom
-          beginAtom = dragCtx.item.id;
-          endAtom = editor.findItem(event, ['atoms'], dragCtx.item);
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const closestSGroup = editor.findItem(event, ['functionalGroups'])!;
-          const sgroup = molecule.sgroups.get(closestSGroup?.id);
-
-          if (sgroup) {
-            const closestAttachmentAtomId = sgroup.getAttachmentAtomId();
-
-            if (sgroup.isContracted()) {
-              const hasAttachmentPoint = closestAttachmentAtomId === undefined;
-              const isBeginFunctionalGroupItself =
-                closestAttachmentAtomId === beginAtom;
-              if (!hasAttachmentPoint && !isBeginFunctionalGroupItself) {
-                endAtom = {
-                  id: closestAttachmentAtomId,
-                  map: 'atoms',
-                };
-              }
-            }
-
-            if (endAtom) {
-              if (endAtom.id !== closestAttachmentAtomId) {
-                this.editor.event.removeFG.dispatch({ fgIds: [sgroup.id] });
-                endAtom = null;
-              }
-            }
-          }
-        } else {
-          // first mousedown event intersect with any canvas
-          beginAtom = this.atomProps;
-          beginPos = dragCtx.xy0;
-          endAtom = editor.findItem(event, ['atoms', 'functionalGroups']);
-          const atomResult: Array<number> = [];
-          const result: Array<number> = [];
-          if (
-            endAtom?.map === 'atoms' &&
-            functionalGroups.size &&
-            this.dragCtx
-          ) {
-            const atomId = FunctionalGroup.atomsInFunctionalGroup(
-              functionalGroups,
-              endAtom.id,
-            );
-            if (atomId !== null) atomResult.push(atomId);
-          } else if (endAtom?.map === 'functionalGroups') {
-            const functionalGroup = molecule.functionalGroups.get(endAtom.id);
-            if (!SGroup.isSaltOrSolvent(functionalGroup?.name || '')) {
-              const attachmentAtomId =
-                functionalGroup?.relatedSGroup.getAttachmentAtomId();
-              endAtom =
-                attachmentAtomId === undefined
-                  ? null
-                  : {
-                      map: 'atoms',
-                      id: attachmentAtomId,
-                    };
-            }
-          }
-          if (atomResult.length > 0) {
-            for (const id of atomResult) {
-              const fgId = FunctionalGroup.findFunctionalGroupByAtom(
-                functionalGroups,
-                id,
-              );
-              fgId !== null && !result.includes(fgId) && result.push(fgId);
-            }
-          }
-          if (result.length > 0) {
-            this.editor.event.removeFG.dispatch({ fgIds: result });
-            delete this.dragCtx;
-            return;
-          }
-        }
-        let dist = Number.MAX_VALUE;
-        if (endAtom?.map === 'atoms') {
-          // after mousedown events is appered, cursor is moved and then cursor intersects any atoms
-          endAtom = endAtom.id;
-        } else {
-          endAtom = this.atomProps;
-          const xy1 = CoordinateTransformation.pageToModel(event, rnd);
-          dist = Vec2.dist(dragCtx.xy0, xy1);
-          if (beginPos) {
-            // rotation only, leght of bond = 1;
-            endPos = vectorUtils.calcNewAtomPos(beginPos, xy1, event.ctrlKey);
-          } else {
-            // first mousedown event intersect with any atom and
-            // rotation only, leght of bond = 1;
-            const atom = rnd.ctab.molecule.atoms.get(beginAtom);
-            endPos = vectorUtils.calcNewAtomPos(
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              atom!.pp.get_xy0(),
-              xy1,
-              event.ctrlKey,
-            );
-          }
-        }
-        // don't rotate the bond if the distance between the start and end point is too small
-        if (dist > 0.3) {
-          const [existingBondId, bond] = this.getExistingBond(
-            molecule,
-            beginAtom,
-            endAtom,
-          );
-          dragCtx.action = fromBondAddition(
-            rnd.ctab,
-            this.bondProps,
-            beginAtom,
-            endAtom,
-            beginPos,
-            endPos,
-          )[0];
-          if (existingBondId !== null) {
-            this.dragCtx.existedBond = bond;
-            this.dragCtx.action.mergeWith(
-              fromOneBondDeletion(rnd.ctab, existingBondId),
-            );
-          }
-        } else {
-          delete dragCtx.action;
-        }
-        this.restoreBondWhenHoveringOnCanvas(event);
-        if (dragCtx.action) this.editor.update(dragCtx.action, true);
+    if (this.dragCtx) {
+      if (!this.isDragStartThresholdReached(event, this.dragCtx)) {
         return true;
       }
+      return this.handleDragMove(event);
     }
     this.editor.hover(
       this.editor.findItem(event, ['atoms', 'bonds', 'functionalGroups']),
@@ -306,16 +198,285 @@ class BondTool implements Tool {
     return true;
   }
 
-  mouseup(event) {
-    if ('dragCtx' in this) {
+  private isDragStartThresholdReached(
+    event: PointerEvent,
+    dragCtx: BondToolDragContext,
+  ) {
+    if (dragCtx.hasStartedDragging) {
+      return true;
+    }
+
+    const dx = event.clientX - dragCtx.pageX0;
+    const dy = event.clientY - dragCtx.pageY0;
+    const distance = Math.hypot(dx, dy);
+    if (distance < BondTool.DRAG_START_THRESHOLD_PX) {
+      return false;
+    }
+
+    dragCtx.hasStartedDragging = true;
+    return true;
+  }
+
+  private handleDragMove(event: PointerEvent) {
+    if (!this.dragCtx) return undefined;
+    const rnd = this.editor.render;
+    const dragCtx = this.dragCtx;
+    const hasItem = 'item' in dragCtx;
+
+    const pos = CoordinateTransformation.pageToModel(event, rnd);
+    let angle = vectorUtils.calcAngle(dragCtx.xy0, pos);
+    if (!event.ctrlKey) angle = vectorUtils.fracAngle(angle, null);
+
+    const degrees = vectorUtils.degrees(angle);
+    this.editor.event.message.dispatch({ info: degrees + 'º' });
+
+    if (!hasItem || dragCtx.item?.map === 'atoms') {
+      return this.handleBondDrag(event, dragCtx, hasItem);
+    }
+    return undefined;
+  }
+
+  private handleBondDrag(
+    event: PointerEvent,
+    dragCtx: BondToolDragContext,
+    hasItem: boolean,
+  ) {
+    const rnd = this.editor.render;
+    const molecule = rnd.ctab.molecule;
+
+    if (dragCtx.action) dragCtx.action.perform(rnd.ctab);
+
+    let beginAtom;
+    let endAtom;
+    let beginPos;
+    let endPos;
+
+    if (hasItem && dragCtx.item?.map === 'atoms') {
+      const item = dragCtx.item;
+      ({ beginAtom, endAtom } = this.resolveAtomDragTarget(
+        event,
+        item,
+        molecule,
+      ));
+    } else {
+      const result = this.resolveCanvasDragTarget(event, dragCtx, molecule);
+      ({ beginAtom, endAtom, beginPos } = result);
+      if (result.shouldReturn) return;
+    }
+
+    ({ endAtom, endPos } = this.resolveEndAtomPosition(
+      event,
+      rnd,
+      beginAtom,
+      endAtom,
+      beginPos,
+    ));
+
+    const dist =
+      endPos !== undefined ? Vec2.dist(dragCtx.xy0, endPos) : Number.MAX_VALUE;
+    this.applyBondAction(event, dragCtx, rnd, molecule, {
+      beginAtom,
+      endAtom,
+      beginPos,
+      endPos,
+      dist,
+    });
+
+    return true;
+  }
+
+  private resolveAtomDragTarget(
+    event: PointerEvent,
+    item: BondItemRef,
+    molecule: Struct,
+  ) {
+    const editor = this.editor;
+    const beginAtom = item.id;
+    let endAtom: BondItemRef | null = editor.findItem(
+      event,
+      ['atoms'],
+      item,
+    ) as BondItemRef | null;
+    const closestSGroup = editor.findItem(event, ['functionalGroups']);
+    const sgroup =
+      closestSGroup != null
+        ? molecule.sgroups.get(closestSGroup.id)
+        : undefined;
+
+    if (sgroup) {
+      endAtom = this.adjustEndAtomForSGroup(sgroup, beginAtom, endAtom);
+    }
+
+    return { beginAtom, endAtom };
+  }
+
+  private adjustEndAtomForSGroup(
+    sgroup: SGroup,
+    beginAtom: number,
+    endAtom: BondItemRef | null,
+  ): BondItemRef | null {
+    const closestAttachmentAtomId = sgroup.getAttachmentAtomId();
+
+    if (sgroup.isContracted()) {
+      const hasAttachmentPoint = closestAttachmentAtomId === undefined;
+      const isBeginFunctionalGroupItself =
+        closestAttachmentAtomId === beginAtom;
+      if (!hasAttachmentPoint && !isBeginFunctionalGroupItself) {
+        endAtom = {
+          id: closestAttachmentAtomId,
+          map: 'atoms',
+        };
+      }
+    }
+
+    if (endAtom && endAtom.id !== closestAttachmentAtomId) {
+      this.editor.event.removeFG.dispatch({ fgIds: [sgroup.id] });
+      endAtom = null;
+    }
+
+    return endAtom;
+  }
+
+  private resolveCanvasDragTarget(
+    event: PointerEvent,
+    dragCtx: BondToolDragContext,
+    molecule: Struct,
+  ) {
+    const functionalGroups = molecule.functionalGroups;
+    const beginAtom = this.atomProps;
+    const beginPos = dragCtx.xy0;
+    let endAtom: BondItemRef | null = this.editor.findItem(event, [
+      'atoms',
+      'functionalGroups',
+    ]) as BondItemRef | null;
+
+    if (endAtom?.map === 'atoms' && functionalGroups.size && this.dragCtx) {
+      const fgIds = this.collectFunctionalGroupIdsForAtom(
+        functionalGroups,
+        endAtom.id,
+      );
+      if (fgIds.length > 0) {
+        this.editor.event.removeFG.dispatch({ fgIds });
+        delete this.dragCtx;
+        return { beginAtom, endAtom, beginPos, shouldReturn: true };
+      }
+    } else if (endAtom?.map === 'functionalGroups') {
+      endAtom = this.resolveEndAtomFromFunctionalGroup(molecule, endAtom);
+    }
+
+    return { beginAtom, endAtom, beginPos, shouldReturn: false };
+  }
+
+  private collectFunctionalGroupIdsForAtom(
+    functionalGroups: Pool<FunctionalGroup>,
+    atomId: number,
+  ) {
+    const atomInFg = FunctionalGroup.atomsInFunctionalGroup(
+      functionalGroups,
+      atomId,
+    );
+    if (atomInFg === null) return [];
+
+    const fgId = FunctionalGroup.findFunctionalGroupByAtom(
+      functionalGroups,
+      atomInFg,
+    );
+    return fgId !== null ? [fgId] : [];
+  }
+
+  private resolveEndAtomFromFunctionalGroup(
+    molecule: Struct,
+    endAtom: BondItemRef,
+  ): BondItemRef | null {
+    const functionalGroup = molecule.functionalGroups.get(endAtom.id);
+    if (!SGroup.isSaltOrSolvent(functionalGroup?.name || '')) {
+      const attachmentAtomId =
+        functionalGroup?.relatedSGroup.getAttachmentAtomId();
+      return attachmentAtomId === undefined
+        ? null
+        : { map: 'atoms', id: attachmentAtomId };
+    }
+    return endAtom;
+  }
+
+  private resolveEndAtomPosition(
+    event: PointerEvent,
+    rnd: Render,
+    beginAtom: number | AtomAttributes,
+    endAtom: BondItemRef | null,
+    beginPos: Vec2 | undefined,
+  ): { endAtom: number | AtomAttributes; endPos: Vec2 | undefined } {
+    let endPos: Vec2 | undefined;
+    if (endAtom?.map === 'atoms') {
+      return { endAtom: endAtom.id, endPos };
+    }
+
+    const newEndAtom: AtomAttributes = this.atomProps;
+    const xy1 = CoordinateTransformation.pageToModel(event, rnd);
+    if (beginPos) {
+      endPos = vectorUtils.calcNewAtomPos(beginPos, xy1, event.ctrlKey);
+    } else {
+      if (typeof beginAtom !== 'number') {
+        return { endAtom: newEndAtom, endPos };
+      }
+      const atom = getOrThrow(
+        rnd.ctab.molecule.atoms,
+        beginAtom,
+        entityNotFoundMessage('Atom', beginAtom),
+      );
+      endPos = vectorUtils.calcNewAtomPos(
+        atom.pp.get_xy0(),
+        xy1,
+        event.ctrlKey,
+      );
+    }
+
+    return { endAtom: newEndAtom, endPos };
+  }
+
+  private applyBondAction(
+    event: PointerEvent,
+    dragCtx: BondToolDragContext,
+    rnd: Render,
+    molecule: Struct,
+    bondParams: BondActionParams,
+  ) {
+    const { beginAtom, endAtom, beginPos, endPos, dist } = bondParams;
+    // don't rotate the bond if the distance between the start and end point is too small
+    if (dist > 0.3) {
+      const [existingBondId, bond] = this.getExistingBond(
+        molecule,
+        beginAtom,
+        endAtom,
+      );
+      dragCtx.action = fromBondAddition(
+        rnd.ctab,
+        this.bondProps,
+        beginAtom,
+        endAtom,
+        beginPos,
+        endPos,
+      )[0];
+      if (existingBondId !== null) {
+        dragCtx.existedBond = bond;
+        dragCtx.action.mergeWith(fromOneBondDeletion(rnd.ctab, existingBondId));
+      }
+    } else {
+      delete dragCtx.action;
+    }
+    this.restoreBondWhenHoveringOnCanvas(event);
+    if (dragCtx.action) this.editor.update(dragCtx.action, true);
+  }
+
+  mouseup(event: PointerEvent) {
+    if (this.dragCtx) {
       const dragCtx = this.dragCtx;
-      const hasItem = 'item' in dragCtx;
       const render = this.editor.render;
       const struct = render.ctab.molecule;
-      if ('action' in dragCtx) {
+      if (dragCtx.action) {
         this.restoreBondWhenHoveringOnCanvas(event);
         this.editor.update(dragCtx.action);
-      } else if (!hasItem) {
+      } else if (!dragCtx.item) {
         const editorOptions = this.editor.options();
         const QUARTER_OF_BOND_WIDTH = 20;
         const QUARTER_OF_BOND_HEIGHT = 5;
@@ -340,7 +501,7 @@ class BondTool implements Tool {
         );
 
         this.editor.update(bondAddition[0]);
-      } else if (hasItem && dragCtx.item.map === 'atoms') {
+      } else if (dragCtx.item.map === 'atoms') {
         // click on atom
         const isAtomSuperatomLeavingGroup = Atom.isSuperatomLeavingGroupAtom(
           struct,
@@ -352,7 +513,7 @@ class BondTool implements Tool {
               label: 'C',
             })[0],
           );
-          delete this.dragCtx.existedBond;
+          delete dragCtx.existedBond;
         }
       } else if (dragCtx.item.map === 'bonds') {
         const bondProps = { ...(this.bondProps || {}) };
@@ -379,27 +540,42 @@ class BondTool implements Tool {
     If we want to add a new bond, we need to delete previous one
     But we can change our mind, then deleted bond needs to be restored
   */
-  restoreBondWhenHoveringOnCanvas(event) {
-    if (!this.dragCtx.existedBond) {
+  restoreBondWhenHoveringOnCanvas(event: PointerEvent) {
+    if (!this.dragCtx) {
       return;
     }
+    const dragCtx = this.dragCtx;
+    if (!dragCtx.existedBond) {
+      return;
+    }
+    const existedBond = dragCtx.existedBond;
     const isHoveringOverAtom = this.editor.findItem(event, ['atoms']);
     if (!isHoveringOverAtom) {
-      const { begin, end } = this.dragCtx.existedBond;
-      const bondEnd = this.dragCtx.item.id === begin ? end : begin;
-      this.dragCtx.action.mergeWith(
+      if (!dragCtx.item || !dragCtx.action) {
+        return;
+      }
+      const { begin, end } = existedBond;
+      const bondEnd = dragCtx.item.id === begin ? end : begin;
+      dragCtx.action.mergeWith(
         fromBondAddition(
           this.editor.render.ctab,
-          this.dragCtx.existedBond,
-          this.dragCtx.item.id,
+          existedBond,
+          dragCtx.item.id,
           bondEnd,
         )[0],
       );
-      delete this.dragCtx.existedBond;
+      delete dragCtx.existedBond;
     }
   }
 
-  getExistingBond(struct: Struct, begin: number, end: number) {
+  getExistingBond(
+    struct: Struct,
+    begin: number | AtomAttributes,
+    end: number | AtomAttributes,
+  ) {
+    if (typeof begin !== 'number' || typeof end !== 'number') {
+      return [null, null] as const;
+    }
     for (const [bondId, bond] of struct.bonds.entries()) {
       const alreadyHasBondInOtherDirection =
         (bond.begin === end && bond.end === begin) ||

@@ -14,9 +14,14 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { FC, useEffect, useState } from 'react';
+import { type ComponentType, type FC, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Form, { Field } from '../../../../../component/form/form/form';
+import type { AnyAction } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
+import Form, {
+  type FormState,
+  Field,
+} from '../../../../../component/form/form/form';
 import { Dialog } from '../../../../components';
 import ErrorsCheck from './components';
 import { check } from '../../../../../state/server';
@@ -31,6 +36,7 @@ interface MoleculeErrors {
 type CheckOption =
   | 'valence'
   | 'radicals'
+  | 'isotopes'
   | 'pseudoatoms'
   | 'stereo'
   | 'query'
@@ -59,13 +65,11 @@ interface CheckSchema {
 
 interface CheckState {
   checkOptions: CheckOption[];
+  [key: string]: unknown;
 }
 
-interface FormState {
-  result?: CheckState;
+interface CheckFormState extends FormState<CheckState> {
   moleculeErrors: MoleculeErrors;
-  errors?: Record<string, unknown>;
-  valid?: boolean;
 }
 
 interface CheckDialogOwnProps {
@@ -74,7 +78,7 @@ interface CheckDialogOwnProps {
 }
 
 interface CheckDialogStateProps {
-  formState: FormState;
+  formState: CheckFormState;
   checkState: CheckState;
 }
 
@@ -89,7 +93,7 @@ type CheckDialogProps = CheckDialogOwnProps &
 
 interface State {
   modal: {
-    form: FormState;
+    form: CheckFormState;
   };
   options: {
     check: CheckState;
@@ -108,28 +112,30 @@ const checkSchema: CheckSchema = {
         enum: [
           'valence',
           'radicals',
+          'isotopes',
           'pseudoatoms',
           'stereo',
+          'chiral',
+          'chiral_flag',
           'query',
           'overlapping_atoms',
           'overlapping_bonds',
           'rgroups',
-          'chiral',
           '3d',
-          'chiral_flag',
         ],
         enumNames: [
           'Valence',
           'Radical',
+          'Isotopes',
           'Pseudoatom',
           'Stereochemistry',
+          'Chirality',
+          'Chiral flag',
           'Query',
           'Overlapping Atoms',
           'Overlapping Bonds',
           'R-Groups',
-          'Chirality',
           '3D Structure',
-          'Chiral flag',
         ],
       },
     },
@@ -312,7 +318,7 @@ const mapStateToProps = (state: State): CheckDialogStateProps => ({
 });
 
 const mapDispatchToProps = (
-  dispatch: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  dispatch: ThunkDispatch<State, undefined, AnyAction>,
   ownProps: CheckDialogOwnProps,
 ): CheckDialogDispatchProps => ({
   onCheck: (opts: CheckOption[]) =>
@@ -323,6 +329,9 @@ const mapDispatchToProps = (
   },
 });
 
-const Check = connect(mapStateToProps, mapDispatchToProps)(CheckDialog);
+const ConnectedCheckDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CheckDialog);
 
-export default Check;
+export default ConnectedCheckDialog as ComponentType<CheckDialogOwnProps>;

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /****************************************************************************
  * Copyright 2021 EPAM Systems
  *
@@ -15,10 +14,10 @@
  * limitations under the License.
  ***************************************************************************/
 
-import MuiSelect, { SelectChangeEvent } from '@mui/material/Select';
+import MuiSelect, { type SelectChangeEvent } from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
-import { ReactNode, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import styles from './Select.module.less';
 import { Icon } from 'components';
@@ -27,13 +26,15 @@ export interface Option {
   value: string;
   label: string;
   children?: ReactNode;
+  disabled?: boolean;
+  markedAsUsed?: boolean;
 }
 
 interface Props {
   options: Array<Option>;
   onChange: (value: string) => void;
   className?: string;
-  value?: string;
+  value?: string | number;
   multiple?: boolean;
   disabled?: boolean;
   formName?: string;
@@ -41,6 +42,7 @@ interface Props {
   placeholder?: string;
   'data-testid'?: string;
   error?: boolean;
+  title?: string;
 }
 
 const ChevronIcon = ({ className }) => (
@@ -59,16 +61,13 @@ const Select = ({
   placeholder,
   'data-testid': testId,
   error,
+  title,
 }: Props) => {
-  const [currentValue, setCurrentValue] = useState<Option>();
-
-  useEffect(() => {
-    let option;
-    if (options) {
-      option = options.find((option) => option.value === value);
-    }
-    return setCurrentValue(option);
-  }, [options, value]);
+  const currentValue = options?.find((option) => option.value === value);
+  const isFullscreen = !!document.fullscreenElement;
+  const portalContainer = isFullscreen
+    ? document.querySelector('#root')
+    : undefined;
 
   const handleChange = (event: SelectChangeEvent) => {
     onChange(event.target.value);
@@ -78,19 +77,19 @@ const Select = ({
     <MuiSelect
       className={clsx(styles.selectContainer, className)}
       value={currentValue?.value ?? ''}
+      title={title}
       onChange={handleChange}
       renderValue={(selected: string) =>
-        (currentValue?.children ??
-          currentValue?.label ??
-          placeholder ??
-          selected ??
-          '') as any
+        currentValue?.children ?? currentValue?.label ?? placeholder ?? selected
       }
       displayEmpty
       multiple={multiple}
       disabled={disabled}
       placeholder={placeholder}
-      MenuProps={{ className: styles.dropdownList }}
+      MenuProps={{
+        container: portalContainer,
+        className: styles.dropdownList,
+      }}
       IconComponent={ChevronIcon}
       data-testid={testId}
       error={error}
@@ -108,8 +107,11 @@ const Select = ({
             value={option.value}
             key={option.value}
             disableRipple={true}
+            disabled={option.disabled}
+            title={option.markedAsUsed ? 'Already in use' : undefined}
             className={clsx({
               [`dropdown-${formName}_${name}`]: formName,
+              [styles.usedOption]: option.markedAsUsed,
             })}
             data-testid={`${option.label}-option`}
           >

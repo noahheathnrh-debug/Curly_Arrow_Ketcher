@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux';
+import type { Dispatch } from 'redux';
 import {
   fromAtomAddition,
   fromAtomsAttrs,
@@ -9,14 +9,21 @@ import {
   Atom,
   Action,
   KetcherLogger,
+  bondChangingAction,
 } from 'ketcher-core';
 import { STRUCT_TYPE } from 'src/constants';
 import { openDialog } from './modal';
 import { getSelectedAtoms } from '../../editor/tool/select';
 import { onAction } from './shared';
-import { Editor } from '../../editor';
+import type { Editor } from '../../editor';
 import { updateSelectedAtoms } from 'src/script/ui/state/modal/atoms';
-import { fromAtom, toAtom, fromBond, toBond } from '../data/convert/structconv';
+import {
+  type ElementFormData,
+  fromAtom,
+  toAtom,
+  fromBond,
+  toBond,
+} from '../data/convert/structconv';
 import SGroupTool from '../../editor/tool/sgroup';
 import { deleteFunctionalGroups } from '../../editor/tool/helper/deleteFunctionalGroups';
 import TemplateTool from '../../editor/tool/template';
@@ -92,7 +99,9 @@ function handleEraser({
       { editor, hoveredItemId: item[itemType][0], newAction, dispatch },
       itemType,
     ).then((res) => {
-      res && eraseItem({ editor, item });
+      if (res) {
+        eraseItem({ editor, item });
+      }
     });
   } else {
     eraseItem({ editor, item });
@@ -152,12 +161,14 @@ function handleAtomPropsDialog({
     const atomFromStruct = restruct.atoms.get(hoveredItemId);
     const convertedAtomForModal = fromAtom(atomFromStruct?.a);
 
-    openDialog(dispatch, newAction.dialog, convertedAtomForModal)
+    if (!newAction.dialog) return;
+
+    openDialog(dispatch, newAction.dialog, convertedAtomForModal ?? undefined)
       .then((res) => {
         const updatedAtom = fromAtomsAttrs(
           restruct,
           hoveredItemId,
-          toAtom(res),
+          toAtom(res as ElementFormData),
           false,
         );
 
@@ -182,12 +193,17 @@ function handleBondPropsDialog({
   const bondFromStruct = restruct.bonds.get(hoveredItemId);
   const convertedBondForModal = fromBond(bondFromStruct?.b);
 
-  openDialog(dispatch, newAction.dialog, convertedBondForModal)
+  if (!newAction.dialog) return;
+
+  openDialog(dispatch, newAction.dialog, convertedBondForModal ?? undefined)
     .then((res) => {
+      const convertedBond = toBond(res as ReturnType<typeof fromBond>);
+      if (!convertedBond) return;
+
       const updatedBond = fromBondsAttrs(
         restruct,
         hoveredItemId,
-        toBond(res),
+        convertedBond,
         false,
       );
 
@@ -248,6 +264,9 @@ function getToolHandler(itemType: string, toolName = '') {
       hand: ({ dispatch }: HandlersProps) =>
         dispatch(onAction({ tool: 'hand' })),
     },
+    bonds: {
+      bond: (props: HandlersProps) => handleBondTypeChangeTool(props),
+    },
     sgroups: {
       atom: (props: HandlersProps) => handleSgroupsTool(props),
     },
@@ -305,6 +324,21 @@ function handleBondTool({ hoveredItemId, newAction, editor }: HandlersProps) {
     { label: 'C' },
   )[0];
   editor.update(newBond);
+}
+
+function handleBondTypeChangeTool({
+  hoveredItemId,
+  newAction,
+  editor,
+}: HandlersProps) {
+  const restruct = editor.render.ctab;
+  const bond = restruct.bonds.get(hoveredItemId)?.b;
+  if (!bond) return;
+
+  const action = bondChangingAction(restruct, hoveredItemId, bond, {
+    ...newAction.opts,
+  });
+  editor.update(action);
 }
 
 function handleChargeTool({ hoveredItemId, newAction, editor }: HandlersProps) {

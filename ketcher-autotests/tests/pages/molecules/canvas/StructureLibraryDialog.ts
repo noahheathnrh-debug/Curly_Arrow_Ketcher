@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { Page, Locator } from '@playwright/test';
 import {
   FunctionalGroupsTabItems,
@@ -113,6 +114,8 @@ export const StructureLibraryDialog = (page: Page) => {
     async openTab(tabSection: TabSection) {
       if (!(await this.isTabOpened(tabSection))) {
         await getElement(tabSection).click();
+        // Wait for the content to load after switching tabs
+        await page.waitForTimeout(250);
       }
     },
 
@@ -151,9 +154,9 @@ export const StructureLibraryDialog = (page: Page) => {
       }
     },
 
-    async addTemplate(
+    async selectTemplate(
       sectionName: TemplateLibraryTab,
-      templateName: LibraryTemplate,
+      templateName: LibraryTemplate | string,
     ) {
       if (!(await this.isTabOpened(TabSection.TemplateLibrary))) {
         await this.switchToTemplateLibraryTab();
@@ -183,14 +186,14 @@ export const StructureLibraryDialog = (page: Page) => {
       await locators.deleteTemplateButton.click();
     },
 
-    async addFunctionalGroup(cardName: FunctionalGroupsTabItems) {
+    async selectFunctionalGroup(cardName: FunctionalGroupsTabItems) {
       if (!(await this.isTabOpened(TabSection.FunctionalGroups))) {
         await this.switchToFunctionalGroupTab();
       }
       await page.getByTestId(cardName).click();
     },
 
-    async addSaltsAndSolvents(cardName: SaltsAndSolventsTabItems) {
+    async selectSaltsAndSolvents(cardName: SaltsAndSolventsTabItems) {
       if (!(await this.isTabOpened(TabSection.SaltsAndSolvents))) {
         await this.switchToSaltsAndSolventsTab();
       }

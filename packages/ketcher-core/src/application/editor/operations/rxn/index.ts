@@ -15,13 +15,19 @@
  ***************************************************************************/
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { LonePairAttachment, RadicalAttachment, RxnArrow, RxnArrowMode, Vec2 } from 'domain/entities';
+import {
+  type LonePairAttachment,
+  type RadicalAttachment,
+  RxnArrow,
+  RxnArrowMode,
+} from 'domain/entities/rxnArrow';
+import { Vec2 } from 'domain/entities/vec2';
 
-import Base from '../base';
+import Base from '../BaseOperation';
 import { OperationType } from '../OperationType';
 import { ReRxnArrow } from '../../../render';
 import { KetcherLogger } from 'utilities';
-import Restruct from 'application/render/restruct/restruct';
+import type Restruct from 'application/render/restruct/restruct';
 
 // todo: separate classes: now here is circular dependency in `invert` method
 
@@ -33,6 +39,7 @@ type RxnArrowAddData = {
   height2?: number;
   lpAttach?: LonePairAttachment;
   raAttach?: RadicalAttachment;
+  arrowId?: number;
 };
 
 class RxnArrowAdd extends Base {
@@ -46,9 +53,10 @@ class RxnArrowAdd extends Base {
     lpAttach?: LonePairAttachment,
     raAttach?: RadicalAttachment,
     height2?: number,
+    arrowId?: number,
   ) {
     super(OperationType.RXN_ARROW_ADD);
-    this.data = { pos, mode, id, height, height2, lpAttach, raAttach };
+    this.data = { pos, mode, id, height, height2, lpAttach, raAttach, arrowId };
   }
 
   execute(restruct: any): void {
@@ -59,13 +67,15 @@ class RxnArrowAdd extends Base {
       height2: this.data.height2,
       lpAttach: this.data.lpAttach,
       raAttach: this.data.raAttach,
+      arrowId: this.data.arrowId,
     });
 
     if (this.data.id == null) {
-      const index = struct.rxnArrows.add(item);
+      const index = struct.addRxnArrow(item);
       this.data.id = index;
+      this.data.arrowId = item.arrowId;
     } else {
-      struct.rxnArrows.set(this.data.id, item);
+      struct.setRxnArrow(this.data.id, item);
     }
 
     const itemId = this.data.id!;
@@ -102,6 +112,7 @@ interface RxnArrowDeleteData {
   height2?: number;
   lpAttach?: LonePairAttachment;
   raAttach?: RadicalAttachment;
+  arrowId?: number;
 }
 
 class RxnArrowDelete extends Base {
@@ -126,6 +137,7 @@ class RxnArrowDelete extends Base {
     this.data.height2 = item.height2;
     this.data.lpAttach = item.lpAttach;
     this.data.raAttach = item.raAttach;
+    this.data.arrowId = item.arrowId;
     this.performed = true;
 
     restruct.markItemRemoved();
@@ -157,6 +169,7 @@ class RxnArrowDelete extends Base {
       this.data.lpAttach,
       this.data.raAttach,
       this.data.height2,
+      this.data.arrowId,
     );
   }
 }

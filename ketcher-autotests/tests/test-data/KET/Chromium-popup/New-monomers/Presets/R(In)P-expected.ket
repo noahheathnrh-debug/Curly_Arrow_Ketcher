@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -240,7 +241,7 @@
         "id": "In___Inosine",
         "fullName": "Inosine",
         "alias": "In",
-        "aliasHELM": "Hyp",
+        "aliasHELM": "In",
         "attachmentPoints": [
             {
                 "attachmentAtom": 8,
@@ -274,7 +275,8 @@
                     1.176,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -283,7 +285,8 @@
                     0.188,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -292,7 +295,8 @@
                     -0.266,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -301,7 +305,8 @@
                     0.441,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "O",
@@ -463,7 +468,7 @@
         "id": "R___Ribose",
         "fullName": "Ribose",
         "alias": "R",
-        "aliasHELM": "r",
+        "aliasHELM": "R",
         "attachmentPoints": [
             {
                 "attachmentAtom": 10,
@@ -584,7 +589,7 @@
         "id": "P___Phosphate",
         "fullName": "Phosphate",
         "alias": "P",
-        "aliasHELM": "p",
+        "aliasHELM": "P",
         "aliasAxoLabs": "p",
         "attachmentPoints": [
             {

@@ -20,14 +20,13 @@ import {
 } from '@utils/canvas';
 import {
   clickOnCanvas,
-  clickOnMiddleOfCanvas,
-  dragMouseTo,
+  clickInTheMiddleOfTheCanvas,
   moveMouseAway,
   openFileAndAddToCanvasAsNewProject,
   pasteFromClipboardAndOpenAsNewProject,
   waitForRender,
-  ZoomInByKeyboard,
-  ZoomOutByKeyboard,
+  zoomInByKeyboard,
+  zoomOutByKeyboard,
 } from '@utils/index';
 import { CommonTopRightToolbar } from '@tests/pages/common/CommonTopRightToolbar';
 import { ContextMenu } from '@tests/pages/common/ContextMenu';
@@ -48,6 +47,8 @@ import {
   horizontalFlipByKeyboard,
   verticalFlipByKeyboard,
 } from '@tests/specs/Structure-Creating-&-Editing/Actions-With-Structures/Rotation/utils';
+import { RotationTool } from '@tests/pages/common/canvas/RotationTool';
+import { getAtomLocator } from '@utils/canvas/atoms/getAtomLocator/getAtomLocator';
 
 let page: Page;
 test.beforeAll(async ({ initMoleculesCanvas }) => {
@@ -110,7 +111,7 @@ test('3. Verify the star atom can be added to the canvas using the extended tabl
    */
   await CommonTopRightToolbar(page).setZoomInputValue('400');
   await selectExtendedTableElement(page, ExtendedTableButton.STAR);
-  await clickOnMiddleOfCanvas(page);
+  await clickInTheMiddleOfTheCanvas(page);
   await page.keyboard.press('Escape');
   await moveMouseAway(page);
   await takeEditorScreenshot(page);
@@ -128,7 +129,7 @@ test('4. Verify the star atom can be added to the canvas using the hotkey (Shift
    */
   await CommonTopRightToolbar(page).setZoomInputValue('400');
   await page.keyboard.press('Shift+8');
-  await clickOnMiddleOfCanvas(page);
+  await clickInTheMiddleOfTheCanvas(page);
   await page.keyboard.press('Escape');
   await moveMouseAway(page);
   await takeEditorScreenshot(page);
@@ -151,10 +152,7 @@ test('5. Verify that the existing atom can be replaced with star atom on the can
    */
   await CommonTopRightToolbar(page).setZoomInputValue('400');
   await pasteFromClipboardAndOpenAsNewProject(page, 'C1C=CC=CN=1');
-  const atomToReplace = page
-    .getByText('N', { exact: true })
-    .locator(':scope:visible')
-    .first();
+  const atomToReplace = getAtomLocator(page, { atomLabel: 'N' });
   await ContextMenu(page, atomToReplace).click(MicroAtomOption.Edit);
   await AtomPropertiesDialog(page).selectAtomType(AtomType.Special);
   await AtomPropertiesDialog(page).editLabel();
@@ -184,11 +182,7 @@ test('6. Verify that the existing atom can be replaced with star atom on the can
    */
   await CommonTopRightToolbar(page).setZoomInputValue('400');
   await pasteFromClipboardAndOpenAsNewProject(page, 'C1C=CC=CN=1');
-  // Change to getAtomLocator later
-  const atomToReplace = page
-    .getByText('N', { exact: true })
-    .locator(':scope:visible')
-    .first();
+  const atomToReplace = getAtomLocator(page, { atomLabel: 'N' });
   await waitForRender(page, async () => {
     await atomToReplace.click();
   });
@@ -211,14 +205,10 @@ test('7. Verify the star atom s behavior during undo/redo actions after adding o
    */
   await CommonTopRightToolbar(page).setZoomInputValue('400');
   await page.keyboard.press('Shift+8');
-  await clickOnMiddleOfCanvas(page);
+  await clickInTheMiddleOfTheCanvas(page);
   await page.keyboard.press('Escape');
   await moveMouseAway(page);
-  // Change to getAtomLocator later
-  const starAtom = page
-    .getByText('*', { exact: true })
-    .locator(':scope:visible')
-    .first();
+  const starAtom = getAtomLocator(page, { atomLabel: '*' });
   await expect(starAtom).toHaveCount(1);
   await undoByKeyboard(page);
   await expect(starAtom).toHaveCount(0);
@@ -238,13 +228,13 @@ test('8. Verify that the star atom is displayed correctly when zooming in and ou
    * Version 3.7
    */
   await page.keyboard.press('Shift+8');
-  await clickOnMiddleOfCanvas(page);
+  await clickInTheMiddleOfTheCanvas(page);
   await moveMouseAway(page);
   await page.keyboard.press('Escape');
 
-  await ZoomInByKeyboard(page, { repeat: 11 });
+  await zoomInByKeyboard(page, { repeat: 11 });
   await takeEditorScreenshot(page);
-  await ZoomOutByKeyboard(page, { repeat: 6 });
+  await zoomOutByKeyboard(page, { repeat: 6 });
   await takeEditorScreenshot(page);
 });
 
@@ -264,7 +254,7 @@ test('9. Verify the copy-paste functionality for structures containing the star 
     page,
     'C1=C*=CC=C1 |$;;star_e;;;$|',
   );
-  await clickOnMiddleOfCanvas(page);
+  await clickInTheMiddleOfTheCanvas(page);
   await selectAllStructuresOnCanvas(page);
   await cutToClipboardByKeyboard(page);
   await takeEditorScreenshot(page);
@@ -290,11 +280,7 @@ test('10. Verify deletion of the star atom from the canvas using the delete opti
     'C1=C*=CC=C1 |$;;star_e;;;$|',
   );
   await CommonLeftToolbar(page).erase();
-  // Change to getAtomLocator later
-  const atomToDelete = page
-    .getByText('*', { exact: true })
-    .locator(':scope:visible')
-    .first();
+  const atomToDelete = getAtomLocator(page, { atomLabel: '*' });
   await atomToDelete.click();
   await takeEditorScreenshot(page);
 });
@@ -647,16 +633,13 @@ test('24. Verify that the star atom retains its properties when the structure is
    *
    * Version 3.7
    */
-  const rotationHandle = page.getByTestId('rotation-handle');
-
   await openFileAndAddToCanvasAsNewProject(
     page,
     'KET/Star-Atom/LayoutValidation.ket',
   );
   await CommonTopRightToolbar(page).setZoomInputValue('150');
   await selectAllStructuresOnCanvas(page);
-  await rotationHandle.hover();
-  await dragMouseTo(page, 720, 300);
+  await RotationTool(page).moveRotationHandleTo({ x: 720, y: 300 });
   await clickOnCanvas(page, 1, 1);
   await takeEditorScreenshot(page);
 });

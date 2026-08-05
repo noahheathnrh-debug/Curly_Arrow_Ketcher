@@ -85,7 +85,9 @@ const SubMenu = ({
   };
 
   const hideCollapse = () => {
-    open && setOpen(false);
+    if (open) {
+      setOpen(false);
+    }
   };
 
   const subComponents = React.Children.map(
@@ -123,7 +125,11 @@ const SubMenu = ({
     KETCHER_MACROMOLECULES_ROOT_NODE_SELECTOR,
   );
   return (
-    <RootContainer data-testid={testId} ref={ref}>
+    <RootContainer
+      data-testid={testId}
+      data-is-selected={isActive(visibleItemId) ? 'true' : 'false'}
+      ref={ref}
+    >
       <>
         <VisibleItem>
           <MenuItem

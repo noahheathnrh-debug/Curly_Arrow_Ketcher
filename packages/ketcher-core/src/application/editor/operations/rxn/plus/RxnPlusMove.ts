@@ -14,25 +14,27 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { BaseOperation } from '../../base';
+import { BaseOperation } from '../../BaseOperation';
 import { OperationType } from '../../OperationType';
-import { ReStruct } from '../../../../render';
+import type { ReStruct } from '../../../../render';
 import { Scale } from 'domain/helpers';
+import type { Vec2 } from 'domain/entities';
 
 export class RxnPlusMove extends BaseOperation {
   data: {
-    id: any;
-    d: any;
-    noinvalidate: any;
+    id?: number;
+    d?: Vec2;
+    noinvalidate?: boolean;
   };
 
-  constructor(id?: any, d?: any, noinvalidate?: any) {
+  constructor(id?: number, d?: Vec2, noinvalidate?: boolean) {
     super(OperationType.RXN_PLUS_MOVE);
     this.data = { id, d, noinvalidate };
   }
 
   execute(restruct: ReStruct) {
     const { id, d, noinvalidate } = this.data;
+    if (id === undefined || !d) return;
 
     const struct = restruct.molecule;
     struct.rxnPluses.get(id)!.pp.add_(d); // eslint-disable-line no-underscore-dangle
@@ -52,5 +54,10 @@ export class RxnPlusMove extends BaseOperation {
     const inverted = new RxnPlusMove();
     inverted.data = this.data;
     return inverted;
+  }
+
+  isDummy() {
+    const { d } = this.data;
+    return d?.x === 0 && d?.y === 0;
   }
 }

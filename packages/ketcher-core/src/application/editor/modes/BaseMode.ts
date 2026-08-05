@@ -1,12 +1,12 @@
 import { Command } from 'domain/entities/Command';
 import { SelectLayoutModeOperation } from '../operations/polymerBond';
-import { CoreEditor, EditorHistory } from '../internal';
+import { EditorHistory } from '../EditorHistory';
+import type { CoreEditor } from '../Editor';
+import { provideEditorInstance } from '../editorSingleton';
+import { type LayoutMode, DEFAULT_LAYOUT_MODE } from './types';
+import { getModeConstructor } from './modesRegistry';
 import {
-  DEFAULT_LAYOUT_MODE,
-  LayoutMode,
-  modesMap,
-} from 'application/editor/modes';
-import {
+  type ClipboardData,
   getStructStringFromClipboardData,
   initHotKeys,
   isClipboardAPIAvailable,
@@ -15,13 +15,22 @@ import {
   legacyCopy,
   legacyPaste,
   normalizeError,
+  PLAIN_TEXT_MIME_TYPE,
 } from 'utilities';
-import { SequenceType, Struct, Vec2 } from 'domain/entities';
-import { identifyStructFormat, SupportedFormat } from 'application/formatters';
-import { KetSerializer } from 'domain/serializers';
-import { ChemicalMimeType } from 'domain/services';
-import { ketcherProvider } from 'application/utils';
-import { DrawingEntitiesManager } from 'domain/entities/DrawingEntitiesManager';
+import { type SequenceType, Struct, Vec2 } from 'domain/entities';
+import { identifyStructFormat } from 'application/formatters/identifyStructFormat';
+import { SupportedFormat } from 'application/formatters/structFormatter.types';
+import { KetSerializer } from 'domain/serializers/ket/ketSerializer';
+import { ChemicalMimeType } from 'domain/services/struct/structService.types';
+import { ketcherProvider } from 'application/ketcherProvider';
+import type { DrawingEntitiesManager } from 'domain/entities/DrawingEntitiesManager';
+
+type KeyboardEventHandler = {
+  shortcut: string | string[];
+  handler: (event: KeyboardEvent) => void;
+};
+
+type KeyboardEventHandlers = Record<string, KeyboardEventHandler>;
 
 export abstract class BaseMode {
   private _pasteIsInProgress = false;
@@ -31,9 +40,21 @@ export abstract class BaseMode {
     public previousMode: LayoutMode = DEFAULT_LAYOUT_MODE,
   ) {}
 
-  private changeMode(editor: CoreEditor, modeName: LayoutMode, isUndo = false) {
+  public get isAntisenseEditMode(): boolean {
+    return false;
+  }
+
+  public get isSyncEditMode(): boolean {
+    return false;
+  }
+
+  private changeMode(
+    editor: CoreEditor,
+    modeName: LayoutMode,
+    isUndo = false,
+  ): void {
     editor.events.layoutModeChange.dispatch(modeName);
-    const ModeConstructor = modesMap[modeName];
+    const ModeConstructor = getModeConstructor(modeName);
     editor.mode.destroy();
     editor.setMode(new ModeConstructor());
     editor.mode.initialize(true, isUndo, false);
@@ -43,9 +64,10 @@ export abstract class BaseMode {
     needRemoveSelection = true,
     _isUndo = false,
     _needReArrangeChains = false,
-  ) {
+    _forceRecalculateAntisense = false,
+  ): Command {
     const command = new Command();
-    const editor = CoreEditor.provideEditorInstance();
+    const editor = provideEditorInstance();
 
     command.addOperation(
       new SelectLayoutModeOperation(
@@ -63,14 +85,24 @@ export abstract class BaseMode {
     return command;
   }
 
-  async onKeyDown(event: KeyboardEvent) {
+  async onKeyDown(event: KeyboardEvent): Promise<void> {
+    if (!this.checkIfTargetIsInput(event)) {
+      const hotKeys = initHotKeys(this.keyboardEventHandlers);
+      const shortcutKey = keyNorm.lookup(hotKeys, event)?.[0];
+
+      if (shortcutKey && this.keyboardEventHandlers[shortcutKey]) {
+        event.stopImmediatePropagation();
+      }
+    }
     await new Promise<void>((resolve) => {
       setTimeout(() => {
-        const editor = CoreEditor.provideEditorInstance();
+        const editor = provideEditorInstance();
         if (!this.checkIfTargetIsInput(event)) {
           const hotKeys = initHotKeys(this.keyboardEventHandlers);
-          const shortcutKey = keyNorm.lookup(hotKeys, event);
-          this.keyboardEventHandlers[shortcutKey]?.handler(event);
+          const shortcutKey = keyNorm.lookup(hotKeys, event)?.[0];
+          if (shortcutKey) {
+            this.keyboardEventHandlers[shortcutKey]?.handler(event);
+          }
         }
         editor.events.mouseLeaveSequenceItem.dispatch();
         resolve();
@@ -78,11 +110,11 @@ export abstract class BaseMode {
     });
   }
 
-  get keyboardEventHandlers() {
+  get keyboardEventHandlers(): KeyboardEventHandlers {
     return {};
   }
 
-  abstract getNewNodePosition();
+  abstract getNewNodePosition(): Vec2;
 
   abstract applyAdditionalPasteOperations(
     _drawingEntitiesManager: DrawingEntitiesManager,
@@ -96,13 +128,13 @@ export abstract class BaseMode {
     drawingEntitiesManager: DrawingEntitiesManager,
   ): boolean;
 
-  abstract scrollForView(): void;
+  abstract scrollForView(): void | Promise<void>;
 
-  onCopy(event?: ClipboardEvent) {
+  onCopy(event?: ClipboardEvent): void {
     if (event && this.checkIfTargetIsInput(event)) {
       return;
     }
-    const editor = CoreEditor.provideEditorInstance();
+    const editor = provideEditorInstance();
     const drawingEntitiesManager =
       editor.drawingEntitiesManager.filterSelection();
     const ketSerializer = new KetSerializer();
@@ -114,23 +146,44 @@ export abstract class BaseMode {
       navigator.clipboard.writeText(serializedKet);
     } else if (event) {
       legacyCopy(event.clipboardData, {
-        'text/plain': serializedKet,
+        [PLAIN_TEXT_MIME_TYPE]: serializedKet,
       });
       event.preventDefault();
     }
   }
 
-  async onPaste(event?: ClipboardEvent) {
+  onCut(event?: ClipboardEvent): void {
     if (event && this.checkIfTargetIsInput(event)) {
       return;
     }
-    const editor = CoreEditor.provideEditorInstance();
+
+    const editor = provideEditorInstance();
+
+    // Check if there's anything selected to cut
+    if (editor.drawingEntitiesManager.selectedEntities.length === 0) {
+      return;
+    }
+
+    this.onCopy(event);
+
+    editor.events.deleteSelectedStructure.dispatch();
+
+    if (event) {
+      event.preventDefault();
+    }
+  }
+
+  async onPaste(event?: ClipboardEvent): Promise<void> {
+    if (event && this.checkIfTargetIsInput(event)) {
+      return;
+    }
+    const editor = provideEditorInstance();
     const isCanvasEmptyBeforePaste =
       !editor.drawingEntitiesManager.hasDrawingEntities;
 
     if (isClipboardAPIAvailable()) {
       const isSequenceEditInRNABuilderMode =
-        CoreEditor.provideEditorInstance().isSequenceEditInRNABuilderMode;
+        provideEditorInstance().isSequenceEditInRNABuilderMode;
 
       if (isSequenceEditInRNABuilderMode || this._pasteIsInProgress) return;
       this._pasteIsInProgress = true;
@@ -146,7 +199,9 @@ export abstract class BaseMode {
         editor.zoomToStructuresIfNeeded();
       });
     } else if (event) {
-      const clipboardData = legacyPaste(event.clipboardData, ['text/plain']);
+      const clipboardData = legacyPaste(event.clipboardData, [
+        PLAIN_TEXT_MIME_TYPE,
+      ]);
       this.pasteFromClipboard(clipboardData);
       event.preventDefault();
 
@@ -162,32 +217,36 @@ export abstract class BaseMode {
     }
   }
 
-  async pasteFromClipboard(clipboardData) {
-    let modelChanges;
-    const editor = CoreEditor.provideEditorInstance();
+  async pasteFromClipboard(clipboardData: ClipboardData): Promise<void> {
+    let pasteOperations: Command | undefined;
+    const editor = provideEditorInstance();
     const pastedStr = await getStructStringFromClipboardData(clipboardData);
+    if (!pastedStr?.trim()) {
+      return;
+    }
     const format = identifyStructFormat(pastedStr, true);
     if (format === SupportedFormat.ket) {
-      modelChanges = this.pasteKetFormatFragment(pastedStr);
+      pasteOperations = this.pasteKetFormatFragment(pastedStr);
     } else {
-      modelChanges = await this.pasteWithIndigoConversion(
+      pasteOperations = await this.pasteWithIndigoConversion(
         pastedStr,
         editor.sequenceTypeEnterMode,
       );
     }
 
-    if (!modelChanges || modelChanges.operations.length === 0) {
+    if (!pasteOperations || pasteOperations.operations.length === 0) {
       return;
     }
 
     editor.drawingEntitiesManager.detectBondsOverlappedByMonomers();
-    editor.renderersContainer.update(modelChanges);
-    EditorHistory.getInstance(editor).update(modelChanges);
-    this.scrollForView();
+    editor.renderersContainer.update(pasteOperations);
+    EditorHistory.getInstance(editor).update(pasteOperations);
+    editor.events.mouseLeaveSequenceItem.dispatch();
+    await this.scrollForView();
   }
 
-  pasteKetFormatFragment(pastedStr: string) {
-    const editor = CoreEditor.provideEditorInstance();
+  pasteKetFormatFragment(pastedStr: string): Command | undefined {
+    const editor = provideEditorInstance();
     const ketSerializer = new KetSerializer();
     const deserialisedKet =
       ketSerializer.deserializeToDrawingEntities(pastedStr);
@@ -227,8 +286,8 @@ export abstract class BaseMode {
   async pasteWithIndigoConversion(
     pastedStr: string,
     sequenceType: SequenceType,
-  ) {
-    const editor = CoreEditor.provideEditorInstance();
+  ): Promise<Command | undefined> {
+    const editor = provideEditorInstance();
     const indigo = ketcherProvider.getKetcher(editor.ketcherId).indigo;
     try {
       const ketStruct = await indigo.convert(pastedStr, {
@@ -249,7 +308,7 @@ export abstract class BaseMode {
 
   private updateEntitiesPosition(
     drawingEntitiesManager: DrawingEntitiesManager,
-  ) {
+  ): void {
     const newNodePosition = this.getNewNodePosition();
     const firstEntityPosition =
       drawingEntitiesManager.allEntities[0]?.[1].position;
@@ -263,15 +322,15 @@ export abstract class BaseMode {
     });
   }
 
-  unsupportedSymbolsError(errorMessage: string) {
-    const editor = CoreEditor.provideEditorInstance();
+  unsupportedSymbolsError(errorMessage: string): void {
+    const editor = provideEditorInstance();
     editor.events.openErrorModal.dispatch({
       errorTitle: 'Error',
       errorMessage,
     });
   }
 
-  private checkIfTargetIsInput(event: Event) {
+  private checkIfTargetIsInput(event: Event): boolean {
     return (
       event.target instanceof HTMLElement &&
       (event.target?.nodeName === 'INPUT' ||
@@ -280,5 +339,7 @@ export abstract class BaseMode {
     );
   }
 
-  public destroy() {}
+  public destroy(): void {
+    // intentional no-op: default base implementation; subclasses override when behavior is needed
+  }
 }

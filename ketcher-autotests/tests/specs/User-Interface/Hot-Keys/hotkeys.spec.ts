@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import { expect, test } from '@fixtures';
 import {
-  clickInTheMiddleOfTheScreen,
+  clickInTheMiddleOfTheCanvas,
   waitForPageInit,
   takeEditorScreenshot,
   openFileAndAddToCanvasAsNewProject,
@@ -9,6 +9,7 @@ import {
   dragMouseTo,
   clickOnCanvas,
   deleteByKeyboard,
+  takeLeftToolbarScreenshot,
 } from '@utils';
 import {
   copyAndPaste,
@@ -30,7 +31,7 @@ import {
   FunctionalGroupsTabItems,
   SaltsAndSolventsTabItems,
 } from '@tests/pages/constants/structureLibraryDialog/Constants';
-import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviation';
+import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviationLocator';
 import { getBondLocator } from '@utils/macromolecules/polymerBond';
 import { getAtomLocator } from '@utils/canvas/atoms/getAtomLocator/getAtomLocator';
 
@@ -46,15 +47,15 @@ test.describe('Hot keys', () => {
     await LeftToolbar(page).text();
     await page.keyboard.press('Escape');
     await expect(page.getByTestId(SelectionToolType.Fragment)).toBeVisible();
-    await expect(page).toHaveScreenshot();
+    await takeLeftToolbarScreenshot(page);
   });
 
   test('Shift+Tab to switch selection tool', async ({ page }) => {
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await page.keyboard.press('Shift+Tab');
     await page.keyboard.press('Shift+Tab');
     await expect(page.getByTestId(SelectionToolType.Fragment)).toBeVisible();
-    await expect(page).toHaveScreenshot();
+    await takeLeftToolbarScreenshot(page);
   });
 
   test('Verify move by ctrl when its a part of molecula as only atom', async ({
@@ -278,10 +279,10 @@ test.describe('Hot keys', () => {
       Expected: Functional group structure copied and moves to a new place.
       */
     await BottomToolbar(page).structureLibrary();
-    await StructureLibraryDialog(page).addFunctionalGroup(
+    await StructureLibraryDialog(page).selectFunctionalGroup(
       FunctionalGroupsTabItems.Cbz,
     );
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await CommonLeftToolbar(page).areaSelectionTool(
       SelectionToolType.Rectangle,
     );
@@ -306,10 +307,10 @@ test.describe('Hot keys', () => {
       Expected: Functional group structure copied and moves to a new place.
       */
     await BottomToolbar(page).structureLibrary();
-    await StructureLibraryDialog(page).addFunctionalGroup(
+    await StructureLibraryDialog(page).selectFunctionalGroup(
       FunctionalGroupsTabItems.Cbz,
     );
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await CommonLeftToolbar(page).areaSelectionTool(
       SelectionToolType.Rectangle,
     );
@@ -341,10 +342,10 @@ test.describe('Hot keys', () => {
       Expected: Salts and solvents structure copied and moves to a new place.
       */
     await BottomToolbar(page).structureLibrary();
-    await StructureLibraryDialog(page).addSaltsAndSolvents(
+    await StructureLibraryDialog(page).selectSaltsAndSolvents(
       SaltsAndSolventsTabItems.FormicAcid,
     );
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await CommonLeftToolbar(page).areaSelectionTool(
       SelectionToolType.Rectangle,
     );
@@ -369,10 +370,10 @@ test.describe('Hot keys', () => {
       Expected: Salts and solvents structure copied and moves to a new place.
       */
     await BottomToolbar(page).structureLibrary();
-    await StructureLibraryDialog(page).addSaltsAndSolvents(
+    await StructureLibraryDialog(page).selectSaltsAndSolvents(
       SaltsAndSolventsTabItems.FormicAcid,
     );
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await CommonLeftToolbar(page).areaSelectionTool(
       SelectionToolType.Rectangle,
     );
@@ -631,7 +632,7 @@ test.describe('Hot key Del', () => {
       }
     });
     await BottomToolbar(page).clickRing(RingButton.Benzene);
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await getAtomLocator(page, { atomLabel: 'C', atomId: 6 }).hover({
       force: true,
     });

@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 import { KetcherLogger } from './KetcherLogger';
-import { LayoutMode } from 'application/editor';
+import type { LayoutMode } from 'application/editor/modes/types';
 
 export const KETCHER_SAVED_SETTINGS_KEY = 'ketcher_editor_saved_settings';
 export const KETCHER_SAVED_OPTIONS_KEY = 'ketcher-opts';
@@ -32,9 +32,19 @@ const DefaultEditorLineLength: EditorLineLength = {
 
 export const SetEditorLineLengthAction = 'SetEditorLineLength';
 
+/**
+ * Shape of the selection tool persisted in local storage.
+ * Mirrors the `ActionObj` used by the UI reducer that assigns it,
+ * but is kept minimal here to avoid coupling `ketcher-core` to
+ * UI-layer action types.
+ */
+export interface PersistedSelectionTool {
+  tool: 'select';
+  opts?: unknown;
+}
+
 interface SavedSettings {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectionTool?: any;
+  selectionTool?: PersistedSelectionTool;
   disableCustomQuery?: boolean;
   editorLineLength?: EditorLineLength;
   monomerLibraryUpdates?: string[];
@@ -165,7 +175,7 @@ export class SettingsManager {
 
   static get monomerLibraryUpdates() {
     const { monomerLibraryUpdates } = this.getSettings();
-    return monomerLibraryUpdates || [];
+    return monomerLibraryUpdates ?? [];
   }
 
   static set monomerLibraryUpdates(monomerLibraryUpdates: string[]) {

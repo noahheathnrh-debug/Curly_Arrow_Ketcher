@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -65,7 +66,8 @@
                     -8.532047209822647,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -289,7 +291,7 @@
         ],
         "stereoFlagPosition": {
             "x": 9.034116879985568,
-            "y": 5.770674833860918,
+            "y": 5.770674874199987,
             "z": 0
         }
     },
@@ -311,7 +313,8 @@
                     -9.5257091694417,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -320,7 +323,8 @@
                     -10.476765611484682,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -337,7 +341,8 @@
                     -9.525708931023132,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "O",
@@ -726,7 +731,7 @@
         ],
         "stereoFlagPosition": {
             "x": 20.432276400968327,
-            "y": 4.664217883483987,
+            "y": 4.664217923823056,
             "z": 0
         }
     },

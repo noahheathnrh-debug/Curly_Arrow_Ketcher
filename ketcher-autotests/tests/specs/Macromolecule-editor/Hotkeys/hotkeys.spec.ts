@@ -6,8 +6,8 @@ import {
   takeTopToolbarScreenshot,
   waitForPageInit,
   resetZoomLevelToDefault,
-  ZoomOutByKeyboard,
-  ZoomInByKeyboard,
+  zoomOutByKeyboard,
+  zoomInByKeyboard,
   undoByKeyboard,
   redoByKeyboard,
   clearCanvasByKeyboard,
@@ -16,7 +16,7 @@ import {
 } from '@utils';
 import { selectAllStructuresOnCanvas } from '@utils/canvas/selectSelection';
 import { CommonLeftToolbar } from '@tests/pages/common/CommonLeftToolbar';
-import { MacroBondType } from '@tests/pages/constants/bondSelectionTool/Constants';
+import { MacroBondTool } from '@tests/pages/constants/bondSelectionTool/Constants';
 import { CommonTopRightToolbar } from '@tests/pages/common/CommonTopRightToolbar';
 import { MacromoleculesTopToolbar } from '@tests/pages/macromolecules/MacromoleculesTopToolbar';
 import { LayoutMode } from '@tests/pages/constants/macromoleculesTopToolbar/Constants';
@@ -25,6 +25,7 @@ test.describe('Hotkeys', () => {
   test.beforeEach(async ({ page }) => {
     await waitForPageInit(page);
     await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
+    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
   });
 
   test('Check Clear Canvas (Ctrl+Del) Shortcut', async ({ page }) => {
@@ -85,7 +86,7 @@ test.describe('Hotkeys', () => {
     */
     await deleteByKeyboard(page);
     await takeLeftToolbarMacromoleculeScreenshot(page);
-    await CommonLeftToolbar(page).bondTool(MacroBondType.Single);
+    await CommonLeftToolbar(page).bondTool(MacroBondTool.Single);
     await page.keyboard.press('Backspace');
     await takeLeftToolbarMacromoleculeScreenshot(page);
     await page.keyboard.press('Shift+Tab');
@@ -101,7 +102,7 @@ test.describe('Hotkeys', () => {
       page,
       'KET/three-monomers-not-connected-with-bonds.ket',
     );
-    await ZoomInByKeyboard(page, { repeat: 5 });
+    await zoomInByKeyboard(page, { repeat: 5 });
     await takeEditorScreenshot(page);
   });
 
@@ -114,7 +115,7 @@ test.describe('Hotkeys', () => {
       page,
       'KET/three-monomers-not-connected-with-bonds.ket',
     );
-    await ZoomOutByKeyboard(page, { repeat: 5 });
+    await zoomOutByKeyboard(page, { repeat: 5 });
     await takeEditorScreenshot(page);
   });
 
@@ -127,7 +128,7 @@ test.describe('Hotkeys', () => {
       page,
       'KET/three-monomers-not-connected-with-bonds.ket',
     );
-    await ZoomInByKeyboard(page, { repeat: 5 });
+    await zoomInByKeyboard(page, { repeat: 5 });
     await takeEditorScreenshot(page);
     await resetZoomLevelToDefault(page);
     await takeEditorScreenshot(page);

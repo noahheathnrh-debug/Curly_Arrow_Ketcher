@@ -14,9 +14,9 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { BaseOperation } from '../base';
+import { BaseOperation } from '../BaseOperation';
 import { OperationType } from '../OperationType';
-import { ReStruct } from '../../../render';
+import type { ReStruct } from '../../../render';
 
 interface TextUpdateData {
   id: number;
@@ -25,7 +25,7 @@ interface TextUpdateData {
 }
 
 export class TextUpdate extends BaseOperation {
-  data: TextUpdateData;
+  readonly data: TextUpdateData;
 
   constructor(id: number, content: string) {
     super(OperationType.TEXT_UPDATE);
@@ -49,5 +49,12 @@ export class TextUpdate extends BaseOperation {
 
     inverted.data.previousContent = this.data.content;
     return inverted;
+  }
+
+  isDummy(restruct?: ReStruct) {
+    if (!restruct) return false;
+    const text = restruct.molecule.texts.get(this.data.id);
+    if (!text) return false;
+    return text.content === this.data.content;
   }
 }

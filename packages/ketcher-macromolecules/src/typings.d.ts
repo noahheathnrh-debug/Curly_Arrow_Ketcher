@@ -5,6 +5,13 @@ declare module '*.module.less' {
   export default classes;
 }
 
+declare module '*.less';
+
+declare namespace JSX {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type Element = React.ReactElement<any, any>;
+}
+
 declare namespace NodeJS {
   export interface ProcessEnv {
     VERSION: string;
@@ -49,6 +56,9 @@ interface Document {
 
 interface Window {
   isPolymerEditorTurnedOn: boolean;
+  ketcher?: {
+    settingsService?: import('ketcher-core').ISettingsService;
+  };
 }
 
 interface HTMLElement {

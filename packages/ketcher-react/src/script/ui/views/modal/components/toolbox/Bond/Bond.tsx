@@ -14,7 +14,7 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { BaseCallProps, BaseProps } from '../../../modal.types';
+import type { BaseCallProps, BaseProps } from '../../../modal.types';
 import Form, {
   CustomQueryField,
   Field,
@@ -27,6 +27,7 @@ import { bond as bondSchema } from '../../../../../data/schema/struct-schema';
 import classes from './Bond.module.less';
 import { useMemo, useRef, useState } from 'react';
 import { Bond as CoreBond, SettingsManager } from 'ketcher-core';
+import { MONOMER_WIZARD_DISALLOWED_BOND_TYPES } from '../../../../components/ContextMenu/utils';
 
 interface BondSettings {
   type: string;
@@ -51,6 +52,16 @@ const Bond = (props: Props) => {
     center: 0,
     customQuery: '',
   });
+  const bondTypeOptions = useMemo(
+    () =>
+      getSelectOptionsFromSchema(bondProps.type).map((option) => ({
+        ...option,
+        disabled:
+          isMonomerCreationWizardActive &&
+          MONOMER_WIZARD_DISALLOWED_BOND_TYPES.includes(option.value),
+      })),
+    [bondProps.type, isMonomerCreationWizardActive],
+  );
   const customValid = useMemo(
     () => ({
       customQuery: (customQuery: string) =>
@@ -60,9 +71,9 @@ const Bond = (props: Props) => {
   );
   const handleCustomQueryCheckBoxChange = (
     value: boolean,
-    formState: BondSettings,
-    _,
-    updateFormState: (settings: BondSettings) => void,
+    formState: Record<string, unknown>,
+    _: (value: unknown) => void,
+    updateFormState: (settings: Record<string, unknown>) => void,
   ) => {
     if (isMonomerCreationWizardActive) {
       return;
@@ -70,7 +81,8 @@ const Bond = (props: Props) => {
 
     setIsCustomQuery(value);
     if (value) {
-      const { type, topology, center, customQuery } = formState;
+      const bondFormState = formState as unknown as BondSettings;
+      const { type, topology, center, customQuery } = bondFormState;
       previousSettings.current = {
         type,
         topology,
@@ -84,9 +96,11 @@ const Bond = (props: Props) => {
             type: '',
             topology: null,
             center: null,
-            customQuery: getBondCustomQuery(formState),
+            customQuery: getBondCustomQuery(
+              formState as unknown as BondSettings,
+            ),
           }
-        : previousSettings.current,
+        : (previousSettings.current as unknown as Record<string, unknown>),
     );
   };
 
@@ -110,7 +124,7 @@ const Bond = (props: Props) => {
         <Field
           name="type"
           component={Select}
-          options={getSelectOptionsFromSchema(bondProps.type)}
+          options={bondTypeOptions}
           disabled={isCustomQuery}
           formName="bond-properties"
           data-testid="type"
@@ -156,7 +170,7 @@ function customQueryValid(customQuery: string, isCustomQuery: boolean) {
   if (!isCustomQuery) {
     return true;
   }
-  const regex = new RegExp(bondSchema.properties.customQuery.pattern);
+  const regex = new RegExp(bondSchema.properties.customQuery.pattern as string);
   const isValid = regex.test(customQuery);
   return isValid;
 }

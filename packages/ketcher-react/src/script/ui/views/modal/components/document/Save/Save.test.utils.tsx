@@ -1,18 +1,13 @@
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { formReducer } from 'src/script/ui/state/modal/form';
 import { ErrorsContext } from 'src/contexts';
-import { defaultBondThickness } from 'ketcher-core';
 
 const initialState = {
   server: true,
   options: {
     app: {
       server: true,
-    },
-    settings: {
-      bondThickness: defaultBondThickness,
     },
     check: { checkOptions: '' },
     getServerSettings: () => ({}),
@@ -36,7 +31,7 @@ const initialState = {
 
 export function renderWithMockContext(component: React.ReactNode) {
   const store = {
-    ...createStore(formReducer, initialState),
+    ...createStore((state = initialState) => state),
     dispatch: jest.fn(),
   };
   return render(

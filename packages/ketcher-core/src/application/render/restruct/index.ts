@@ -33,9 +33,11 @@ import Visel from './visel';
 export * from './generalEnumTypes';
 export * from './lonePairUtils';
 export * from './reatom';
+export * from './showHydrogenLabels';
 export * from './rergroupAttachmentPoint';
 export * from './reImage';
 export * from './remultitailArrow';
+export * from './draftToLexical';
 export {
   ReObject,
   ReAtom,

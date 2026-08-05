@@ -1,6 +1,6 @@
-import { AttachmentPointName, FunctionalGroup } from 'ketcher-core';
+import type { AttachmentPointName, FunctionalGroup } from 'ketcher-core';
 import type { TriggerEvent, PredicateParams } from 'react-contexify';
-import { Selection } from '../../../../editor/Editor';
+import type { Selection } from '../../../../editor/Editor';
 
 export enum CONTEXT_MENU_ID {
   FOR_BONDS = 'context-menu-for-bonds',
@@ -60,6 +60,10 @@ export interface FunctionalGroupsContextMenuProps extends BaseContextMenuProps {
 export interface MacromoleculeContextMenuProps extends BaseContextMenuProps {
   id: string;
   functionalGroups: FunctionalGroup[];
+  /** Total count of monomers on canvas with the same code as the primary monomer */
+  totalMonomerCount?: number;
+  /** True when the selection contains at least one non-monomer chemical structure element */
+  hasNonMonomerStructure?: boolean;
 }
 
 export interface MultitailArrowContextMenuProps {

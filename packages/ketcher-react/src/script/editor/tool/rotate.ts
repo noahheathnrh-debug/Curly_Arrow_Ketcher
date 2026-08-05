@@ -15,12 +15,12 @@
  ***************************************************************************/
 
 import {
+  type Atom,
+  type Bond,
+  type FlipDirection,
+  type Vec2,
   Action,
-  Atom,
-  Bond,
-  FlipDirection,
   FunctionalGroup,
-  Vec2,
   fromFlip,
   fromItemsFuse,
   fromRotate,
@@ -32,11 +32,11 @@ import {
   MonomerMicromolecule,
   RotateMonomerOperation,
   CoordinateTransformation,
+  assert,
 } from 'ketcher-core';
-import assert from 'assert';
 import { intersection, throttle } from 'lodash';
-import Editor, { Selection } from '../Editor';
-import { Tool } from './Tool';
+import type { Editor, Selection } from '../Editor';
+import type { Tool } from './Tool';
 import { normalizeAngle } from '../utils/normalizeAngle';
 
 type SnapMode = 'one-bond' | 'multiple-bonds';
@@ -295,8 +295,14 @@ class RotateTool implements Tool {
             );
           }
         });
-        monomerRotateAction.perform(this.reStruct);
-        action = action.mergeWith(monomerRotateAction);
+        // `perform` executes the rotation and returns the inverted action
+        // (the one that must go into the undo history). Merging the
+        // un-inverted `monomerRotateAction` here instead would make `undo`
+        // re-apply the rotation instead of reverting it.
+        const invertedMonomerRotateAction = monomerRotateAction.perform(
+          this.reStruct,
+        );
+        action = action.mergeWith(invertedMonomerRotateAction);
       }
 
       delete this.dragCtx;

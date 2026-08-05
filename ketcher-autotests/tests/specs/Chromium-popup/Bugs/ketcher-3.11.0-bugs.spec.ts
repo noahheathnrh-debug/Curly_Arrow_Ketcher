@@ -13,7 +13,7 @@ import { SaveStructureDialog } from '@tests/pages/common/SaveStructureDialog';
 import { ConfirmMessageDialog } from '@tests/pages/molecules/canvas/createMonomer/ConfirmMessageDialog';
 import { SelectionToolType } from '@tests/pages/constants/areaSelectionTool/Constants';
 import { Atom } from '@tests/pages/constants/atoms/atoms';
-import { MacroBondType } from '@tests/pages/constants/bondSelectionTool/Constants';
+import { MacroBondTool } from '@tests/pages/constants/bondSelectionTool/Constants';
 import {
   MacroBondOption,
   MonomerOnMicroOption,
@@ -57,7 +57,7 @@ import { LeftToolbar } from '@tests/pages/molecules/LeftToolbar';
 import { RightToolbar } from '@tests/pages/molecules/RightToolbar';
 import {
   takeEditorScreenshot,
-  clickInTheMiddleOfTheScreen,
+  clickInTheMiddleOfTheCanvas,
   openFileAndAddToCanvas,
   openFileAndAddToCanvasAsNewProject,
   selectAllStructuresOnCanvas,
@@ -84,7 +84,7 @@ import {
   moveMouseAway,
 } from '@utils';
 import { getAtomLocator } from '@utils/canvas/atoms/getAtomLocator/getAtomLocator';
-import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviation';
+import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviationLocator';
 import {
   FileType,
   verifyFileExport,
@@ -103,6 +103,10 @@ import {
   getBondLocator,
 } from '@utils/macromolecules/polymerBond';
 import { MonomerPreviewTooltip } from '@tests/pages/macromolecules/canvas/MonomerPreviewTooltip';
+import { expandAbbreviation } from '@utils/sgroup/helpers';
+import { getSGroupLabelLocator } from '@utils/canvas/s-group-signes/getSGroupLabelLocator';
+import { getArrowLocator } from '@utils/canvas/arrow-signes/getArrowLocator';
+import { pageReload } from '@utils/common/helpers';
 
 let page: Page;
 
@@ -130,7 +134,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
       page,
       'KET/S-Groups/All types of Nucleotide Componets S-Groups.ket',
     );
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
 
     await takeElementScreenshot(page, getAtomLocator(page, { atomId: 11 }), {
       padding: 250,
@@ -180,7 +184,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     const atomToolbar = RightToolbar(page);
 
     await atomToolbar.clickAtom(Atom.Nitrogen);
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
 
     await atomToolbar.clickAtom(Atom.Oxygen);
     await clickOnCanvas(page, 200, 200);
@@ -289,6 +293,29 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     });
   });
 
+  test('Case 2.6 — Context menu closes on Escape in popup mode', async () => {
+    /* Test case: regression for popup context menu dismissal
+     * Steps:
+     * 1. Open a structure in popup mode.
+     * 2. Open a context menu on canvas.
+     * 3. Press Escape.
+     * Expected Result: The context menu closes.
+     */
+
+    await CommonTopLeftToolbar(page).clearCanvas();
+    await RightToolbar(page).clickAtom(Atom.Oxygen);
+    await clickInTheMiddleOfTheCanvas(page);
+
+    const contextMenu = ContextMenu(page, getAtomLocator(page, { atomId: 0 }));
+
+    await contextMenu.open();
+    await expect(contextMenu.contextMenuBody).toBeVisible();
+
+    await page.keyboard.press('Escape');
+
+    await expect(contextMenu.contextMenuBody).toBeHidden();
+  });
+
   test('Case 3 — Superatom rendering with multiple connection points — part of structure should not disappear', async () => {
     /* Test case: https://github.com/epam/ketcher/issues/8974
      * Bug: https://github.com/epam/ketcher/issues/2517
@@ -302,8 +329,9 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await openFileAndAddToCanvas(page, 'Molfiles-V2000/superatom.mol');
 
     await LeftToolbar(page).sGroup();
+    await expandAbbreviation(page, getAbbreviationLocator(page, { name: 'w' }));
 
-    const wLocator = page.getByText('w', { exact: true });
+    const wLocator = getSGroupLabelLocator(page, { labelText: 'w' });
     const wBox = await wLocator.boundingBox();
     if (wBox) {
       const clickX = wBox.x - 10;
@@ -502,8 +530,11 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
      */
 
     await openFileAndAddToCanvasMacro(page, 'KET/sugar-phosphate-core.ket');
-    await ContextMenu(page, getBondLocator(page, { bondId: 45 })).open();
-    await expect(page.getByTestId(MacroBondOption.Delete)).toBeVisible();
+    expect(
+      await ContextMenu(page, getBondLocator(page, {}).first()).isOptionEnabled(
+        MacroBondOption.Delete,
+      ),
+    ).toBeTruthy();
   });
 
   test('Case 11 - Preview tooltips for monomers loaded from HELM with inline smiles are wrong', async ({
@@ -724,7 +755,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
       page,
       '*1C=*C=*C=1 |$star_e;;star_e;;star_e;$|',
     );
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await LeftToolbar(page).chargePlusButton.click();
     const starAtom = getAtomLocator(page, { atomId: 6 });
     await starAtom.click({ force: true });
@@ -787,33 +818,29 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await takeEditorScreenshot(page);
   });
 
-  test('Case 21 - In Macro mode clicking on Selection tool icon does not open dropdown menu as in Micro mode', async () => {
+  test('Case 21 - In Macro mode clicking on Selection tool icon does not open dropdown menu as in Micro mode', async ({
+    FlexCanvas: _,
+  }) => {
     /* Test case: https://github.com/epam/ketcher/issues/8974
      * Bug: https://github.com/epam/ketcher/issues/7776
      * Steps:
      * 1. Open Ketcher in Macro mode.
      * 2. Click on the Selection tool icon (not the triangle part).
-     * 3. Observe that no dropdown appears.
+     * 3. Observe that dropdown appears.
      * 4. Switch to Micro mode.
      * 5. Click on the Selection tool icon → dropdown with all selection tools appears.
      * Expected Result:
      * Clicking on the Selection tool icon (both in Macro and Micro modes) should open the dropdown menu with all selection tools, providing a consistent user experience.
      */
-
-    await openFileAndAddToCanvasAsNewProject(
-      page,
-      'KET/Ambiguous-monomers-bonds/ketcherPhosphateMixedAndAlternatives.ket',
-    );
     await CommonLeftToolbar(page).areaSelectionDropdownButton.click();
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
+    await expect(
+      CommonLeftToolbar(page).toolSelectionDropdownPanel,
+    ).toBeVisible();
+    await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await CommonLeftToolbar(page).areaSelectionDropdownButton.click();
-    await takeElementScreenshot(
-      page,
-      CommonLeftToolbar(page).areaSelectionDropdownButton,
-      {
-        padding: 90,
-      },
-    );
+    await expect(
+      CommonLeftToolbar(page).toolSelectionDropdownPanel,
+    ).toBeVisible();
   });
 
   test('Case 22 - Context menu remains visible after creating cyclic structure via right-click menu', async ({
@@ -829,15 +856,15 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
      * Expected Result: After clicking Create cyclic structure, the context menu should automatically close.
      * The cyclic structure should be generated, and the canvas should regain focus immediately.
      */
-
+    await pageReload(page);
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/polymer-chain-that-meets-cyclic-structure-criteria.ket',
     );
     await CommonLeftToolbar(page).areaSelectionTool();
     await selectMonomersAndBonds(page, {
-      monomerIds: [68, 69, 82, 83, 73, 76, 71, 72, 80, 79, 81, 84],
-      bondIds: [97, 112, 115, 101, 102, 113, 114, 100, 111, 108, 104, 109],
+      monomerIds: [68, 69, 82, 83, 73, 71, 72, 80, 79, 84],
+      bondIds: [97, 112, 115, 101, 102, 113, 114, 100, 111, 108],
     });
     await ContextMenu(page, getMonomerLocator(page, { monomerId: 80 })).click(
       MonomerOption.ArrangeAsARing,
@@ -899,7 +926,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
       MacroFileType.HELM,
       'CHEM1{[4aPEGMal]}|CHEM2{[4FB]}|CHEM3{[A6OH]}$CHEM2,CHEM1,1:R2-1:R1|CHEM3,CHEM2,1:R2-1:R1$$$V2.0',
     );
-    const chainlocator = getSymbolLocator(page, { symbolId: 7 });
+    const chainlocator = getSymbolLocator(page, { symbolAlias: '@' });
     const locators = await getCoordinatesOfTheMiddleOfTheScreen(page);
     await CommonLeftToolbar(page).handTool();
     await chainlocator.hover({ force: true });
@@ -907,9 +934,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await CommonLeftToolbar(page).areaSelectionTool();
     await chainlocator.hover({ force: true });
     await MonomerPreviewTooltip(page).waitForBecomeVisible();
-    await takeElementScreenshot(page, chainlocator, {
-      padding: 120,
-    });
+    await takeElementScreenshot(page, MonomerPreviewTooltip(page).window);
   });
 
   test('Case 25 - 5NitInd unsplit nucleotide should be shown as X symbol instead of @ one', async ({
@@ -1011,7 +1036,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await presetSection.setupBase({
       atomIds: [0, 1, 2, 3, 4],
       bondIds: [0, 1, 2, 3],
-      symbol: Base.Base.alias,
+      code: Base.Base.alias,
       name: 'B1',
       naturalAnalogue: NucleotideNaturalAnalogue.A,
       HELMAlias: 'BaseAlias',
@@ -1026,15 +1051,18 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await presetSection.setupSugar({
       atomIds: [5, 6, 7],
       bondIds: [5, 6],
-      symbol: Sugar.Sugar.alias,
+      code: Sugar.Sugar.alias,
       name: 'S1',
       HELMAlias: 'SugAlias',
     });
 
+    await page.mouse.move(600, 200);
+    await dragMouseTo(page, 450, 250);
+
     await presetSection.setupPhosphate({
       atomIds: [8, 9, 10, 11, 12],
       bondIds: [8, 9, 10, 11],
-      symbol: Phosphate.Phosphate.alias,
+      code: Phosphate.Phosphate.alias,
       name: 'P1',
       HELMAlias: 'PhosAlias',
     });
@@ -1094,7 +1122,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
-      'RNA1{[d12r]}$$$$V2.0',
+      'RNA1{[12ddR]}$$$$V2.0',
     );
     await CommonTopLeftToolbar(page).saveFile();
     await SaveStructureDialog(page).chooseFileFormat(
@@ -1163,7 +1191,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await presetSection.setupBase({
       atomIds: [0, 1, 2, 3, 4],
       bondIds: [0, 1, 2, 3],
-      symbol: Base.Base.alias,
+      code: Base.Base.alias,
       name: 'B1',
       naturalAnalogue: NucleotideNaturalAnalogue.A,
       HELMAlias: 'BaseAlias',
@@ -1178,7 +1206,7 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await presetSection.setupSugar({
       atomIds: [5, 6, 7],
       bondIds: [5, 6],
-      symbol: Sugar.Sugar.alias,
+      code: Sugar.Sugar.alias,
       name: 'S1',
       HELMAlias: 'SugAlias',
     });
@@ -1186,13 +1214,14 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
     await presetSection.setupPhosphate({
       atomIds: [8, 9, 10, 11, 12],
       bondIds: [8, 9, 10, 11],
-      symbol: Phosphate.Phosphate.alias,
+      code: Phosphate.Phosphate.alias,
       name: 'P1',
       HELMAlias: 'PhosAlias',
     });
 
     await dialog.submit();
 
+    await clickOnCanvas(page, 0, 0);
     await page.waitForTimeout(1000);
     await takeElementScreenshot(page, getAtomLocator(page, { atomId: 5 }), {
       padding: 240,
@@ -1332,7 +1361,9 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
      */
 
     await openFileAndAddToCanvasAsNewProject(page, 'CDXML/cdxml-3261.cdxml');
-    await takeEditorScreenshot(page);
+    await takeElementScreenshot(page, getArrowLocator(page, {}), {
+      padding: 250,
+    });
     await verifyFileExport(
       page,
       'CDXML/cdxml-3261-expected.cdxml',
@@ -1367,13 +1398,13 @@ test.describe('Bugs: ketcher-3.11.0 — first trio', () => {
       x: 300,
       y: 150,
     });
-    await CommonLeftToolbar(page).bondTool(MacroBondType.Single);
+    await CommonLeftToolbar(page).bondTool(MacroBondTool.Single);
     await bondTwoMonomers(
       page,
       getMonomerLocator(page, Sugar.R),
       getMonomerLocator(page, Base._Base3),
     );
-    await verifyHELMExport(page, 'RNA1{r([_Base3_HELM***---])}$$$$V2.0');
+    await verifyHELMExport(page, 'RNA1{R([_Base3_HELM***---])}$$$$V2.0');
   });
 
   test('Case 38 - SVG/PNG: Export of any atom with Isotope (atomic mass) value set does not work', async () => {

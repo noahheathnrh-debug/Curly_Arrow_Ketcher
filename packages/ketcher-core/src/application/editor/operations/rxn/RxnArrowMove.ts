@@ -14,7 +14,7 @@
  * limitations under the License.
  ***************************************************************************/
 
-import Base from '../base';
+import Base from '../BaseOperation';
 import { OperationType } from '../OperationType';
 import { Scale } from 'domain/helpers';
 
@@ -55,5 +55,10 @@ export class RxnArrowMove extends Base {
     );
     move.data = this.data;
     return move;
+  }
+
+  isDummy() {
+    const { d } = this.data;
+    return d?.x === 0 && d?.y === 0;
   }
 }

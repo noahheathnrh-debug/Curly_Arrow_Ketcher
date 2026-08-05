@@ -41,7 +41,7 @@ import {
 } from '@utils/canvas';
 import { getAtomLocator } from '@utils/canvas/atoms/getAtomLocator/getAtomLocator';
 import { expandMonomer } from '@utils/canvas/monomer/helpers';
-import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviation';
+import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviationLocator';
 import {
   FileType,
   verifyFileExport,
@@ -51,7 +51,7 @@ import {
   verifySVGExport,
 } from '@utils/files/receiveFileComparisonData';
 import {
-  clickInTheMiddleOfTheScreen,
+  clickInTheMiddleOfTheCanvas,
   clickOnCanvas,
   dragMouseTo,
   keyboardTypeOnCanvas,
@@ -66,6 +66,7 @@ import {
 import {
   AttachmentPoint,
   createRNAAntisenseChain,
+  getAttachmentPointLocator,
   getMonomerLocator,
 } from '@utils/macromolecules/monomer';
 
@@ -103,6 +104,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     await page.keyboard.press('Backspace');
     await pasteFromClipboardByKeyboard(page);
     await takeEditorScreenshot(page);
+    await TextEditorDialog(page).cancel();
   });
 
   test('Case 2: In Macro mode selection tool not resets to Rectangle when switching between Flex, Snake, and Sequence modes', async ({
@@ -339,7 +341,10 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     await selectAllStructuresOnCanvas(page);
     await expect(LeftToolbar(page).createMonomerButton).toBeEnabled();
     await LeftToolbar(page).createMonomer();
-    const attachmentPointR1 = page.getByTestId(AttachmentPoint.R1).first();
+    const attachmentPointR1 = getAttachmentPointLocator(
+      page,
+      AttachmentPoint.R1,
+    ).first();
     await ContextMenu(page, attachmentPointR1).open();
     await takeEditorScreenshot(page);
     await CreateMonomerDialog(page).discard();
@@ -445,7 +450,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     await expect(LeftToolbar(page).createMonomerButton).toBeEnabled();
     await LeftToolbar(page).createMonomer();
     await createMonomerDialog.selectType(MonomerType.Sugar);
-    await createMonomerDialog.setSymbol('qeg');
+    await createMonomerDialog.setCode('qeg');
     await createMonomerDialog.setName('gly');
     await createMonomerDialog.submit();
     await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
@@ -500,7 +505,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     await clickOnCanvas(page, 300, 300, { from: 'pageTopLeft' });
     await selectAllStructuresOnCanvas(page);
     await expect(LeftToolbar(page).createMonomerButton).toBeEnabled();
-    await page.keyboard.press('Control+M');
+    await page.keyboard.press('ControlOrMeta+M');
     // to make molecule visible
     await CommonLeftToolbar(page).handTool();
     await page.mouse.move(600, 200);
@@ -545,6 +550,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     await addTextBoxToCanvas(page);
     await TextEditorDialog(page).setText(pasteText);
     await takeEditorScreenshot(page);
+    await TextEditorDialog(page).cancel();
   });
 
   test('Case 20: Unnecessary leaving groups (R-groups) not appear upon "Removing Abbreviation" of expanded monomer when an attachment point is occupied', async ({
@@ -568,7 +574,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
       'RNA1{[SGNA](A)P.[SGNA](A)P}|RNA2{[SGNA](A)}|RNA3{[SGNA]}$$$$V2.0',
     );
     await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
-    await clickInTheMiddleOfTheScreen(page);
+    await clickInTheMiddleOfTheCanvas(page);
     await expandMonomer(
       page,
       getAbbreviationLocator(page, { name: 'SGNA' }).nth(0),
@@ -718,7 +724,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
-      'RNA1{[O1[C@@H]%91[C@H](O)[C@H](O%92)[C@H]1CO%93.[*:3]%91.[*:1]%93.[*:2]%92 |$;;;;;;;;;_R3;_R1;_R2$|]p}$$$$V2.0',
+      'RNA1{[O1[C@@H]%91[C@H](O)[C@H](O%92)[C@H]1CO%93.[*:3]%91.[*:1]%93.[*:2]%92 |$;;;;;;;;;_R3;_R1;_R2$|]P}$$$$V2.0',
     );
     await takeEditorScreenshot(page, {
       hideMonomerPreview: true,
@@ -726,7 +732,7 @@ test.describe('Ketcher bugs in 3.8.0', () => {
     });
     await verifyHELMExport(
       page,
-      'RNA1{[O1[C@H](CO[*:1])[C@@H](O[*:2])[C@@H](O)[C@@H]1[*:3] |$;;;;_R1;;;_R2;;;;_R3$|].p}$$$$V2.0',
+      'RNA1{[O1[C@H](CO[*:1])[C@@H](O[*:2])[C@@H](O)[C@@H]1[*:3] |$;;;;_R1;;;_R2;;;;_R3$|].P}$$$$V2.0',
     );
   });
 

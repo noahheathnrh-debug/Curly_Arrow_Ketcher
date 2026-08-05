@@ -14,9 +14,9 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { BaseOperation } from '../base';
+import { BaseOperation } from '../BaseOperation';
 import { OperationType } from '../OperationType';
-import { ReStruct } from '../../../render';
+import type { ReStruct } from '../../../render';
 import { Scale } from 'domain/helpers';
 
 interface TextMoveData {
@@ -68,5 +68,10 @@ export class TextMove extends BaseOperation {
     move.data = this.data;
 
     return move;
+  }
+
+  isDummy() {
+    const { d } = this.data;
+    return d?.x === 0 && d?.y === 0;
   }
 }

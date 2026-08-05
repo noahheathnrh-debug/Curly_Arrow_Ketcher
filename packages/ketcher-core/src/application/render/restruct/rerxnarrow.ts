@@ -14,24 +14,24 @@
  * limitations under the License.
  ***************************************************************************/
 
+import { Box2Abs } from 'domain/entities/box2Abs';
 import {
-  Box2Abs,
-  LonePairAttachment,
-  RadicalAttachment,
+  type LonePairAttachment,
+  type RadicalAttachment,
+  type RxnArrowMode,
   RxnArrow,
-  RxnArrowMode,
-  Vec2,
-} from 'domain/entities';
+} from 'domain/entities/rxnArrow';
+import { Vec2 } from 'domain/entities/vec2';
 
 import { LayerMap } from './generalEnumTypes';
 import Raphael from '../raphael-ext';
 import ReObject from './reobject';
-import ReStruct from './restruct';
-import { Render } from '../raphaelRender';
+import type ReStruct from './restruct';
+import type { Render } from '../raphaelRender';
 import { Scale } from 'domain/helpers';
 import draw from '../draw';
 import util from '../util';
-import { tfx } from 'utilities';
+import { toFixed } from 'utilities';
 import { getLonePairModelPositions, getRadicalModelPositions } from './lonePairUtils';
 
 type Arrow = {
@@ -41,6 +41,7 @@ type Arrow = {
   height2?: number;
   lpAttach?: LonePairAttachment;
   raAttach?: RadicalAttachment;
+  arrowId?: number;
 };
 
 type ArrowParams = {
@@ -281,6 +282,12 @@ class ReRxnArrow extends ReObject {
 
   show(restruct: ReStruct, _id, options) {
     const path = this.generatePath(restruct.render, options, 'arrow');
+    path.node?.setAttribute('data-testid', 'rxn-arrow');
+    path.node?.setAttribute('data-arrowtype', this.item.mode + '-arrow');
+    if (typeof this.item.arrowId === 'number') {
+      path.node?.setAttribute('data-arrow-id', String(this.item.arrowId));
+    }
+
     const offset = options.offset;
 
     // paper.set() (used by CurlyMechanism) has no translateAbs; unwrap its items.
@@ -335,7 +342,7 @@ function computeCubicRefPoints(
 }
 
 function findMiddlePoint(height: number, a: Vec2, b: Vec2) {
-  if (+tfx(height) === 0) {
+  if (+toFixed(height) === 0) {
     const minX = Math.min(a.x, b.x);
     const minY = Math.min(a.y, b.y);
     const x = minX + Math.abs(a.x - b.x) / 2;

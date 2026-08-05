@@ -15,7 +15,12 @@
  ***************************************************************************/
 
 import { useAppSelector } from 'hooks';
-import { MonomerItemType, isAmbiguousMonomerLibraryItem } from 'ketcher-core';
+import {
+  getRnaPresetPhosphatePosition,
+  isAmbiguousMonomerLibraryItem,
+  MonomerItemType,
+  RnaPresetWithOptionalFields,
+} from 'ketcher-core';
 import { debounce } from 'lodash';
 import React, { ReactElement, useCallback } from 'react';
 import {
@@ -28,7 +33,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { RnaPresetItem } from 'components/monomerLibrary/RnaPresetItem';
 import {
-  GroupContainerRow,
+  GroupContainerColumn,
   ItemsContainer,
 } from 'components/monomerLibrary/monomerLibraryGroup/styles';
 import { selectEditor, selectShowPreview, showPreview } from 'state/common';
@@ -55,6 +60,9 @@ export const RnaPresetGroup = ({ presets, duplicatePreset, editPreset }) => {
   const { show } = useContextMenu({ id: CONTEXT_MENU_ID.FOR_RNA });
 
   const dispatch = useDispatch();
+  const resolvePhosphatePosition = (preset: IRnaPreset) =>
+    preset.phosphatePosition ??
+    getRnaPresetPhosphatePosition(preset as RnaPresetWithOptionalFields);
 
   const validatePreset = (preset: IRnaPreset) => {
     let isBaseValid = true;
@@ -123,16 +131,16 @@ export const RnaPresetGroup = ({ presets, duplicatePreset, editPreset }) => {
     [dispatchShowPreview],
   );
 
-  const handleItemMouseLeave = (): void => {
+  const closeLibraryPreview = useCallback((): void => {
     debouncedShowPreview.cancel();
     dispatch(showPreview(undefined));
-  };
+  }, [debouncedShowPreview, dispatch]);
 
   const handleItemMouseMove = (
     preset: IRnaPreset,
     e: React.MouseEvent,
   ): void => {
-    handleItemMouseLeave();
+    closeLibraryPreview();
 
     if (needSkipPreviewForElement(e.target as HTMLElement)) {
       return;
@@ -168,6 +176,8 @@ export const RnaPresetGroup = ({ presets, duplicatePreset, editPreset }) => {
             monomers,
             name: preset.name,
             idtAliases: preset.idtAliases,
+            aliasAxoLabs: preset.aliasAxoLabs,
+            phosphatePosition: resolvePhosphatePosition(preset),
             position: PresetPosition.Library,
             style,
           };
@@ -191,7 +201,7 @@ export const RnaPresetGroup = ({ presets, duplicatePreset, editPreset }) => {
     };
 
   return (
-    <GroupContainerRow data-testid="rna-preset-group">
+    <GroupContainerColumn data-testid="rna-preset-group">
       <ItemsContainer>
         {presets.map((preset: IRnaPreset, index: number): ReactElement => {
           return (
@@ -202,12 +212,13 @@ export const RnaPresetGroup = ({ presets, duplicatePreset, editPreset }) => {
               onClick={selectPreset(preset)}
               onContextMenu={handleContextMenu(preset)}
               onMouseMove={(e) => handleItemMouseMove(preset, e)}
-              onMouseLeave={handleItemMouseLeave}
+              onMouseLeave={closeLibraryPreview}
+              onStarClick={closeLibraryPreview}
             />
           );
         })}
       </ItemsContainer>
       <RNAContextMenu />
-    </GroupContainerRow>
+    </GroupContainerColumn>
   );
 };

@@ -1,7 +1,9 @@
 import { Chem } from '@tests/pages/constants/monomers/Chem';
 import { Locator, test, expect } from '@fixtures';
+import { LayoutMode } from '@tests/pages/constants/macromoleculesTopToolbar/Constants';
+import { MacromoleculesTopToolbar } from '@tests/pages/macromolecules/MacromoleculesTopToolbar';
 import { CommonLeftToolbar } from '@tests/pages/common/CommonLeftToolbar';
-import { MacroBondType } from '@tests/pages/constants/bondSelectionTool/Constants';
+import { MacroBondTool } from '@tests/pages/constants/bondSelectionTool/Constants';
 import { CommonTopRightToolbar } from '@tests/pages/common/CommonTopRightToolbar';
 import { Library } from '@tests/pages/macromolecules/Library';
 import {
@@ -20,6 +22,7 @@ test.describe('Modal window', () => {
   test.beforeEach(async ({ page }) => {
     await waitForPageInit(page);
     await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
+    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await Library(page).switchToCHEMTab();
 
     await Library(page).dragMonomerOnCanvas(Chem.Test_6_Ch, {
@@ -33,7 +36,7 @@ test.describe('Modal window', () => {
     });
     chem2 = getMonomerLocator(page, Chem.Test_6_Ch).nth(1);
     // Select bond tool
-    await CommonLeftToolbar(page).bondTool(MacroBondType.Single);
+    await CommonLeftToolbar(page).bondTool(MacroBondTool.Single);
   });
 
   test('"Connect" button is disabled', async ({ page }) => {

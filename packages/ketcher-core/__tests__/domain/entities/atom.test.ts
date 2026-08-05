@@ -159,6 +159,19 @@ describe('Atom', () => {
       expect(atom.isQuery()).toBeTruthy();
     });
 
+    it.each([
+      { queryProperties: { ringMembership: 0 } },
+      { queryProperties: { ringSize: 0 } },
+      { queryProperties: { connectivity: 0 } },
+    ])('should return true for zero-valued query properties', (queryParams) => {
+      const atom = new Atom({
+        ...hydrogenParams,
+        ...queryParams,
+      });
+
+      expect(atom.isQuery()).toBe(true);
+    });
+
     it('should return falsy value if it is default atom', () => {
       const atom = new Atom(hydrogenParams);
       expect(atom.isQuery()).toBeFalsy();
@@ -304,7 +317,7 @@ describe('Atom', () => {
     it('should return false if atom has rgLabel', () => {
       const paramsWithRgLabel = {
         ...hydrogenParams,
-        rglabel: 'test',
+        rglabel: 1,
       };
 
       const atom = new Atom(paramsWithRgLabel);
@@ -426,6 +439,36 @@ describe('Atom', () => {
       expect(nitrogen.calcValence(5)).toBe(true);
       expect(nitrogen.valence).toBe(5);
       expect(nitrogen.implicitH).toBe(0);
+      expect(nitrogen.badConn).toBe(false);
+    });
+
+    it('should use implicit H count query property for carbon', () => {
+      const carbon = new Atom({
+        ...hydrogenParams,
+        label: 'C',
+        charge: null,
+        implicitHCount: 8,
+        isotope: null,
+      });
+
+      expect(carbon.calcValence(0)).toBe(true);
+      expect(carbon.valence).toBe(4);
+      expect(carbon.implicitH).toBe(8);
+      expect(carbon.badConn).toBe(false);
+    });
+
+    it('should continue using implicit H count query property for heteroatoms', () => {
+      const nitrogen = new Atom({
+        ...hydrogenParams,
+        label: 'N',
+        charge: null,
+        implicitHCount: 4,
+        isotope: null,
+      });
+
+      expect(nitrogen.calcValence(0)).toBe(true);
+      expect(nitrogen.valence).toBe(3);
+      expect(nitrogen.implicitH).toBe(4);
       expect(nitrogen.badConn).toBe(false);
     });
 

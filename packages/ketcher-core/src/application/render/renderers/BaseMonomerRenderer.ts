@@ -1,11 +1,12 @@
-import { editorEvents } from 'application/editor/editorEvents';
-import { CoreEditor, SelectBase } from 'application/editor/internal';
+import type { CoreEditor } from 'application/editor/Editor';
+import { provideEditorInstance } from 'application/editor/editorSingleton';
 import { Coordinates } from 'application/editor/shared/coordinates';
-import { D3SvgElementSelection } from 'application/render/types';
-import assert from 'assert';
+import type { D3SvgElementSelection } from 'application/render/types';
+import { SELECTION_COLOR } from 'application/render/renderers/constants';
+import { assert } from 'utilities';
 import { AttachmentPoint } from 'domain/AttachmentPoint';
-import { BaseMonomer } from 'domain/entities/BaseMonomer';
-import { DrawingEntity } from 'domain/entities/DrawingEntity';
+import type { BaseMonomer } from 'domain/entities/BaseMonomer';
+import type { DrawingEntity } from 'domain/entities/DrawingEntity';
 import { Vec2 } from 'domain/entities/vec2';
 import {
   anglesToSector,
@@ -13,22 +14,28 @@ import {
   checkFor0and360,
   sectorsList,
 } from 'domain/helpers/attachmentPointCalculations';
-import {
+import type {
   AttachmentPointConstructorParams,
   AttachmentPointName,
 } from 'domain/types';
 import { BaseRenderer } from './BaseRenderer';
-import { monomerFactory } from 'application/editor/operations/monomer/monomerFactory';
+import { monomerEntityFactory } from 'domain/helpers/monomerEntityFactory';
 import { AmbiguousMonomer } from 'domain/entities/AmbiguousMonomer';
+import {
+  getMonomerSize,
+  setMonomerSize,
+} from 'application/render/renderers/monomerSizeState';
 
 const labelPositions: { [key: string]: { x: number; y: number } | undefined } =
   {};
 export const MONOMER_CSS_CLASS = 'monomer';
-let monomerSize: { width: number; height: number } = { width: 0, height: 0 };
 
 export abstract class BaseMonomerRenderer extends BaseRenderer {
-  private readonly editorEvents: typeof editorEvents;
   private readonly editor: CoreEditor;
+  private get editorEvents() {
+    return provideEditorInstance().events;
+  }
+
   private selectionCircle?: D3SvgElementSelection<SVGCircleElement, void>;
   private selectionBorder?: D3SvgElementSelection<SVGUseElement, void>;
   public declare bodyElement?: D3SvgElementSelection<SVGUseElement, this>;
@@ -36,6 +43,8 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
 
   private attachmentPoints: AttachmentPoint[] | [] = [];
   private hoveredAttachmentPoint: AttachmentPointName | null = null;
+  private _dragTargetAttachmentPoint: AttachmentPointName | null = null;
+  private _dragCircleHoverAttachmentPoint: AttachmentPointName | null = null;
 
   private readonly monomerSymbolElement?: SVGUseElement | SVGRectElement;
   public readonly monomerSize: { width: number; height: number };
@@ -68,8 +77,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
   ) {
     super(monomer as DrawingEntity);
     this.monomer.setRenderer(this);
-    this.editorEvents = editorEvents;
-    this.editor = CoreEditor?.provideEditorInstance();
+    this.editor = provideEditorInstance();
     this.monomerSymbolElement = document.querySelector(
       `${monomerSymbolElementId} .monomer-body`,
     ) as SVGUseElement | SVGRectElement;
@@ -84,7 +92,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
         this.monomerSymbolElement?.getAttribute('data-actual-height') ?? 0
       ),
     };
-    monomerSize = this.monomerSize;
+    setMonomerSize(this.monomerSize);
   }
 
   // FIXME: `BaseMonomerRenderer` should not know about `isSnake`.
@@ -101,7 +109,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
   }
 
   public static get monomerSize() {
-    return monomerSize;
+    return getMonomerSize();
   }
 
   public get center() {
@@ -207,22 +215,26 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
     }
 
     const appendFnToUse = appendFn ?? this.appendAttachmentPoint.bind(this);
+    const hasDragTarget = this._dragTargetAttachmentPoint !== null;
 
-    // draw used attachment points
-    this.monomer.usedAttachmentPointsNamesList.forEach((item) => {
-      const attachmentPoint = appendFnToUse(item);
-      const angle: number = attachmentPoint.getAngle();
+    // draw used attachment points (hidden when a drag target is active)
+    if (!hasDragTarget) {
+      this.monomer.usedAttachmentPointsNamesList.forEach((item) => {
+        const attachmentPoint = appendFnToUse(item);
+        const angle: number = attachmentPoint.getAngle();
 
-      this.attachmentPoints.push(attachmentPoint as never);
+        this.attachmentPoints.push(attachmentPoint as never);
 
-      // remove this sector from list of free sectors
-      const newList = this.freeSectorsList.filter((item) => {
-        return (
-          anglesToSector[item].min > angle || anglesToSector[item].max <= angle
-        );
+        // remove this sector from list of free sectors
+        const newList = this.freeSectorsList.filter((item) => {
+          return (
+            anglesToSector[item].min > angle ||
+            anglesToSector[item].max <= angle
+          );
+        });
+        this.freeSectorsList = checkFor0and360(newList);
       });
-      this.freeSectorsList = checkFor0and360(newList);
-    });
+    }
 
     const unrenderedAtPoints: AttachmentPointName[] = [];
 
@@ -261,6 +273,17 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
     attachmentPointName: AttachmentPointName,
     customAngle?: number,
   ): AttachmentPointConstructorParams {
+    // Attachment points are only ever prepared/drawn after the root element
+    // has been appended (see drawAttachmentPoints callers, which bail out
+    // early when `rootElement` is not yet set). Reaching this point without
+    // a root element would indicate a programming error, not a normal
+    // runtime case.
+    if (!this.rootElement) {
+      throw new Error(
+        'Cannot prepare attachment point params before the root element is appended.',
+      );
+    }
+
     let rotation;
 
     if (!this.monomer.isAttachmentPointUsed(attachmentPointName)) {
@@ -268,8 +291,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
     }
 
     return {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      rootElement: this.rootElement!,
+      rootElement: this.rootElement,
       monomer: this.monomer,
       bodyWidth: this.monomerSize.width,
       bodyHeight: this.monomerSize.height,
@@ -283,6 +305,9 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
       applyZoomForPositionCalculation: true,
       // FIXME: `BaseMonomerRenderer` should not know about `isSnake`.
       isSnake: this.isSnakeBondForAttachmentPoint(attachmentPointName),
+      isDragTarget: this._dragTargetAttachmentPoint === attachmentPointName,
+      isDragCircleHover:
+        this._dragCircleHoverAttachmentPoint === attachmentPointName,
     };
   }
 
@@ -308,6 +333,24 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
 
   public hoverAttachmentPoint(attachmentPointName: AttachmentPointName): void {
     this.hoveredAttachmentPoint = attachmentPointName;
+  }
+
+  public setDragTargetAttachmentPoint(
+    attachmentPointName: AttachmentPointName | null,
+  ): void {
+    this._dragTargetAttachmentPoint = attachmentPointName;
+  }
+
+  public setDragCircleHoverAttachmentPoint(
+    attachmentPointName: AttachmentPointName | null,
+  ): void {
+    this._dragCircleHoverAttachmentPoint = attachmentPointName;
+  }
+
+  protected raiseAttachmentPoints() {
+    this.attachmentPoints.forEach((attachmentPoint) => {
+      attachmentPoint.raise();
+    });
   }
 
   protected appendRootElement(
@@ -380,7 +423,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
     // cache label position to reuse it form other monomers with same label
     // need to improve performance for large amount of monomers
     // getBBox triggers reflow
-    const [, , monomerClass] = monomerFactory(
+    const [, monomerClass] = monomerEntityFactory(
       this.monomer instanceof AmbiguousMonomer
         ? this.monomer.variantMonomerItem
         : this.monomer.monomerItem,
@@ -413,7 +456,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
     let cursor = 'default';
 
     if (this.hoverElement) this.hoverElement.remove();
-    if (this.editor.selectedTool instanceof SelectBase) cursor = 'move';
+    if (this.editor.selectedTool?.name === 'select-tool') cursor = 'move';
 
     return hoverAreaElement
       .style('cursor', cursor)
@@ -464,7 +507,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
         .attr('opacity', '0.7')
         .attr('cx', this.center.x)
         .attr('cy', this.center.y)
-        .attr('fill', '#57FF8F')
+        .attr('fill', SELECTION_COLOR)
         .attr('class', 'dynamic-element');
     }
   }
@@ -537,9 +580,12 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
       .attr('font-weight', '500')
       .attr('text-align', 'right')
       .attr('style', 'user-select: none;')
+      .attr('pointer-events', 'none')
       .attr('x', this.enumerationElementPosition.x)
       .attr('y', this.enumerationElementPosition.y)
       .text(this.enumeration);
+
+    this.raiseAttachmentPoints();
   }
 
   public redrawEnumeration(needToDrawTerminalIndicator: boolean) {
@@ -574,6 +620,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
       .attr('font-weight', '700')
       .attr('text-align', 'right')
       .attr('style', 'user-select: none;')
+      .attr('pointer-events', 'none')
       .attr('x', this.beginningElementPosition.x)
       .attr('y', this.beginningElementPosition.y)
       .text(
@@ -581,6 +628,8 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
           ? this.CHAIN_END_TERMINAL_INDICATOR_TEXT
           : this.CHAIN_START_TERMINAL_INDICATOR_TEXT,
       );
+
+    this.raiseAttachmentPoints();
   }
 
   protected abstract get modificationConfig();
@@ -615,6 +664,7 @@ export abstract class BaseMonomerRenderer extends BaseRenderer {
       this.rootElement ??
       this.appendRootElement(this.scale ? this.canvasWrapper : this.canvas);
     this.bodyElement = this.appendBody(this.rootElement, theme);
+    this.bodyElement?.attr('data-testid', 'shape');
     this.appendEvents();
     this.drawModification();
 

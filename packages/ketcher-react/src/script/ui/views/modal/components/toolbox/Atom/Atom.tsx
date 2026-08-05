@@ -14,17 +14,17 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { BaseCallProps, BaseProps } from '../../../modal.types';
+import type { BaseCallProps, BaseProps } from '../../../modal.types';
 
 import Form, {
   Field,
   CustomQueryField,
 } from '../../../../../component/form/form/form';
-import { FC, useMemo, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import { Dialog } from '../../../../components';
 import {
-  AtomAllAttributeName,
+  type AtomAllAttributeName,
   SettingsManager,
   getAtomCustomQuery,
 } from 'ketcher-core';
@@ -54,7 +54,6 @@ interface AtomProps extends BaseCallProps, BaseProps {
   label: string;
   radical: number;
   ringBondCount: number;
-  stereoParity: number;
   substitutionCount: number;
   unsaturatedAtom: boolean;
   customQuery: string;
@@ -88,9 +87,6 @@ const querySpecificFields: Array<{
 const Atom: FC<Props> = (props: Props) => {
   const {
     formState,
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    stereoParity,
-    /* eslint-enable @typescript-eslint/no-unused-vars */
     isMultipleAtoms = false,
     isRestoredModal,
     isMonomerCreationWizardActive = false,
@@ -145,7 +141,8 @@ const Atom: FC<Props> = (props: Props) => {
         pseudoAtomValid(value, atomType, isCustomQuery, disableQueryElements),
       atomList: (value: string) =>
         AtomListValid(value, atomType, isCustomQuery),
-      charge: (charge) => chargeValid(charge, isMultipleAtoms, isCustomQuery),
+      charge: (charge) =>
+        chargeValid(charge, isMultipleAtoms, isCustomQuery) ?? false,
       customQuery: (value: string) => customQueryValid(value, isCustomQuery),
     };
   }, [formState.result.atomType, isCustomQuery, isMultipleAtoms]);
@@ -155,7 +152,7 @@ const Atom: FC<Props> = (props: Props) => {
       groupName: 'General',
       component: (
         <div>
-          <AtomElement formState={formState} className=""></AtomElement>
+          <AtomElement formState={formState}></AtomElement>
           <Field name="alias" data-testid="alias" />
           <Field
             name="charge"

@@ -28,8 +28,8 @@ import help from './help';
 import functionalGroups from './functionalGroups';
 import fullscreen from './fullscreen';
 import { removeStructAction, openInfoModal } from '../state/shared';
-import { Tools, UiAction } from './action.types';
-import Editor from '../../editor/Editor';
+import type { Tools, UiAction } from './action.types';
+import type Editor from '../../editor/Editor';
 
 export * from './action.types';
 
@@ -206,6 +206,7 @@ const config: Record<string, UiAction> = {
   settings: {
     title: 'Settings',
     action: { dialog: 'settings' },
+    disabled: (editor) => editor.isMonomerCreationWizardActive,
     hidden: (options) => isHidden(options, 'settings'),
   },
   about: {

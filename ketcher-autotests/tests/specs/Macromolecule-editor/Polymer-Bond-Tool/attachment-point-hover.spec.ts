@@ -1,9 +1,11 @@
 import { Peptide } from '@tests/pages/constants/monomers/Peptides';
 import { test } from '@fixtures';
 import { waitForPageInit, takeEditorScreenshot } from '@utils';
+import { LayoutMode } from '@tests/pages/constants/macromoleculesTopToolbar/Constants';
+import { MacromoleculesTopToolbar } from '@tests/pages/macromolecules/MacromoleculesTopToolbar';
 import { bondTwoMonomers } from '@utils/macromolecules/polymerBond';
 import { CommonLeftToolbar } from '@tests/pages/common/CommonLeftToolbar';
-import { MacroBondType } from '@tests/pages/constants/bondSelectionTool/Constants';
+import { MacroBondTool } from '@tests/pages/constants/bondSelectionTool/Constants';
 import { CommonTopRightToolbar } from '@tests/pages/common/CommonTopRightToolbar';
 import { Library } from '@tests/pages/macromolecules/Library';
 import { getMonomerLocator } from '@utils/macromolecules/monomer';
@@ -12,6 +14,7 @@ test.describe('Check attachment point hover', () => {
   test.beforeEach(async ({ page }) => {
     await waitForPageInit(page);
     await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
+    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await Library(page).switchToPeptidesTab();
   });
 
@@ -29,7 +32,7 @@ test.describe('Check attachment point hover', () => {
       y: 400,
     });
     const peptide2 = getMonomerLocator(page, Peptide.Tza).nth(1);
-    await CommonLeftToolbar(page).bondTool(MacroBondType.Single);
+    await CommonLeftToolbar(page).bondTool(MacroBondTool.Single);
     await bondTwoMonomers(page, peptide1, peptide2);
 
     const bondLine = page

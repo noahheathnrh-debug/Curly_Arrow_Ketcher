@@ -17,14 +17,15 @@
 import * as clipArea from '../component/cliparea/cliparea';
 
 import {
+  type Editor,
   KetSerializer,
   formatProperties,
   ChemicalMimeType,
   KetcherLogger,
   ketcherProvider,
   SupportedFormat,
-  Editor,
   getStructure,
+  isEditableInputTarget,
   MolSerializer,
   runAsyncAction,
   SettingsManager,
@@ -102,7 +103,7 @@ function shouldIgnoreKeyEvent(state, event): boolean {
   // TODO: It is done to intercept hotkeys when editing inputs in monomer creation wizard
   // It targets plain inputs only, ideally it has to be incorporated with ClipArea functionality
   // Ideally x2 – create a common event interception layer for both micro and macro editors
-  return event.target.nodeName === 'INPUT';
+  return isEditableInputTarget(event.target);
 }
 
 function shouldShowAbbreviationLookup(key: string, state): boolean {
@@ -200,6 +201,25 @@ function handleSelectTool(newAction, key: string, index: number) {
   return newAction;
 }
 
+// While hovering a bond, cycling through a shared shortcut (e.g. '1' for
+// single/up/down/updown) must advance from the bond's own current type/stereo,
+// not from the active toolbar tool (which doesn't change just from hovering,
+// so re-pressing the key would otherwise always land on the same entry) (#3705).
+function getNextBondTypeAction(hoveredItem, group, render) {
+  const hoveredBondId = hoveredItem.bonds;
+  if (hoveredBondId === undefined) return null;
+
+  const bond = render.ctab.bonds.get(hoveredBondId)?.b;
+  if (!bond) return null;
+
+  const currentIndex = group.findIndex((actName) => {
+    const opts = actions[actName]?.action?.opts;
+    return opts?.type === bond.type && opts?.stereo === bond.stereo;
+  });
+
+  return getNextAction(group[(currentIndex + 1) % group.length]);
+}
+
 function handleHotkeyGroup(
   group,
   actionTool,
@@ -225,9 +245,17 @@ function handleHotkeyGroup(
   if (clipArea.actions.indexOf(actName) === -1) {
     let newAction = getNextAction(actName);
     const hoveredItem = getHoveredItem(render.ctab);
+    const { atoms, bonds } = editor.selection() ?? {};
+    const hasSelection = Boolean(atoms?.length) || Boolean(bonds?.length);
 
-    if (shouldHandleItemDirectly(hoveredItem, newAction)) {
-      newAction = getCurrentAction(group[index]) || newAction;
+    // For erase action, prioritize selected items over hovered item
+    if (actName === 'erase' && hasSelection) {
+      dispatch(onAction(newAction));
+    } else if (shouldHandleItemDirectly(hoveredItem, newAction)) {
+      newAction =
+        getNextBondTypeAction(hoveredItem, group, render) ||
+        getCurrentAction(group[index]) ||
+        newAction;
       handleHotkeyOverItem({
         hoveredItem,
         newAction,
@@ -361,6 +389,13 @@ export function initClipboard(dispatch, getState) {
       const state = getState();
       return !state.modal;
     },
+    onLegacyCopy() {
+      const state = getState();
+      const editor = state.editor;
+      const data = legacyClipData(editor);
+      editor.selection(null);
+      return data;
+    },
     onLegacyCut() {
       const state = getState();
       const editor = state.editor;
@@ -405,15 +440,14 @@ export function initClipboard(dispatch, getState) {
       const result = await runAsyncAction(async () => {
         const structStr = await getStructStringFromClipboardData(data);
         if (structStr || !rxnTextPlain.test(data['text/plain'])) {
-          if (isSmarts) {
-            loadStruct(structStr, {
-              fragment: true,
-              isPaste: true,
-              'input-format': ChemicalMimeType.DaylightSmarts,
-            });
-          } else {
-            loadStruct(structStr, { fragment: true, isPaste: true });
-          }
+          const opts = isSmarts
+            ? {
+                fragment: true,
+                isPaste: true,
+                'input-format': ChemicalMimeType.DaylightSmarts,
+              }
+            : { fragment: true, isPaste: true };
+          await dispatch(load(structStr, opts));
         }
       }, ketcherInstance.eventBus);
       return result;
@@ -494,7 +528,9 @@ async function clipData(editor: Editor) {
     return res;
   } catch (e: any) {
     KetcherLogger.error('hotkeys.ts::clipData', e);
-    errorHandler && errorHandler(e.message);
+    if (errorHandler) {
+      errorHandler(e.message);
+    }
   }
 
   return null;
@@ -524,7 +560,9 @@ function legacyClipData(editor: Editor) {
     return res;
   } catch (e: any) {
     KetcherLogger.error('hotkeys.ts::legacyClipData', e);
-    errorHandler && errorHandler(e.message);
+    if (errorHandler) {
+      errorHandler(e.message);
+    }
   }
 
   return null;

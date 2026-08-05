@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -870,7 +871,8 @@
                     -0.1507,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -1008,6 +1010,7 @@
         "id": "meC___N-Methyl-Cysteine",
         "fullName": "N-Methyl-Cysteine",
         "alias": "meC",
+        "aliasBILN": "meC",
         "attachmentPoints": [
             {
                 "attachmentAtom": 4,
@@ -1075,7 +1078,8 @@
                     -3.0039,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -1380,7 +1384,8 @@
                     -0.6239287570717864,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -1525,6 +1530,7 @@
         "id": "dD___D-Aspartic acid",
         "fullName": "D-Aspartic acid",
         "alias": "dD",
+        "aliasBILN": "dD",
         "attachmentPoints": [
             {
                 "attachmentAtom": 3,
@@ -1656,7 +1662,8 @@
                     -0.1075,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             }
         ],
         "bonds": [
@@ -1842,7 +1849,8 @@
                     -1.2103,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -1984,6 +1992,7 @@
         "id": "dF___D-Phenylalanine",
         "fullName": "D-Phenylalanine",
         "alias": "dF",
+        "aliasBILN": "dF",
         "attachmentPoints": [
             {
                 "attachmentAtom": 8,
@@ -2042,7 +2051,8 @@
                     -3.0039,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -2258,7 +2268,8 @@
                     -0.2124,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -2459,7 +2470,8 @@
                     -1.8157340037213354,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -2738,6 +2750,7 @@
         "id": "DHis1B___(2R)-2-amino-3-(1-benzyl-1H-imidazol-4-yl)propanoic acid",
         "fullName": "(2R)-2-amino-3-(1-benzyl-1H-imidazol-4-yl)propanoic acid",
         "alias": "DHis1B",
+        "aliasBILN": "D-His_1Bn",
         "attachmentPoints": [
             {
                 "attachmentAtom": 1,
@@ -2786,7 +2799,8 @@
                     0.9304,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -2795,7 +2809,8 @@
                     -0.5472,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -2926,6 +2941,7 @@
         "id": "dI___D-Isoleucine",
         "fullName": "D-Isoleucine",
         "alias": "dI",
+        "aliasBILN": "dI",
         "attachmentPoints": [
             {
                 "attachmentAtom": 3,
@@ -2984,7 +3000,8 @@
                     -0.5997833336137317,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -3001,7 +3018,8 @@
                     0.4004998390582191,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -3116,6 +3134,7 @@
         "id": "aIle___L-allo-Isoleucine",
         "fullName": "L-allo-Isoleucine",
         "alias": "aIle",
+        "aliasBILN": "aIle",
         "attachmentPoints": [
             {
                 "attachmentAtom": 5,
@@ -3174,7 +3193,8 @@
                     -3.2675831238738704,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -3255,7 +3275,8 @@
                     2.929312083381643,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "O",
@@ -3560,7 +3581,8 @@
                     2.8647574141882735,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -3744,7 +3766,8 @@
                     4.2983,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -3843,6 +3866,7 @@
         "id": "Asp-al___(3S)-3-amino-4-oxobutanoic acid",
         "fullName": "(3S)-3-amino-4-oxobutanoic acid",
         "alias": "Asp-al",
+        "aliasBILN": "Asp-al",
         "attachmentPoints": [
             {
                 "attachmentAtom": 5,
@@ -3892,7 +3916,8 @@
                     -1.0323,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -4058,7 +4083,8 @@
                     -1.1228323294574454,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -4218,6 +4244,7 @@
         "id": "dQ___D-Glutamine",
         "fullName": "D-Glutamine",
         "alias": "dQ",
+        "aliasBILN": "dQ",
         "attachmentPoints": [
             {
                 "attachmentAtom": 3,
@@ -4345,7 +4372,8 @@
                     -2.3647119733026702,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -4522,7 +4550,8 @@
                     0.2326,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -4629,6 +4658,7 @@
         "id": "meS___N-Methyl-Serine",
         "fullName": "N-Methyl-Serine",
         "alias": "meS",
+        "aliasBILN": "meS",
         "attachmentPoints": [
             {
                 "attachmentAtom": 2,
@@ -4687,7 +4717,8 @@
                     -3.504442364608732,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -4899,6 +4930,7 @@
         "id": "DSerBn___O-Benzyl-D-serine",
         "fullName": "O-Benzyl-D-serine",
         "alias": "DSerBn",
+        "aliasBILN": "D-Ser_Bn",
         "attachmentPoints": [
             {
                 "attachmentAtom": 1,
@@ -4967,7 +4999,8 @@
                     -0.384,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -5090,6 +5123,7 @@
         "id": "Nva___norvaline",
         "fullName": "norvaline",
         "alias": "Nva",
+        "aliasBILN": "Nva",
         "attachmentPoints": [
             {
                 "attachmentAtom": 5,
@@ -5184,7 +5218,8 @@
                     -0.5259,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -5432,7 +5467,8 @@
                     -2.5161,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -5933,7 +5969,8 @@
                     2.3361,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -6193,7 +6230,8 @@
                     -1.0003513851972434,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -6321,6 +6359,7 @@
         "id": "SertBu___O-tert-Butyl-L-serine",
         "fullName": "O-tert-Butyl-L-serine",
         "alias": "SertBu",
+        "aliasBILN": "Ser_tBu",
         "attachmentPoints": [
             {
                 "attachmentAtom": 7,
@@ -6371,7 +6410,8 @@
                     -1.3378944956649557,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -6569,6 +6609,7 @@
         "id": "meR___N-Methyl-Arginine",
         "fullName": "N-Methyl-Arginine",
         "alias": "meR",
+        "aliasBILN": "meR",
         "attachmentPoints": [
             {
                 "attachmentAtom": 5,
@@ -6619,7 +6660,8 @@
                     -1.6098,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "C",
@@ -6636,7 +6678,8 @@
                     0.1051,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -6848,7 +6891,8 @@
                     -1.16,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "N",
@@ -7043,7 +7087,8 @@
                     -0.2861,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -7172,6 +7217,7 @@
         "id": "meL___N-Methyl-Leucine",
         "fullName": "N-Methyl-Leucine",
         "alias": "meL",
+        "aliasBILN": "meL",
         "attachmentPoints": [
             {
                 "attachmentAtom": 7,
@@ -7262,7 +7308,8 @@
                     1.5634,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 2
             },
             {
                 "label": "N",
@@ -7450,7 +7497,8 @@
                     -0.7865,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -7640,6 +7688,7 @@
         "id": "meH___N-Methyl-Histidine",
         "fullName": "N-Methyl-Histidine",
         "alias": "meH",
+        "aliasBILN": "meH",
         "attachmentPoints": [
             {
                 "attachmentAtom": 8,

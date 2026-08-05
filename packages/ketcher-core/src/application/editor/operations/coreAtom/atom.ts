@@ -16,13 +16,11 @@
  ***************************************************************************/
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { RenderersManager } from 'application/render/renderers/RenderersManager';
-import { Operation } from 'domain/entities/Operation';
-import { Atom } from 'domain/entities/CoreAtom';
-import {
-  Bond as MicromoleculesBond,
-  Atom as MicromoleculesAtom,
-} from 'domain/entities';
+import type { RenderersManager } from 'application/render/renderers/RenderersManager';
+import type { Operation } from 'domain/entities/Operation';
+import type { Atom } from 'domain/entities/CoreAtom';
+import type { Bond as MicromoleculesBond } from 'domain/entities/bond';
+import type { Atom as MicromoleculesAtom } from 'domain/entities/atom';
 import { KetcherLogger } from 'utilities';
 
 interface BondWithIdInMicromolecules {
@@ -152,9 +150,11 @@ export class AtomDeleteOperation implements Operation {
 
   public invertAfterAllOperations(renderersManager: RenderersManager) {
     renderersManager.addAtom(this.atom);
+    renderersManager.rerenderSGroups();
   }
 
   public executeAfterAllOperations(renderersManager: RenderersManager) {
     renderersManager.deleteAtom(this.atom);
+    renderersManager.rerenderSGroups();
   }
 }

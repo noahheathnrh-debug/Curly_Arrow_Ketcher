@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -101,7 +102,7 @@
         "id": "bP___Boranophosphate",
         "fullName": "Boranophosphate",
         "alias": "bP",
-        "aliasHELM": "bp",
+        "aliasHELM": "bP",
         "attachmentPoints": [
             {
                 "attachmentAtom": 0,

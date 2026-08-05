@@ -1,5 +1,12 @@
-import { RxnArrowMode, Vec2 } from 'domain/entities';
-import { StereLabelStyleType } from 'application/render/restruct';
+import type { RxnArrowMode } from 'domain/entities/rxnArrow';
+import type { Vec2 } from 'domain/entities/vec2';
+import type {
+  StereoColoringType,
+  StereoLabelStyleType,
+} from 'application/render/restruct/generalEnumTypes';
+import type { UsageInMacromolecule } from './render.constants';
+
+export { UsageInMacromolecule } from './render.constants';
 
 export type RenderOptionStyles = Record<string, string | number>;
 
@@ -13,12 +20,6 @@ export enum MeasurementUnits {
 export enum ChargeDisplayStyle {
   Standard = 'standard',
   Circled = 'circled',
-}
-
-export enum UsageInMacromolecule {
-  MonomerConnectionsModal,
-  MonomerPreview,
-  BondPreview,
 }
 
 export type RenderOptions = {
@@ -99,7 +100,8 @@ export type RenderOptions = {
   atomSelectionPlateRadius: number;
   contractedFunctionalGroupSize: number;
 
-  stereoLabelStyle?: StereLabelStyleType;
+  stereoLabelStyle?: StereoLabelStyleType;
+  colorStereogenicCenters: StereoColoringType;
 
   previewOpacity: number;
 

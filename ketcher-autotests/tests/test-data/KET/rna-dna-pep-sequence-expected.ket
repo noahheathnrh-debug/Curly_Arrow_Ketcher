@@ -1,4 +1,5 @@
 {
+    "ket_version": "2.0.0",
     "root": {
         "nodes": [
             {
@@ -511,7 +512,7 @@
         "id": "P___Phosphate",
         "fullName": "Phosphate",
         "alias": "P",
-        "aliasHELM": "p",
+        "aliasHELM": "P",
         "aliasAxoLabs": "p",
         "attachmentPoints": [
             {
@@ -760,7 +761,8 @@
                     0.209,
                     0
                 ],
-                "stereoLabel": "abs"
+                "stereoLabel": "abs",
+                "stereoParity": 1
             },
             {
                 "label": "C",
@@ -891,6 +893,7 @@
         "fullName": "Proline",
         "alias": "P",
         "aliasHELM": "P",
+        "aliasBILN": "P",
         "attachmentPoints": [
             {
                 "attachmentAtom": 0,

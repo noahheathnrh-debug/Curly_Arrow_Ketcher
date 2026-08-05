@@ -1,34 +1,52 @@
 import { IRnaPreset } from 'components/monomerLibrary/RnaBuilder/types';
 import {
+  buildRnaPresetConnections,
+  IKetTemplateConnection,
   IKetMonomerGroupTemplate,
   monomerFactory,
   MonomerItemType,
+  MonomerOrAmbiguousType,
   setMonomerTemplatePrefix,
   KetMonomerClass,
   IRnaLabeledPreset,
-  isAmbiguousMonomerLibraryItem,
+  getRnaPresetPhosphatePosition,
   setAmbiguousMonomerTemplatePrefix,
+  isAmbiguousMonomerLibraryItem,
 } from 'ketcher-core';
 import { getMonomerUniqueKey } from 'state/library';
 
 interface RnaPresetsTemplatesType
-  extends Pick<IKetMonomerGroupTemplate, 'templates' | 'idtAliases'>,
+  extends Pick<
+      IKetMonomerGroupTemplate,
+      'templates' | 'idtAliases' | 'aliasAxoLabs'
+    >,
+    Partial<Pick<IKetMonomerGroupTemplate, 'connections'>>,
     Pick<IRnaLabeledPreset, 'default' | 'favorite' | 'name'> {
-  aliasAxoLabs?: string;
+  connections?: IKetTemplateConnection[];
 }
 
 export const getPresets = (
-  monomers: ReadonlyArray<MonomerItemType>,
+  monomers: ReadonlyArray<MonomerOrAmbiguousType>,
   rnaPresetsTemplates: ReadonlyArray<RnaPresetsTemplatesType>,
   isDefault?: boolean,
 ): IRnaPreset[] => {
-  const monomerLibraryItemByMonomerIDMap = new Map<string, MonomerItemType>(
+  const monomerLibraryItemByMonomerIDMap = new Map<
+    string,
+    MonomerOrAmbiguousType
+  >(
     monomers.map((monomer) => {
-      const monomerID = isAmbiguousMonomerLibraryItem(monomer)
-        ? setAmbiguousMonomerTemplatePrefix(monomer.id)
-        : setMonomerTemplatePrefix(
-            monomer.props.id || getMonomerUniqueKey(monomer),
-          );
+      let monomerID: string;
+
+      if (isAmbiguousMonomerLibraryItem(monomer)) {
+        const ambiguousMonomer = monomer;
+        monomerID = setAmbiguousMonomerTemplatePrefix(ambiguousMonomer.id);
+      } else {
+        const monomerItem = monomer as MonomerItemType;
+        monomerID = setMonomerTemplatePrefix(
+          monomerItem.props.id || getMonomerUniqueKey(monomerItem),
+        );
+      }
+
       return [monomerID, monomer];
     }),
   );
@@ -67,13 +85,27 @@ export const getPresets = (
         KetMonomerClass.Phosphate,
       ) as MonomerItemType;
 
+      const connections =
+        rnaPresetsTemplate.connections ??
+        buildRnaPresetConnections({
+          base: rnaBase,
+          sugar: ribose,
+          phosphate,
+        });
+
       const result: IRnaPreset = {
         base: rnaBase ? { ...rnaBase, label: rnaBase.label } : undefined,
         name: rnaPresetsTemplate.name,
         phosphate: phosphate
           ? { ...phosphate, label: phosphate.label }
           : undefined,
+        connections,
         sugar: ribose ? { ...ribose, label: ribose.label } : undefined,
+        phosphatePosition: getRnaPresetPhosphatePosition({
+          sugar: ribose,
+          phosphate,
+          connections,
+        }),
         favorite: rnaPresetsTemplate.favorite,
         default: isDefault || rnaPresetsTemplate.default,
       };

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***************************************************************************/
-import { zoom, select, ZoomTransform, ZoomBehavior, drag } from 'd3';
-import { BaseTool } from 'application/editor/tools/Tool';
+import { type ZoomBehavior, zoom, select, ZoomTransform, drag } from 'd3';
+import type { BaseTool } from 'application/editor/tools/Tool';
 import { canvasSelector, drawnStructuresSelector } from '../constants';
-import { D3SvgElementSelection } from 'application/render/types';
+import type { D3SvgElementSelection } from 'application/render/types';
 import { Vec2 } from 'domain/entities/vec2';
-import { DrawingEntitiesManager } from 'domain/entities/DrawingEntitiesManager';
+import type { DrawingEntitiesManager } from 'domain/entities/DrawingEntitiesManager';
 import { clamp, isNumber } from 'lodash';
 import { notifyRenderComplete } from 'application/render/internal';
-import { StructureBbox } from 'application/render/renderers/types';
+import type { StructureBbox } from 'application/render/renderers/types';
 
 export enum SCROLL_POSITION {
   CENTER = 'CENTER',
@@ -67,18 +67,41 @@ export class ZoomTool implements BaseTool {
 
   // eslint-disable-next-line no-use-before-define
   private static _instance: ZoomTool;
+  // Per-rendering-operation context so each RenderersManager renders to its own canvas
+  // eslint-disable-next-line no-use-before-define
+  private static _renderingContext: ZoomTool | undefined;
+
   public static get instance() {
+    return ZoomTool._renderingContext ?? ZoomTool._instance;
+  }
+
+  static setRenderingContext(zoomTool: ZoomTool | undefined) {
+    ZoomTool._renderingContext = zoomTool;
+  }
+
+  static initInstance(
+    drawingEntitiesManager: DrawingEntitiesManager,
+    canvas?: SVGSVGElement,
+  ) {
+    ZoomTool._instance = new ZoomTool(drawingEntitiesManager, canvas);
     return ZoomTool._instance;
   }
 
-  static initInstance(drawingEntitiesManager: DrawingEntitiesManager) {
-    ZoomTool._instance = new ZoomTool(drawingEntitiesManager);
-    return ZoomTool._instance;
-  }
-
-  private constructor(drawingEntitiesManager: DrawingEntitiesManager) {
-    this.canvasWrapper = select(canvasSelector);
-    this.canvas = select(drawnStructuresSelector);
+  private constructor(
+    drawingEntitiesManager: DrawingEntitiesManager,
+    canvas?: SVGSVGElement,
+  ) {
+    if (canvas) {
+      this.canvasWrapper = select<SVGSVGElement, void>(
+        canvas,
+      ) as unknown as D3SvgElementSelection<SVGSVGElement, void>;
+      this.canvas = select(canvas).select<SVGGElement>(
+        drawnStructuresSelector,
+      ) as unknown as D3SvgElementSelection<SVGGElement, void>;
+    } else {
+      this.canvasWrapper = select(canvasSelector);
+      this.canvas = select(drawnStructuresSelector);
+    }
 
     this.zoomLevel = 1;
     this._zoomTransform = new ZoomTransform(1, 0, 0);
@@ -277,7 +300,7 @@ export class ZoomTool implements BaseTool {
       canvasWrapperWidth / 2 - xOffsetValue,
       canvasWrapperHeight / 2 - yOffsetValue,
     );
-    const currentY = this._zoomTransform?.y || 0;
+    const currentY = this._zoomTransform?.y ?? 0;
 
     // Calculate Y position for translateTo
     let yPosition: number;
@@ -402,6 +425,12 @@ export class ZoomTool implements BaseTool {
   }
 
   public resetZoom() {
+    const canvasWrapperNode = this.canvasWrapper.node();
+
+    if (!canvasWrapperNode?.transform?.baseVal) {
+      return;
+    }
+
     this.zoom?.transform(this.canvasWrapper, new ZoomTransform(1, 0, 0));
   }
 
@@ -447,7 +476,8 @@ export class ZoomTool implements BaseTool {
   destroy() {
     this.scrollBars?.horizontal?.bar?.remove();
     this.scrollBars?.vertical?.bar?.remove();
-    this.resizeObserver?.unobserve(this.canvasWrapper.node() as SVGSVGElement);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
     this.zoom = null;
     this.zoomEventHandlers = [];
   }
@@ -486,14 +516,14 @@ export class ZoomTool implements BaseTool {
     const canvasWrapperBbox = this.canvasWrapper
       .node()
       ?.getBoundingClientRect();
-    return canvasWrapperBbox?.height || 0;
+    return canvasWrapperBbox?.height ?? 0;
   }
 
   public get canvasWrapperWidth() {
     const canvasWrapperBbox = this.canvasWrapper
       .node()
       ?.getBoundingClientRect();
-    return canvasWrapperBbox?.width || 0;
+    return canvasWrapperBbox?.width ?? 0;
   }
 
   public get canvasWrapperSize() {
@@ -501,8 +531,8 @@ export class ZoomTool implements BaseTool {
       .node()
       ?.getBoundingClientRect();
     return {
-      width: canvasWrapperBbox?.width || 0,
-      height: canvasWrapperBbox?.height || 0,
+      width: canvasWrapperBbox?.width ?? 0,
+      height: canvasWrapperBbox?.height ?? 0,
     };
   }
 }

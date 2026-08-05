@@ -36,11 +36,12 @@ import {
   modifyInRnaBuilder,
   getSymbolLocator,
   getMonomerLocator,
+  AttachmentPoint,
 } from '@utils/macromolecules/monomer';
 import { CommonTopLeftToolbar } from '@tests/pages/common/CommonTopLeftToolbar';
 
 import { SelectionToolType } from '@tests/pages/constants/areaSelectionTool/Constants';
-import { MacroBondType } from '@tests/pages/constants/bondSelectionTool/Constants';
+import { MacroBondTool } from '@tests/pages/constants/bondSelectionTool/Constants';
 import {
   keyboardPressOnCanvas,
   keyboardTypeOnCanvas,
@@ -61,26 +62,15 @@ import {
 } from '@utils/canvas/monomer/helpers';
 import { ContextMenu } from '@tests/pages/common/ContextMenu';
 import { MonomerOption } from '@tests/pages/constants/contextMenu/Constants';
-import { KETCHER_CANVAS } from '@tests/pages/constants/canvas/Constants';
 import { MacromoleculesTopToolbar } from '@tests/pages/macromolecules/MacromoleculesTopToolbar';
 import { LayoutMode } from '@tests/pages/constants/macromoleculesTopToolbar/Constants';
 import { ConfirmYourActionDialog } from '@tests/pages/macromolecules/canvas/ConfirmYourActionDialog';
 import { getAtomLocator } from '@utils/canvas/atoms/getAtomLocator/getAtomLocator';
+import { getAbbreviationLocator } from '@utils/canvas/s-group-signes/getAbbreviationLocator';
+import { bondMonomerPointToMoleculeAtom } from '@utils/macromolecules/polymerBond';
+import { AmbiguousMonomerPreviewTooltip } from '@tests/pages/macromolecules/canvas/AmbiguousMonomerPreviewTooltip';
 
 let page: Page;
-
-async function connectMonomerToAtom(page: Page) {
-  await getMonomerLocator(page, Peptide.A).hover();
-  await page
-    .getByTestId('monomer')
-    .locator('g')
-    .filter({ hasText: 'R2' })
-    .locator('path')
-    .hover();
-  await page.mouse.down();
-  await page.locator('g').filter({ hasText: /^H2N$/ }).locator('rect').hover();
-  await page.mouse.up();
-}
 
 async function interactWithMicroMolecule(
   page: Page,
@@ -148,7 +138,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test('Case 2: Switching from Sequence mode to Flex mode and back not shifts visible area of canvas beyond visible frame', async () => {
+  test('Case 2: Switching from Sequence mode to Flex mode and back not shifts visible area of canvas beyond visible frame', async ({
+    SnakeCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/5115
@@ -159,7 +151,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Switch view to Sequence mode
      * 4. Switch back to Flex mode
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Snake);
     await openFileAndAddToCanvasAsNewProjectMacro(
       page,
       'KET/Chromium-popup/switching-from-sequence-mode-to-snake-mode-and-back.ket',
@@ -176,7 +167,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     await takeEditorScreenshot(page, { hideMonomerPreview: true });
   });
 
-  test('Case 3: Connection between molecule and monomer affect an amount of implicit hydrogens', async () => {
+  test('Case 3: Connection between molecule and monomer affect an amount of implicit hydrogens', async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6021
@@ -185,18 +178,23 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 1. Open prepared file in Macro mode -> Flex mode
      * 2. Connect monomer to molecule's atom with implicit hydrogen in label
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await openFileAndAddToCanvasAsNewProjectMacro(
       page,
       'KET/Chromium-popup/monomer-and-micro-structure.ket',
     );
     await takeEditorScreenshot(page);
-    await CommonLeftToolbar(page).bondTool(MacroBondType.Single);
-    await connectMonomerToAtom(page);
+    await bondMonomerPointToMoleculeAtom(
+      page,
+      getMonomerLocator(page, Peptide.A).first(),
+      getAtomLocator(page, { atomLabel: 'N' }).first(),
+      AttachmentPoint.R2,
+    );
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 4: Replacing all monomers (or part of them) in edit mode system not cuts sequence on two`, async () => {
+  test(`Case 4: Replacing all monomers (or part of them) in edit mode system not cuts sequence on two`, async ({
+    SequenceCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/5341
@@ -207,9 +205,7 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Select three @ symbols in edit mode (having blinking cursor somewhere in the middle of sequence - this is important!
      * 4. Click any monomer from the library (C peptide in my case) - click Yes in appeared Confirm Your Action dialog
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(
-      LayoutMode.Sequence,
-    );
+
     await openFileAndAddToCanvasAsNewProjectMacro(
       page,
       'KET/Chromium-popup/Bugs/Replacing all monomers (or part of them) in edit mode - works wrong - system cuts sequence on two.ket',
@@ -236,7 +232,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test(`Case 5: Side chain attachment point shown in wrong place in Snake mode`, async () => {
+  test(`Case 5: Side chain attachment point shown in wrong place in Snake mode`, async ({
+    SnakeCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6022
@@ -248,13 +246,12 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 4. Hover mouse cursor over base
      * 5. Take a screenshot to validate the side chain attachment point is shown in the right place
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Snake);
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
       'RNA1{R(A)P}$$$$V2.0',
     );
-    await CommonLeftToolbar(page).bondTool(MacroBondType.Single);
+    await CommonLeftToolbar(page).bondTool(MacroBondTool.Single);
     const baseLocator = getMonomerLocator(page, Base.A).first();
     await baseLocator.hover({ force: true });
     await takeEditorScreenshot(page, {
@@ -263,7 +260,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test(`Case 6: When pressing Enter, a user can create new sequences in the “Modify RNA Builder” mode`, async () => {
+  test(`Case 6: When pressing Enter, a user can create new sequences in the “Modify RNA Builder” mode`, async ({
+    SequenceCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/4723
@@ -276,9 +275,7 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 5. Enter letters
      * 6. Take a screenshot to validate user can not create new sequences in the “Modify RNA Builder” mode
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(
-      LayoutMode.Sequence,
-    );
+
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
@@ -286,7 +283,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     );
     await selectAllStructuresOnCanvas(page);
     const symbolU = getSymbolLocator(page, { symbolAlias: 'U' }).first();
-    await symbolU.click();
     await modifyInRnaBuilder(page, symbolU);
     await keyboardPressOnCanvas(page, 'Enter');
     await keyboardTypeOnCanvas(page, 'AAA');
@@ -296,7 +292,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test(`Case 7: Bond length is different for monomers loaded from HELM and from the library`, async () => {
+  test(`Case 7: Bond length is different for monomers loaded from HELM and from the library`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/4723
@@ -307,7 +305,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Put the same preset from the library and put it above first one
      * 4. Take a screenshot to validate bonds length should be the same (1.5 angstroms)
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
@@ -325,7 +322,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test(`Case 8: After inserting a nucleotide in the Text-editing mode, the cursor blinks in the wrong place`, async () => {
+  test(`Case 8: After inserting a nucleotide in the Text-editing mode, the cursor blinks in the wrong place`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/4533
@@ -338,7 +337,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 5. Paste the copied preset to the beginning of the sequence
      * 6. Take a screenshot to validate the cursor blinks in the right place
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await Library(page).dragMonomerOnCanvas(Preset.T, {
       x: 0,
       y: 0,
@@ -388,7 +386,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test(`Case 10: System not opens "intellisence"-like dropdown control`, async () => {
+  test(`Case 10: System not opens "intellisence"-like dropdown control`, async ({
+    MoleculesCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6112
@@ -398,7 +398,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 2. Change C1 of a molecule to O using the keyboard and then try to change C2 to N very
      * quickly afterward
      */
-    await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await drawBenzeneRing(page);
     await CommonLeftToolbar(page).areaSelectionTool(
       SelectionToolType.Rectangle,
@@ -414,7 +413,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 11: Undo operation work for monomer at micro mode if it was deleted`, async () => {
+  test(`Case 11: Undo operation work for monomer at micro mode if it was deleted`, async ({
+    MoleculesCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6112
@@ -425,7 +426,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Press Undo
      * 4. Take a screenshot
      */
-    await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/Chromium-popup/Bugs/1. Peptide X (ambiguouse, alternatives, from library).ket',
@@ -437,7 +437,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 12: Canvas remain in edit mode if we insert monomer from the library`, async () => {
+  test(`Case 12: Canvas remain in edit mode if we insert monomer from the library`, async ({
+    SequenceCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/5231
@@ -447,10 +449,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 2. Go to the Library - Peptide tab
      * 3. Click on A peptide
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: false,
-      goToPeptides: false,
-    });
     await Library(page).selectMonomer(Peptide.A);
     await moveMouseAway(page);
     await takeEditorScreenshot(page, {
@@ -544,7 +542,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     });
   });
 
-  test(`Case 16: Undo/Redo operation for bonds and molecules (multi-select) works`, async () => {
+  test(`Case 16: Undo/Redo operation for bonds and molecules (multi-select) works`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/5966
@@ -557,7 +557,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 5. Press Undo button
      * 6. Take a screenshot
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/Chromium-popup/Bugs/Undo_Redo operation for bonds and molecules (multi-select) works wrong.ket',
@@ -602,7 +601,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 18: All side chain bonds are shown in Sequence mode for bases, CHEMs, phosphates and sugars`, async () => {
+  test(`Case 18: All side chain bonds are shown in Sequence mode for bases, CHEMs, phosphates and sugars`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/5317
@@ -613,10 +614,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Switch to Sequence mode
      * 4. Take a screenshot
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: false,
-      goToPeptides: false,
-    });
     await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await openFileAndAddToCanvasAsNewProject(
       page,
@@ -646,17 +643,14 @@ test.describe('Ketcher bugs in 3.0.0', () => {
       page,
       'KET/Chromium-popup/Bugs/1. Peptide X (ambiguouse, alternatives, from library).ket',
     );
-    await page
-      .getByTestId(KETCHER_CANVAS)
-      .getByText('X')
-      .nth(0)
-      .locator('..')
-      .first()
-      .hover();
+    await getAbbreviationLocator(page, { name: Peptide.X.alias }).hover();
+    await AmbiguousMonomerPreviewTooltip(page).waitForBecomeVisible();
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 20: Entire element bounding box should be clickable, not only black dots`, async () => {
+  test(`Case 20: Entire element bounding box should be clickable, not only black dots`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6127
@@ -667,10 +661,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Click on the center of double bond (e.g. between two black lines)
      * 4. Take a screenshot
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: true,
-      goToPeptides: false,
-    });
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/Chromium-popup/Bugs/Entire element bounding box should be clickable, not only black dots.ket',
@@ -679,7 +669,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 21: Structural distortion not occurs during multi expand and multi collapse of macromolecule abbreviations in Micro mode`, async () => {
+  test(`Case 21: Structural distortion not occurs during multi expand and multi collapse of macromolecule abbreviations in Micro mode`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/5670
@@ -690,21 +682,22 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Select all monomers and expand it and collapse it
      * 4. Take a screenshot
      */
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Flex);
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/Chromium-popup/Bugs/monomers-cycled.ket',
     );
     await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await selectAllStructuresOnCanvas(page);
-    await expandMonomers(page, page.getByText('1Nal'));
+    await expandMonomers(page, getAbbreviationLocator(page, { name: '1Nal' }));
     await takeEditorScreenshot(page);
     const atom = getAtomLocator(page, { atomId: 35 });
     await collapseMonomers(page, atom);
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 22: Atom properties not missing on initial load in Macro mode and correct hydrogen rendering on mode switch`, async () => {
+  test(`Case 22: Atom properties not missing on initial load in Macro mode and correct hydrogen rendering on mode switch`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6237
@@ -717,24 +710,19 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 5. Take a screenshot
      */
     await pageReload(page);
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: true,
-      goToPeptides: false,
-    });
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/Chromium-popup/Bugs/ketcher - 2025-01-06T161755.116.ket',
     );
     await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await takeEditorScreenshot(page);
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: true,
-      goToPeptides: false,
-    });
+    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 23: Correct representation of hydrogens for Alias, Charge, Valence, and Radical properties in Macro mode`, async () => {
+  test(`Case 23: Correct representation of hydrogens for Alias, Charge, Valence, and Radical properties in Macro mode`, async ({
+    MoleculesCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6235
@@ -745,19 +733,17 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 3. Switch to Macro mode
      * 4. Take a screenshot
      */
-    await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await openFileAndAddToCanvasAsNewProject(
       page,
       'KET/Chromium-popup/Bugs/ketcher - 2025-01-06T160012.582.ket',
     );
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: true,
-      goToPeptides: false,
-    });
+    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor();
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 24: Export to 3-letter sequence work`, async () => {
+  test(`Case 24: Export to 3-letter sequence work`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6240
@@ -769,10 +755,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      *
      * Version 3.5
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: true,
-      goToPeptides: false,
-    });
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
@@ -819,7 +801,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
   //   },
   // );
 
-  test(`Case 26: Consistent zoom behavior when inserting a molecule via setMolecule and Paste from Clipboard/Open from File`, async () => {
+  test(`Case 26: Consistent zoom behavior when inserting a molecule via setMolecule and Paste from Clipboard/Open from File`, async ({
+    FlexCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6370
@@ -829,10 +813,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 2. Load RXN V3000 file with Super G and Super T monomers
      * 3. Take a screenshot
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: true,
-      goToPeptides: false,
-    });
     await openFileAndAddToCanvasAsNewProjectMacro(
       page,
       'Molfiles-V3000/Bugs/macromol.mol',
@@ -847,7 +827,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 27: Layout in case of two sense chains connected to same antisense works as expected`, async () => {
+  test(`Case 27: Layout in case of two sense chains connected to same antisense works as expected`, async ({
+    SnakeCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6106
@@ -857,11 +839,6 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 2. Load from HELM using paste from clipboard
      * 3. Take a screenshot
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: false,
-      goToPeptides: false,
-    });
-    await MacromoleculesTopToolbar(page).selectLayoutModeTool(LayoutMode.Snake);
     await pasteFromClipboardAndAddToMacromoleculesCanvas(
       page,
       MacroFileType.HELM,
@@ -939,7 +916,9 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 5. Take a screenshot
      */
     await Library(page).switchToRNATab();
-    await expect(page.getByTestId(Preset.MOE_A_P.testId)).toBeInViewport();
+    await expect(
+      Library(page).getMonomerLibraryCardLocator(Preset.MOE_A_P),
+    ).toBeInViewport();
     await Library(page).selectMonomer(Preset.MOE_A_P);
     await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await verifyFileExport(
@@ -961,7 +940,7 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * Bug: https://github.com/epam/ketcher/issues/6557
      * Description: Modified phosphates not shift away from main structure during expand in Micro Mode
      * Scenario:
-     * 1. Open Ketcher in Macro mode
+     * 1. Open Ketcher in Micro mode
      * 2. Select all structure
      * 3. Expand structure
      * 4. Take a screenshot
@@ -972,11 +951,16 @@ test.describe('Ketcher bugs in 3.0.0', () => {
       'KET/Chromium-popup/Bugs/modified-phosphates.ket',
     );
     await selectAllStructuresOnCanvas(page);
-    await expandMonomers(page, page.getByText('mph').first());
+    await expandMonomers(
+      page,
+      getAbbreviationLocator(page, { name: 'mph' }).first(),
+    );
     await takeEditorScreenshot(page);
   });
 
-  test(`Case 32: Natural monomer have standard bond lengths and angles`, async () => {
+  test(`Case 32: Natural monomer have standard bond lengths and angles`, async ({
+    SequenceCanvas: _,
+  }) => {
     /*
      * Test case: https://github.com/epam/ketcher/issues/6600
      * Bug: https://github.com/epam/ketcher/issues/6563
@@ -989,17 +973,10 @@ test.describe('Ketcher bugs in 3.0.0', () => {
      * 5. Draw a cyclohexane
      * 6. Compare bond lengths
      */
-    await CommonTopRightToolbar(page).turnOnMacromoleculesEditor({
-      enableFlexMode: false,
-      goToPeptides: false,
-    });
     await Library(page).selectMonomer(Base.A);
     await CommonTopRightToolbar(page).turnOnMicromoleculesEditor();
     await selectAllStructuresOnCanvas(page);
-    const baseA = page
-      .getByTestId(KETCHER_CANVAS)
-      .filter({ has: page.locator(':visible') })
-      .getByText('A', { exact: true });
+    const baseA = getAbbreviationLocator(page, { name: 'A' }).first();
     await expandMonomer(page, baseA);
     await BottomToolbar(page).clickRing(RingButton.Cyclohexane);
     await clickOnCanvas(page, 180, 180, { from: 'pageTopLeft' });

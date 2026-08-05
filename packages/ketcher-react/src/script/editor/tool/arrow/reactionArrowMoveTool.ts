@@ -1,4 +1,4 @@
-import {
+import type {
   ArrowMoveTool,
   CommonArrowDragContext,
   ReactionArrowClosestItem,
@@ -7,12 +7,12 @@ import {
   CoordinateTransformation,
   fromArrowResizing,
   fromMultipleMove,
+  assert,
   getLonePairModelPositions,
   LonePairAttachment,
   RxnArrowMode,
   Vec2,
 } from 'ketcher-core';
-import assert from 'assert';
 import { ArrowTool } from './arrowTool';
 
 export class ReactionArrowMoveTool
@@ -51,7 +51,7 @@ export class ReactionArrowMoveTool
     if (!closestItem.ref) {
       return fromMultipleMove(
         this.reStruct,
-        this.editor.selection() || {},
+        this.editor.selection() ?? {},
         offset,
       );
     } else {

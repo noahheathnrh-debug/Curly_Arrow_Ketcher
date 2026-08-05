@@ -4,7 +4,15 @@ module.exports = {
   testEnvironment: 'jsdom',
   transform: {
     '\\.(js|jsx)$': 'babel-jest',
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          module: 'commonjs',
+          moduleResolution: 'node16',
+        },
+      },
+    ],
     '\\.svg$': '<rootDir>/testFileTransformer.js',
     '\\.sdf$': '<rootDir>/textFileTransformer.js',
   },
@@ -17,6 +25,9 @@ module.exports = {
     '^hooks(.*)$': '<rootDir>/src/hooks/$1',
     '^assets(.*)$': '<rootDir>/src/assets/$1',
     '^helpers(.*)$': '<rootDir>/src/helpers/$1',
+    '^ketcher-react$': '<rootDir>/src/testMocks/ketcher-react.tsx',
+    '^ketcher-react/(.*)$': '<rootDir>/src/testMocks/ketcher-react.tsx',
+    '^react-contexify$': '<rootDir>/src/testMocks/react-contexify.tsx',
     '\\.sdf$': '<rootDir>/textFileTransformer.js',
     '^d3$': '<rootDir>/../../node_modules/d3/dist/d3.min.js',
   },

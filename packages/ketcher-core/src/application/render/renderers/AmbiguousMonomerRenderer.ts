@@ -1,14 +1,14 @@
-import { Selection } from 'd3';
-import { BaseMonomerRenderer } from 'application/render/renderers';
+import type { Selection } from 'd3';
+import { BaseMonomerRenderer } from 'application/render/renderers/BaseMonomerRenderer';
 import { AmbiguousMonomer } from 'domain/entities/AmbiguousMonomer';
 import { MONOMER_SYMBOLS_IDS } from 'application/render/renderers/constants';
-import { monomerFactory } from 'application/editor';
+import { monomerRendererFactory } from './monomerRendererFactory';
 import { EmptyMonomer } from 'domain/entities/EmptyMonomer';
-import { AttachmentPointName } from 'domain/types';
+import type { AttachmentPointName } from 'domain/types';
 import { PreviewAttachmentPoint } from 'domain/PreviewAttachmentPoint';
-import { UsageInMacromolecule } from 'application/render';
-import { D3SvgElementSelection } from 'application/render/types';
-import { KetMonomerClass } from 'application/formatters';
+import type { UsageInMacromolecule } from 'application/render';
+import type { D3SvgElementSelection } from 'application/render/types';
+import { KetMonomerClass } from 'domain/constants/monomers';
 
 type PreviewAttachmentPointParams = {
   canvas: D3SvgElementSelection<SVGSVGElement, void>;
@@ -38,7 +38,7 @@ export class AmbiguousMonomerRenderer extends BaseMonomerRenderer {
       scale,
     );
 
-    const [, MonomerRenderer] = monomerFactory(
+    const [, MonomerRenderer] = monomerRendererFactory(
       this.monomer.monomers[0].monomerItem,
     );
 
@@ -46,6 +46,8 @@ export class AmbiguousMonomerRenderer extends BaseMonomerRenderer {
     this.monomerSymbolElementsIds = monomerSymbolElementsIds;
     this.CHAIN_START_TERMINAL_INDICATOR_TEXT =
       this.monomerRenderer.CHAIN_START_TERMINAL_INDICATOR_TEXT;
+    this.CHAIN_END_TERMINAL_INDICATOR_TEXT =
+      this.monomerRenderer.CHAIN_END_TERMINAL_INDICATOR_TEXT;
   }
 
   protected appendBody(
@@ -115,6 +117,8 @@ export class AmbiguousMonomerRenderer extends BaseMonomerRenderer {
       .attr('font-size', '6px')
       .attr('font-weight', 300)
       .text(this.monomer.monomers.length);
+
+    this.raiseAttachmentPoints();
   }
 
   public show(theme) {
@@ -153,6 +157,7 @@ export class AmbiguousMonomerRenderer extends BaseMonomerRenderer {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.bodyElement = this.appendBody(this.rootElement);
+    this.bodyElement?.attr('data-testid', 'shape');
     this.appendLabel(this.rootElement);
     this.appendNumberOfMonomers();
     this.drawAttachmentPoints(
@@ -163,6 +168,23 @@ export class AmbiguousMonomerRenderer extends BaseMonomerRenderer {
   }
 
   protected get modificationConfig() {
-    return undefined;
+    switch (this.monomer.monomerClass) {
+      case KetMonomerClass.AminoAcid:
+        return { backgroundId: '#modified-background', requiresFill: true };
+      case KetMonomerClass.Base:
+        return { backgroundId: '#rna-base-modified-background' };
+      case KetMonomerClass.Sugar:
+        // Ambiguous monomers render on a white body, so the default white sugar
+        // band would be invisible — requiresFill drives the <use> fill to a dark
+        // color here (the text color isn't #333333) to keep the band visible.
+        return {
+          backgroundId: '#sugar-modified-background',
+          requiresFill: true,
+        };
+      case KetMonomerClass.Phosphate:
+        return { backgroundId: '#phosphate-modified-background' };
+      default:
+        return undefined;
+    }
   }
 }
