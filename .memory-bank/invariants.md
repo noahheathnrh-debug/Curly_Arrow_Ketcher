@@ -20,9 +20,17 @@ A monomer in the library is uniquely identified by the combination of `(MonomerN
 **D4 — RNA preset class constraint**
 `MonomerGroupTemplate` entries in the library must have class `RNA`. Non-RNA monomer group templates are not handled.
 
+**D5 — A mechanism arrow means the same chemistry after a round trip**
+Saving and reloading a document must leave every mechanism arrow anchored to the same atoms and bonds it was drawn against. Pool ids are not identity — they are renumbered on every save — so an anchor may only be trusted across a save if it is carried by a stable id. An anchor that cannot be resolved keeps its stored value; it is never silently dropped, because an arrow without anchors is a bare curve that still looks like chemistry.
+
+Lone-pair and radical *indices within* an atom are explicitly outside this guarantee: they are positions in a recomputed layout and hold only while the atom's valence, charge, neighbour geometry and hydrogen side are unchanged.
+
 ---
 
 ## Architectural Invariants
+
+**A0 — Hiding a control is not enforcement**
+A capability withheld by an embedding host must be refused on every route to the operation — the toolbar, the keyboard shortcut, the context menu, and the editor's own API. A restriction implemented only by hiding or disabling a button is not implemented. New tools and actions are gated by the tool they activate, so a second control for an existing tool inherits the restriction rather than escaping it.
 
 **A1 — Renderer never mutates the model**
 Renderers (Raphael `ReStruct` and D3 `RenderersManager`) are read-only consumers of the domain model. They must never call mutation methods on `Struct`, `DrawingEntitiesManager`, or any entity directly.

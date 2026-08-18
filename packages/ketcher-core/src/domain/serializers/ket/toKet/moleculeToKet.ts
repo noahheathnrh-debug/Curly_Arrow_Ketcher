@@ -91,6 +91,10 @@ export function moleculeToKet(
 function atomToKet(source: Atom, monomer?: BaseMonomer): KetAtomNode {
   const result: KetAtomNode = {};
 
+  // Present only on atoms a mechanism arrow anchors to, so ordinary structures
+  // are unaffected.
+  ifDef(result, 'stableId', source.stableId);
+
   if (source.label !== 'L#') {
     ifDef(
       result,
@@ -176,6 +180,7 @@ function bondToKet(source: Bond): KetBondNode {
     ifDef(result, 'center', source.reactingCenterStatus, 0);
     ifDef(result, 'cip', source.cip, '');
   }
+  ifDef(result, 'stableId', source.stableId);
   ifDef(result, 'selected', source.getInitiallySelected());
   return result;
 }

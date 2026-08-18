@@ -23,6 +23,9 @@ The ten most important features, distilled from [documentation/help.md](../../do
 1. [Atom Editing](./atom-editing.md) — placing/replacing atoms, charge, periodic & extended tables, atom properties
 2. [Bond Editing](./bond-editing.md) — bond types, chains, cycling, geometry, bond properties
 3. [Reactions](./reactions.md) — arrows, pluses, atom mapping, pathway & multi-step reactions
+3a. [Mechanism Arrows](./mechanism-arrows.md) — curly & fishhook electron-pushing arrows, anchored to lone pairs/radicals/bonds and automatically routed around the structure
+3b. [Mechanism-Focused Controls](./mechanism-focused-controls.md) — persistent toolbar filtering and hold-Space canvas panning for fast mechanism drawing
+3c. [Embedding Capabilities & Profiles](./embedding-capabilities.md) — named activity profiles an embedding host applies, enforced across toolbar, keyboard and API alike
 4. [Stereochemistry](./stereochemistry.md) — stereo bonds, CIP labels, enhanced stereochemistry
 5. [Templates, Functional Groups & Structural Groups](./templates-and-groups.md) — templates, functional groups, R-Groups, S-Groups
 

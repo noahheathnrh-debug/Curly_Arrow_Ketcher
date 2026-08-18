@@ -105,6 +105,22 @@ export interface AtomAttributes {
   implicitHCount?: number | null;
   initiallySelected?: initiallySelectedType;
   revealedLonePairs?: number;
+  /**
+   * Identity that outlives this atom's Pool id.
+   *
+   * Pool ids are renumbered several times over on the way to KET — once per
+   * fragment on the way into the drawing-entity model, again when those
+   * fragments are merged back into a fresh `Struct`, and again when
+   * `prepareStructForKet` clones each fragment out. Mechanism arrows anchor to
+   * atoms by id, so without a token that rides along through every one of
+   * those hops their anchors land on whatever atom inherits the number.
+   *
+   * Only atoms an arrow actually references carry one, so ordinary structures
+   * serialize exactly as before. Deliberately absent from `Atom.attrlist`: it
+   * is identity, not a chemical property, and must not appear in property
+   * dialogs or operation diffs.
+   */
+  stableId?: string;
 }
 
 export type AtomPropertiesInContextMenu = SubsetOfFields<
@@ -213,6 +229,7 @@ export class Atom extends BaseMicromoleculeEntity {
   hasImplicitH?: boolean;
   pseudo!: string;
   revealedLonePairs: number;
+  stableId?: string;
 
   /** @deprecated */
   get attpnt() {
@@ -222,6 +239,10 @@ export class Atom extends BaseMicromoleculeEntity {
   constructor(attributes: AtomAttributes) {
     super(attributes?.initiallySelected);
     this.label = attributes.label;
+    // Copied explicitly rather than through `Atom.attrlist`, which drives the
+    // property dialogs. `Atom.clone()` is `new Atom(this)`, so an attribute
+    // that is not named here does not survive a clone.
+    this.stableId = attributes.stableId;
     this.fragment = getValueOrDefault(attributes.fragment, -1);
     this.alias = getValueOrDefault(attributes.alias, Atom.attrlist.alias);
     this.isotope = getValueOrDefault(attributes.isotope, Atom.attrlist.isotope);

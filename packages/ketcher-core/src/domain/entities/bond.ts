@@ -41,6 +41,12 @@ export interface BondAttributes {
   endSuperatomAttachmentPointNumber?: number;
   beginSgroup?: SGroup;
   endSgroup?: SGroup;
+  /**
+   * Identity that outlives this bond's Pool id. See {@link AtomAttributes.stableId}.
+   *
+   * Only bonds a mechanism arrow references carry one.
+   */
+  stableId?: string;
 }
 
 export class Bond extends BaseMicromoleculeEntity {
@@ -114,12 +120,17 @@ export class Bond extends BaseMicromoleculeEntity {
   endSuperatomAttachmentPointNumber?: number;
   beginSgroup?: SGroup;
   endSgroup?: SGroup;
+  stableId?: string;
 
   constructor(attributes: BondAttributes) {
     super(attributes.initiallySelected);
     this.begin = attributes.begin;
     this.end = attributes.end;
     this.type = attributes.type;
+    // Assigned outside the `Bond.attrlist` loop in `getAttrHash` on purpose:
+    // identity, not a chemical property. `Bond.clone()` is `new Bond(this)`, so
+    // it has to be named here to survive a clone.
+    this.stableId = attributes.stableId;
     this.xxx = attributes.xxx ?? '';
     this.stereo = Bond.PATTERN.STEREO.NONE;
     this.topology = Bond.PATTERN.TOPOLOGY.EITHER;

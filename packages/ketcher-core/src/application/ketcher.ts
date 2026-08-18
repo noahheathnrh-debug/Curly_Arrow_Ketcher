@@ -52,6 +52,11 @@ import {
   assert,
 } from 'utilities';
 import { ketcherProvider } from './ketcherProvider';
+import { capabilityProvider } from './capabilities/CapabilityProvider';
+import type {
+  CapabilityRecord,
+  CapabilitySpec,
+} from './capabilities/types';
 import {
   deleteAllEntitiesOnCanvas,
   parseAndAddMacromoleculesOnCanvas,
@@ -211,6 +216,22 @@ export class Ketcher {
 
   addEditor(editor: Editor) {
     this.#editor = editor;
+  }
+
+  /**
+   * What this editor lets the user do.
+   *
+   * Deliberately separate from {@link setSettings}, whose allowlist is about how
+   * structures are interpreted and drawn. Capabilities are about permission, and
+   * changing them takes effect immediately — a teaching host can unlock the
+   * structure between stages of an activity without remounting the editor.
+   */
+  setCapabilities(capabilities: CapabilitySpec): void {
+    capabilityProvider.set(this.id, capabilities);
+  }
+
+  getCapabilities(): CapabilityRecord {
+    return capabilityProvider.get(this.id);
   }
 
   setSettings(settings: KetcherApiSettings): void {
@@ -901,6 +922,8 @@ export class Ketcher {
       );
     }
 
+    await editor.waitForMonomersLibrary();
+
     const dataInKetFormat = await this.ensureMonomersLibraryDataInKetFormat(
       rawMonomersData,
       params,
@@ -934,6 +957,8 @@ export class Ketcher {
         'Updating monomer library in small molecules mode is not allowed, please switch to macromolecules mode',
       );
     }
+
+    await editor.waitForMonomersLibrary();
 
     const dataInKetFormat = await this.ensureMonomersLibraryDataInKetFormat(
       rawMonomersData,

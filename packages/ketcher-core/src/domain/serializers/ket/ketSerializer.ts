@@ -32,6 +32,7 @@ import { headerToKet } from './toKet/headerToKet';
 import { moleculeToKet } from './toKet/moleculeToKet';
 import { moleculeToStruct } from './fromKet/moleculeToStruct';
 import { prepareStructForKet } from './toKet/prepare';
+import { ensureStableIdsForAnchors, resolveStableIdAnchors } from './stableIds';
 import { rgroupToKet } from './toKet/rgroupToKet';
 import { rgroupToStruct } from './fromKet/rgroupToStruct';
 import { rxnToStruct } from './fromKet/rxnToStruct';
@@ -213,10 +214,19 @@ export class KetSerializer implements Serializer<Struct> {
     });
     resultingStruct.name = ket.header?.moleculeName ?? '';
 
+    // Every node has been read, so atom and bond ids are final. This is the one
+    // place mechanism-arrow anchors can be resolved from their stable ids
+    // without having to track renumbering through each merge.
+    resolveStableIdAnchors(resultingStruct);
+
     return resultingStruct;
   }
 
   serializeMicromolecules(struct: Struct, monomer?: BaseMonomer): string {
+    // Stamp before anything is cloned or renumbered, so the tokens ride along
+    // through `prepareStructForKet`'s per-fragment clones.
+    ensureStableIdsForAnchors(struct);
+
     const result: IKetMicromoleculeSerializedResult = {
       root: {
         nodes: [],
@@ -969,6 +979,7 @@ export class KetSerializer implements Serializer<Struct> {
         height: rxnArrow.height,
         initiallySelected: rxnArrow.initiallySelected,
         arrowId: rxnArrow.arrowId,
+        ...rxnArrow.mechanism,
       });
 
       struct.addRxnArrow(arrow);
@@ -1063,6 +1074,12 @@ export class KetSerializer implements Serializer<Struct> {
     isBeautified = true, // TODO make false by default
     needSetSelectionToMacromolecules = false,
   ) {
+    // Must run on the caller's struct, before anything clones it: the very
+    // first hop, `removeLeavingGroupsFromConnectedAtoms`, already re-keys the
+    // atoms densely from zero, so by then the arrows' numeric anchors no longer
+    // name the atoms they were drawn against.
+    ensureStableIdsForAnchors(_struct);
+
     const struct = KetSerializer.removeLeavingGroupsFromConnectedAtoms(_struct);
     struct.enableInitiallySelected();
     const populatedStruct = populateStructWithSelection(

@@ -26,8 +26,14 @@ import {
   toStereoLabel,
 } from '../../data/convert/structconv';
 
-import { Elements, KetcherLogger } from 'ketcher-core';
+import {
+  Elements,
+  KetcherLogger,
+  SettingsManager,
+  capabilityProvider,
+} from 'ketcher-core';
 import acts from '../../action';
+import { isToolAllowed } from '../../../editor/capabilities';
 import { debounce } from 'lodash/fp';
 import { openDialog } from '../modal';
 import { highlightFG } from '../functionalGroups';
@@ -41,6 +47,25 @@ import { openInfoModalWithCustomMessage } from '../shared';
 
 export default function initEditor(dispatch, getState, ketcherId) {
   const updateAction = debounce(100, () => dispatch({ type: 'UPDATE' }));
+
+  // A host may change the capability profile mid-session — unlocking the
+  // structure between stages of an activity. Recompute every action's status so
+  // the toolbars follow, and step off the active tool if it is no longer
+  // allowed, so no invisible-but-armed tool is left selected.
+  capabilityProvider.subscribe(ketcherId, () => {
+    const editor = getState().editor;
+    const activeTool = getState().actions?.active?.tool;
+
+    if (editor && activeTool && !isToolAllowed(ketcherId, activeTool)) {
+      dispatch({
+        type: 'ACTION',
+        action: SettingsManager.getSettings().selectionTool,
+      });
+    }
+
+    dispatch({ type: 'UPDATE' });
+  });
+
   const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
   const getSelectedSruCount = (sgroupType) => {
     const editor = getState().editor;

@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 import * as clipArea from '../component/cliparea/cliparea';
+import type ReactEditor from '../../editor/Editor';
 
 import {
   type Editor,
@@ -32,6 +33,7 @@ import {
   keyNorm,
   initHotKeys,
   getStructStringFromClipboardData,
+  capabilityProvider,
 } from 'ketcher-core';
 import { debounce, isEqual } from 'lodash/fp';
 import { load, onAction, removeStructAction } from './shared';
@@ -49,15 +51,118 @@ import {
 } from './abbreviationLookup';
 import { isArrowKey, moveSelectedItems } from './moveSelectedItems';
 import { handleHotkeyOverItem } from './handleHotkeysOverItem';
+import {
+  arrangeActiveMechanismStep,
+  duplicateActiveMechanismStep,
+  navigateMechanismStep,
+} from './mechanismSteps';
 
 let keydownListener: ((event: KeyboardEvent) => void) | null = null;
+let spaceKeydownListener: ((event: KeyboardEvent) => void) | null = null;
+let keyupListener: ((event: KeyboardEvent) => void) | null = null;
+let mousemoveListener: ((event: MouseEvent) => void) | null = null;
+let windowBlurListener: (() => void) | null = null;
+let temporaryPanActive = false;
+let temporaryPanEditor: ReactEditor | null = null;
+let temporaryPanLastPointer: { x: number; y: number } | null = null;
+
+function isSpaceKey(event: KeyboardEvent): boolean {
+  return (
+    event.code === 'Space' || event.key === ' ' || event.key === 'Spacebar'
+  );
+}
+
+function stopTemporaryPan(): void {
+  if (!temporaryPanActive) return;
+
+  temporaryPanEditor?.render.update(false);
+  temporaryPanEditor?.event.cursor.dispatch({ status: 'disable' });
+  temporaryPanActive = false;
+  temporaryPanEditor = null;
+  temporaryPanLastPointer = null;
+}
+
+function startTemporaryPan(editor: ReactEditor): void {
+  temporaryPanActive = true;
+  temporaryPanEditor = editor;
+
+  const lastPointerEvent = editor.lastEvent;
+  if (lastPointerEvent instanceof MouseEvent) {
+    temporaryPanLastPointer = {
+      x: lastPointerEvent.clientX,
+      y: lastPointerEvent.clientY,
+    };
+  }
+
+  const { x = 0, y = 0 } = temporaryPanLastPointer ?? {};
+  editor.event.cursor.dispatch({
+    status: 'enable',
+    cursorPosition: { clientX: x, clientY: y },
+  });
+}
+
+function panWhileSpaceIsHeld(event: MouseEvent): void {
+  if (!temporaryPanActive || !temporaryPanEditor) return;
+
+  temporaryPanEditor.event.cursor.dispatch({ status: 'move' });
+  const currentPointer = { x: event.clientX, y: event.clientY };
+
+  if (!temporaryPanLastPointer) {
+    temporaryPanLastPointer = currentPointer;
+    return;
+  }
+
+  const zoom = temporaryPanEditor.render.options.zoom || 1;
+  const deltaX = (currentPointer.x - temporaryPanLastPointer.x) / zoom;
+  const deltaY = (currentPointer.y - temporaryPanLastPointer.y) / zoom;
+  temporaryPanLastPointer = currentPointer;
+
+  temporaryPanEditor.render.setViewBox((viewBox) => ({
+    ...viewBox,
+    minX: viewBox.minX - deltaX,
+    minY: viewBox.minY - deltaY,
+  }));
+}
 
 export function initKeydownListener(element) {
   return function (dispatch, getState) {
     const hotKeys = initHotKeys(actions);
 
-    keydownListener = (event) => keyHandle(dispatch, getState, hotKeys, event);
+    if (keydownListener)
+      element.removeEventListener('keydown', keydownListener);
+    if (spaceKeydownListener)
+      document.removeEventListener('keydown', spaceKeydownListener, true);
+    if (keyupListener)
+      document.removeEventListener('keyup', keyupListener, true);
+    if (mousemoveListener)
+      document.removeEventListener('mousemove', mousemoveListener);
+    if (windowBlurListener) {
+      window.removeEventListener('blur', windowBlurListener);
+    }
+    temporaryPanActive = false;
+    temporaryPanEditor = null;
+    temporaryPanLastPointer = null;
+
+    keydownListener = (event) => {
+      if (isSpaceKey(event)) return;
+      keyHandle(dispatch, getState, hotKeys, event);
+    };
+    spaceKeydownListener = (event) => {
+      if (!isSpaceKey(event)) return;
+      keyHandle(dispatch, getState, hotKeys, event);
+    };
+    keyupListener = (event) => {
+      if (!isSpaceKey(event) || !temporaryPanActive) return;
+      event.preventDefault();
+      stopTemporaryPan();
+    };
+    mousemoveListener = (event) => panWhileSpaceIsHeld(event);
+    windowBlurListener = stopTemporaryPan;
     element.addEventListener('keydown', keydownListener);
+    document.addEventListener('keydown', spaceKeydownListener, true);
+    document.addEventListener('keyup', keyupListener, true);
+    document.addEventListener('mousemove', mousemoveListener);
+    window.addEventListener('blur', windowBlurListener);
   };
 }
 
@@ -66,6 +171,24 @@ export function removeKeydownListener(element) {
     if (keydownListener) {
       element.removeEventListener('keydown', keydownListener);
     }
+    if (spaceKeydownListener) {
+      document.removeEventListener('keydown', spaceKeydownListener, true);
+    }
+    if (keyupListener) {
+      document.removeEventListener('keyup', keyupListener, true);
+    }
+    if (mousemoveListener) {
+      document.removeEventListener('mousemove', mousemoveListener);
+    }
+    if (windowBlurListener) {
+      window.removeEventListener('blur', windowBlurListener);
+    }
+    stopTemporaryPan();
+    keydownListener = null;
+    spaceKeydownListener = null;
+    keyupListener = null;
+    mousemoveListener = null;
+    windowBlurListener = null;
   };
 }
 
@@ -104,6 +227,36 @@ function shouldIgnoreKeyEvent(state, event): boolean {
   // It targets plain inputs only, ideally it has to be incorporated with ClipArea functionality
   // Ideally x2 – create a common event interception layer for both micro and macro editors
   return isEditableInputTarget(event.target);
+}
+
+function handleMechanismWorkflowShortcut(state, dispatch, event): boolean {
+  if (!state.toolbar.mechanismControlsEnabled) return false;
+
+  // Duplicating and arranging a step rewrite the structure, so they need the
+  // same permission the toolbar buttons do. Navigating between steps only moves
+  // the selection and stays available on a locked document.
+  const canEditStructure = capabilityProvider.can(
+    state.editor.ketcherId,
+    'editBonds',
+  );
+
+  const modifier = event.ctrlKey || event.metaKey;
+  if (modifier && event.key === 'Enter') {
+    if (!canEditStructure) return false;
+    dispatch(duplicateActiveMechanismStep());
+  } else if (modifier && event.shiftKey && event.key.toLowerCase() === 'a') {
+    if (!canEditStructure) return false;
+    dispatch(arrangeActiveMechanismStep());
+  } else if (event.altKey && event.key === 'ArrowUp') {
+    dispatch(navigateMechanismStep(-1));
+  } else if (event.altKey && event.key === 'ArrowDown') {
+    dispatch(navigateMechanismStep(1));
+  } else {
+    return false;
+  }
+
+  event.preventDefault();
+  return true;
 }
 
 function shouldShowAbbreviationLookup(key: string, state): boolean {
@@ -279,9 +432,27 @@ function handleHotkeyGroup(
 function keyHandle(dispatch, getState, hotKeys, event) {
   const state = getState();
 
+  if (isSpaceKey(event)) {
+    if (!shouldIgnoreKeyEvent(state, event)) {
+      // Still swallowed even when panning is withheld, so the page underneath
+      // an embedded editor does not scroll on space.
+      event.preventDefault();
+      if (
+        !temporaryPanActive &&
+        !event.repeat &&
+        capabilityProvider.can(state.editor.ketcherId, 'panAndZoom')
+      ) {
+        startTemporaryPan(state.editor);
+      }
+    }
+    return;
+  }
+
   if (shouldIgnoreKeyEvent(state, event)) {
     return;
   }
+
+  if (handleMechanismWorkflowShortcut(state, dispatch, event)) return;
 
   const { editor } = state;
   const { render } = editor;
@@ -327,7 +498,12 @@ function keyHandle(dispatch, getState, hotKeys, event) {
     return;
   }
 
-  if (isArrowKey(event.key)) {
+  // Nudging runs outside the action table, so it needs its own check — it is
+  // the one way to move a locked structure without touching a toolbar.
+  if (
+    isArrowKey(event.key) &&
+    capabilityProvider.can(editor.ketcherId, 'moveStructures')
+  ) {
     moveSelectedItems(editor, event.key, event.shiftKey);
   }
 }

@@ -29,5 +29,6 @@ These span multiple packages and are the most valuable parts to understand. They
 - [rendering](./rendering.md) — Raphael (`ReStruct`) and D3 (`RenderersManager`) pipelines
 - [serialization](./serialization.md) — serializers, `FormatterFactory`, `StructService`, `Indigo`
 - [operations-history](./operations-history.md) — `Action`/`BaseOperation` and `Command`/`Operation` + undo/redo
+- [mechanism-embedding](./mechanism-embedding.md) — embedding the editor inside a teaching activity: comparing arrows, the puzzle envelope, the host-facing editor
 - [monomer-library](./monomer-library.md) — loading/caching/merging monomers, RNA presets, library UI
 - [monomer-drag-and-drop](./monomer-drag-and-drop.md) — dragging library items onto the canvas (D3 drag, ghost preview, placement, mode differences)

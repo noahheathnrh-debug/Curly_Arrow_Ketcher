@@ -17,7 +17,11 @@
 import type { Root } from 'react-dom/client';
 import { type ButtonsConfig, KetcherBuilder } from './builders';
 
-import type { StructServiceProvider } from 'ketcher-core';
+import {
+  capabilityProvider,
+  type CapabilitySpec,
+  type StructServiceProvider,
+} from 'ketcher-core';
 import type { CustomButton } from './builders/ketcher/CustomButtons';
 
 interface Config {
@@ -30,6 +34,14 @@ interface Config {
   errorHandler: (message: string) => void;
   togglerComponent?: JSX.Element;
   ketcherId: string;
+  /**
+   * What this editor instance lets the user do — a profile name, a set of
+   * capability overrides, or both. Omitted means unrestricted.
+   *
+   * Enforced rather than merely displayed: the shortcut and the programmatic
+   * `editor.tool(...)` obey it too, not just the toolbar.
+   */
+  capabilities?: CapabilitySpec;
 }
 
 export type { Config, ButtonsConfig };
@@ -45,6 +57,7 @@ async function buildKetcherAsync({
   togglerComponent,
   customButtons,
   ketcherId: prevKetcherId,
+  capabilities,
 }: Config) {
   const builder = new KetcherBuilder();
 
@@ -52,6 +65,12 @@ async function buildKetcherAsync({
   builder.appendServiceMode(structServiceProvider.mode);
   const ketcher = await builder.build();
   structService.addKetcherId(ketcher.id);
+
+  // Registered before the UI is built, so the first render already reflects the
+  // profile instead of briefly showing controls the host withheld.
+  if (capabilities) {
+    capabilityProvider.set(ketcher.id, capabilities);
+  }
 
   const { cleanup, setServer } = await builder.appendUiAsync(
     prevKetcherId,

@@ -20,6 +20,7 @@ export * from './domain/serializers';
 export * from './domain/services';
 export * from './domain/helpers';
 export * from './domain/types';
+export * from './domain/mechanism';
 
 export * from './infrastructure/services';
 
@@ -30,6 +31,7 @@ export * from './application/ketcher';
 export * from './application/ketcher.types';
 export * from './application/ketcherBuilder';
 export * from './application/settings';
+export * from './application/capabilities';
 export * from './application/utils';
 export * from './application/ketcherProvider';
 export * from './application/getStructure';

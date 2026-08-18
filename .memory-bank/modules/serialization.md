@@ -25,6 +25,21 @@ The **central** serializer — the only one that handles **both** micro `Struct`
 - **Micro:** deserialization parses the JSON, validates it against a schema, and dispatches each node to the matching "from KET" converter; serialization prepares the structure and emits each node via its "to KET" converter, tagging the document with a KET version.
 - **Macro:** parse-and-validate, then deserialize macromolecules entities converting into drawing entities (there is also a path to deserialize straight into a `Struct`); serialization emits nodes, connections, and templates.
 
+#### Stable identity for mechanism-arrow anchors
+
+Atoms and bonds are written to KET **positionally** — a molecule node lists them in order, with no id of their own — and one node is emitted per fragment. Saving also re-keys the atom pool several times over: once per fragment on the way into the drawing-entity model, again when those fragments are merged back into a fresh structure, and again when each fragment is cloned out for writing. Pool ids are monotonic and never reused, so deleting an atom leaves a hole that a reload closes up.
+
+Mechanism arrows anchor to atoms and bonds *by id*, and none of those hops rewrite the anchors. A structure whose fragments happen to be numbered contiguously survives by luck; interleaved ids (draw a nucleophile, then a substrate, then extend the nucleophile) or a deletion do not.
+
+So each atom and bond an arrow references carries an explicit **stable id**, and each arrow carries a second copy of its anchors expressed in those ids. The ids are stamped once, on the caller's structure, before anything clones it; the anchors are recomputed from them in a single pass once a file has been fully read and the ids are final.
+
+Two properties are deliberate:
+
+- **Opt-in.** Only referenced atoms and bonds are stamped, so a structure with no mechanism arrows serializes byte-for-byte as before, and an arrow's identifier is written only for mechanism arrows.
+- **Degrades quietly.** A file written before stable ids existed has only the numeric anchors and loads exactly as it used to. An anchor that cannot be resolved keeps its stored number rather than being dropped — a possibly-wrong anchor is better than silently turning a curly arrow back into a bare curve.
+
+Lone-pair and radical *indices* within an atom are a separate matter and are **not** stabilised: they are positions in a recomputed layout, so they hold only while the atom's valence, charge, neighbour geometry and hydrogen side are unchanged.
+
 ### MOL
 
 A mol serializer on ketcher side handles **only V2000**. **V3000** is handled by Indigo.

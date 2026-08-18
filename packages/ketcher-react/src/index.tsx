@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 export * from './Editor';
+export * from './embed';
 export * from './script';
 export * from './constants';
 export * from './components';

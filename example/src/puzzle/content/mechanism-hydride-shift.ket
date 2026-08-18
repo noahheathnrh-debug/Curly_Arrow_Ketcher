@@ -1,0 +1,145 @@
+{
+    "root": {
+        "nodes": [
+            {
+                "$ref": "mol0"
+            },
+            {
+                "type": "arrow",
+                "data": {
+                    "mode": "curly-mechanism",
+                    "pos": [
+                        {
+                            "x": 7.925,
+                            "y": -5.5,
+                            "z": 0
+                        },
+                        {
+                            "x": 9.2,
+                            "y": -6,
+                            "z": 0
+                        }
+                    ],
+                    "height": 0.25,
+                    "height2": 0.25,
+                    "autoRoute": true,
+                    "bdAttach": {
+                        "bondId": 1,
+                        "side": 1
+                    },
+                    "destAttach": {
+                        "kind": "new-bond",
+                        "atomId1": 2,
+                        "atomId2": 1
+                    }
+                }
+            }
+        ]
+    },
+    "mol0": {
+        "type": "molecule",
+        "atoms": [
+            {
+                "label": "C",
+                "location": [
+                    8,
+                    -6,
+                    0
+                ]
+            },
+            {
+                "label": "C",
+                "location": [
+                    9.2,
+                    -6,
+                    0
+                ],
+                "charge": 1
+            },
+            {
+                "label": "H",
+                "location": [
+                    7.85,
+                    -5,
+                    0
+                ]
+            },
+            {
+                "label": "C",
+                "location": [
+                    7.1,
+                    -5.45,
+                    0
+                ]
+            },
+            {
+                "label": "C",
+                "location": [
+                    7.1,
+                    -6.55,
+                    0
+                ]
+            },
+            {
+                "label": "C",
+                "location": [
+                    10.1,
+                    -5.4,
+                    0
+                ]
+            },
+            {
+                "label": "C",
+                "location": [
+                    10.1,
+                    -6.6,
+                    0
+                ]
+            }
+        ],
+        "bonds": [
+            {
+                "type": 1,
+                "atoms": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "type": 1,
+                "atoms": [
+                    0,
+                    2
+                ]
+            },
+            {
+                "type": 1,
+                "atoms": [
+                    0,
+                    3
+                ]
+            },
+            {
+                "type": 1,
+                "atoms": [
+                    0,
+                    4
+                ]
+            },
+            {
+                "type": 1,
+                "atoms": [
+                    1,
+                    5
+                ]
+            },
+            {
+                "type": 1,
+                "atoms": [
+                    1,
+                    6
+                ]
+            }
+        ]
+    }
+}

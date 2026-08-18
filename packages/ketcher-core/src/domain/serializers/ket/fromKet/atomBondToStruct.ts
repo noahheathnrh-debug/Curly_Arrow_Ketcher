@@ -93,6 +93,8 @@ export function atomToStruct(source) {
   ifDef(params, 'exactChangeFlag', Number(Boolean(source.exactChangeFlag)));
   // implicit hydrogens
   ifDef(params, 'implicitHCount', source.implicitHCount);
+  // mechanism-arrow anchor identity
+  ifDef(params, 'stableId', source.stableId);
 
   const newAtom = new Atom(params as AtomAttributes);
   newAtom.setInitiallySelected(source.selected);
@@ -125,6 +127,7 @@ export function bondToStruct(source, atomOffset = 0) {
   ifDef(params, 'customQuery', source.customQuery);
   ifDef(params, 'begin', source.atoms[0] + atomOffset);
   ifDef(params, 'end', source.atoms[1] + atomOffset);
+  ifDef(params, 'stableId', source.stableId);
   ifDef(params, 'initiallySelected', source.selected);
 
   const newBond = new Bond(params as BondAttributes);

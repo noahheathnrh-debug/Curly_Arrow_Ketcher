@@ -136,6 +136,9 @@
         "selected": {
           "type": "boolean"
         },
+        "stableId": {
+          "type": "string"
+        },
         "charge": {
           "type": "integer",
           "minimum": -1000,
@@ -282,6 +285,9 @@
         },
         "selected": {
           "type": "boolean"
+        },
+        "stableId": {
+          "type": "string"
         },
         "stereobox": {
           "type": "integer",
@@ -682,6 +688,76 @@
             },
             "height": {
               "type": "number"
+            },
+            "height2": {
+              "type": "number"
+            },
+
+            "along1": {
+              "type": "number"
+            },
+
+            "along2": {
+              "type": "number"
+            },
+            "lpAttach": {
+              "type": "object",
+              "required": ["atomId", "pairIdx"],
+              "properties": {
+                "atomId": { "type": "number" },
+                "pairIdx": { "type": "number" }
+              }
+            },
+            "raAttach": {
+              "type": "object",
+              "required": ["atomId", "radicalIdx"],
+              "properties": {
+                "atomId": { "type": "number" },
+                "radicalIdx": { "type": "number" }
+              }
+            },
+            "bdAttach": {
+              "type": "object",
+              "required": ["bondId"],
+              "properties": {
+                "bondId": { "type": "number" },
+                "side": { "type": "number", "enum": [-1, 1] },
+                "component": { "type": "string", "enum": ["sigma", "pi"] }
+              }
+            },
+            "destAttach": {
+              "type": "object",
+              "required": ["kind"],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": ["atom", "bond", "new-bond"]
+                },
+                "atomId": { "type": "number" },
+                "atomId1": { "type": "number" },
+                "atomId2": { "type": "number" },
+                "bondId": { "type": "number" },
+                "side": { "type": "number", "enum": [-1, 1] },
+                "approach": { "type": "number" }
+              }
+            },
+            "autoRoute": {
+              "type": "boolean"
+            },
+            "arrowId": {
+              "type": "number"
+            },
+            "anchorRefs": {
+              "type": "object",
+              "properties": {
+                "lpAtom": { "type": "string" },
+                "raAtom": { "type": "string" },
+                "bdBond": { "type": "string" },
+                "destAtom": { "type": "string" },
+                "destAtom1": { "type": "string" },
+                "destAtom2": { "type": "string" },
+                "destBond": { "type": "string" }
+              }
             }
           }
         },

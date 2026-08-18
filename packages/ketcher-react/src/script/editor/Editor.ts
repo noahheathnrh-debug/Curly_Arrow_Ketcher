@@ -110,6 +110,7 @@ import type {
   ToolEventHandlerName,
 } from './tool/Tool';
 import { getSelectionMap, getStructCenter } from './utils/structLayout';
+import { isToolAllowed } from './capabilities';
 import { isNumber } from 'lodash';
 import paperjs from 'paper';
 
@@ -379,6 +380,15 @@ class Editor implements KetcherEditor {
     /* eslint-disable no-underscore-dangle */
     if (arguments.length === 0) {
       return this._tool;
+    }
+
+    // The toolbar and the hotkey handler both check an action's `disabled`
+    // state before getting here, but nothing else does: a host calling
+    // `editor.tool('bond')` would otherwise walk straight past a capability the
+    // embedder withheld. Returning null is the existing "tool not activated"
+    // contract, so the previously active tool simply stays selected.
+    if (name && !isToolAllowed(this.ketcherId, name)) {
+      return null;
     }
 
     if (this._tool?.cancel) {

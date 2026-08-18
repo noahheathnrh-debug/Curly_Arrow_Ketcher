@@ -18,6 +18,7 @@ import { Pool } from 'domain/entities/pool';
 import type { SGroup } from 'domain/entities/sgroup';
 import type { Struct } from 'domain/entities/struct';
 import { Vec2 } from 'domain/entities/vec2';
+import { RxnArrow } from 'domain/entities/rxnArrow';
 import type { KetFileNode } from '../../serializers.types';
 
 export function prepareStructForKet(struct: Struct) {
@@ -54,6 +55,29 @@ export function prepareStructForKet(struct: Struct) {
         mode: item.mode,
         pos: item.pos,
         height: item.height,
+        // Mechanism-arrow fields. Without these a save/load round trip silently
+        // reverts every curly arrow to an anchorless quadratic. `undefined`
+        // entries are dropped by JSON.stringify, so plain reaction arrows
+        // serialize exactly as before.
+        height2: item.height2,
+        along1: item.along1,
+        along2: item.along2,
+        lpAttach: item.lpAttach,
+        raAttach: item.raAttach,
+        bdAttach: item.bdAttach,
+        destAttach: item.destAttach,
+        autoRoute: item.autoRoute,
+        // The anchors again, by stable id. These are what survive the
+        // renumbering the numeric fields above cannot; they are resolved back
+        // into those fields on load. Computed upstream, while the numeric
+        // anchors still matched the struct — not re-derived here, where the
+        // ids have already moved.
+        //
+        // Both are written only for mechanism arrows. Every arrow carries an
+        // `arrowId`, but a plain reaction arrow has no use for one and emitting
+        // it would change the output of every existing reaction file.
+        arrowId: RxnArrow.isMechanism(item) ? item.arrowId : undefined,
+        anchorRefs: item.anchorRefs,
       },
       selected: item.getInitiallySelected(),
     });

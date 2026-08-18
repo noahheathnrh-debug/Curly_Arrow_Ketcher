@@ -18,6 +18,12 @@
 | Superatom               | Collapsed representation of a group of atoms shown as single label                                                                | S-Group types, functional groups, abbreviations            |
 | Functional Group        | Common chemical substructure with known properties (e.g., COOH, NH2)                                                              | Abbreviations, functional group helpers, template library  |
 | Reaction                | Chemical transformation with reactants, products, and reaction arrow                                                              | RxnArrow/RxnPlus entities, RXN format, reaction tools      |
+| Mechanism arrow         | Curved arrow showing electrons moving: full-headed (curly) for a pair, half-headed (fishhook) for a single electron. Distinct from a reaction arrow, which connects whole structures rather than showing electron flow | RxnArrow modes, curly-arrow tool, mechanism router |
+| Electron source         | Where a mechanism arrow's electrons come from — a specific lone pair, a radical dot, or a bond. Never the charge symbol: a charge indicates electrons are present, but the source is the pair itself, even when lone pairs are hidden | Mechanism arrow anchors, curly-arrow tool |
+| Electron destination    | Where a mechanism arrow's electrons go — onto an atom, into an existing bond whose order increases, or into the gap where a new bond forms                                        | Mechanism arrow anchors, mechanism router |
+| Approach sector         | A free angular wedge around an atom, unoccupied by bonds or implicit hydrogens, through which a mechanism arrowhead may arrive     | Mechanism router, lone-pair layout solver |
+| Route                   | The chosen shape of one mechanism arrow: two curvature offsets plus the endpoint anchors and the metrics used to judge it          | Mechanism router |
+| Auto-route              | Whether a mechanism arrow's shape is owned by the router. Turns off permanently the first time the user drags a curvature handle   | RxnArrow entity, resize operation |
 | Stereochemistry         | 3D spatial arrangement of atoms (chiral centers, E/Z isomers, R/S labels)                                                         | Atom/Bond stereo properties, stereo validation, Molfile    |
 | Valence                 | Number of bonds an atom can form based on its element and charge                                                                  | Valence validation, implicit hydrogen calculation          |
 | Aromatization           | Detection/assignment of aromatic ring systems in structures                                                                       | Indigo service, structure cleanup, ring detection          |
@@ -37,6 +43,9 @@
 | Editor Operation | Command-pattern operation that modifies structure with undo/redo support            | Operation classes, editor actions, history management     |
 | Tool             | User interaction handler for specific editing mode (atom tool, bond tool, etc.)     | Tool classes, event handlers, toolbar integration         |
 | Serializer       | Parser/formatter for converting between Struct and chemical file formats            | Domain serializers (KET, MOL, SMILES, etc.)               |
+| Pool id          | An entity's key within its `Struct` collection. Monotonic and never reused, so deleting leaves a hole; renumbered on every save | Struct collections, all intra-structure references |
+| Stable id        | An explicit identifier written into KET for atoms and bonds a mechanism arrow anchors to, so the anchor survives the renumbering a save performs. Written only for referenced entities | KET serialization, mechanism anchors |
+| Semantic anchor  | A mechanism arrow endpoint expressed as chemistry — a lone pair, radical, or bond — rather than as a coordinate | Mechanism arrows, arrow routing, answer checking |
 | Formatter        | Application-layer service for structure format conversion via Indigo                | Formatters package, API integration, format conversion    |
 | Render Engine    | SVG-based rendering system using Raphael.js (legacy) or Paper.js (modern)           | Render package, ReStruct, view components                 |
 | KetcherBuilder   | Builder pattern class for constructing Ketcher editor instances                     | Ketcher initialization, dependency injection, async setup |

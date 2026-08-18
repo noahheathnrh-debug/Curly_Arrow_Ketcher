@@ -30,28 +30,64 @@ import fullscreen from './fullscreen';
 import { removeStructAction, openInfoModal } from '../state/shared';
 import type { Tools, UiAction } from './action.types';
 import type Editor from '../../editor/Editor';
+import { capabilityProvider } from 'ketcher-core';
+import { capabilityForAction } from './capabilityMap';
 
 export * from './action.types';
 
 const disableIfViewOnly = (editor: Editor): boolean =>
   !!editor.render.options.viewOnlyMode;
 
-const updateConfigItem = (item: UiAction): UiAction => {
-  if (typeof item.disabled === 'boolean' || item.enabledInViewOnly === true) {
-    return item;
-  } else if (typeof item.disabled === 'function') {
+/**
+ * Whether the host has withheld the capability this action needs.
+ *
+ * Separate from view-only, and stricter: view-only freezes the whole document,
+ * while a capability profile can freeze the chemistry and still allow arrows.
+ */
+const disabledByCapability = (
+  editor: Editor,
+  key: string,
+  item: UiAction,
+): boolean => {
+  const capability = capabilityForAction(key, item.action);
+  if (!capability) return false;
+  return !capabilityProvider.can(editor.ketcherId, capability);
+};
+
+/**
+ * Fold the global gates into each action's own `disabled` predicate.
+ *
+ * Doing it here rather than at each call site is what makes the restriction
+ * reach the keyboard as well as the toolbar: the hotkey handler tests the same
+ * computed action state, so an action that is disabled has no working shortcut.
+ */
+const updateConfigItem = (item: UiAction, key: string): UiAction => {
+  const capability = capabilityForAction(key, item.action);
+
+  // `enabledInViewOnly` exempts an action from the *view-only* freeze — reading
+  // and copying stay available on a read-only document. It was never meant to
+  // exempt it from a capability the host withheld, so the two are kept apart.
+  const gate = (editor: Editor): boolean => {
+    if (!item.enabledInViewOnly && disableIfViewOnly(editor)) return true;
+    return capability ? disabledByCapability(editor, key, item) : false;
+  };
+
+  // An action with a hard-coded `disabled: true` is already off and needs no
+  // gate; one with `false` would previously skip the wrapper entirely and
+  // silently escape both gates, so it is wrapped like any other.
+  if (item.disabled === true) return item;
+
+  if (!capability && item.enabledInViewOnly === true) return item;
+
+  if (typeof item.disabled === 'function') {
     const originalDisabled = item.disabled;
     return {
       ...item,
-      disabled: (...props) =>
-        disableIfViewOnly(props[0]) || originalDisabled(...props),
-    };
-  } else {
-    return {
-      ...item,
-      disabled: disableIfViewOnly,
+      disabled: (...props) => gate(props[0]) || originalDisabled(...props),
     };
   }
+
+  return { ...item, disabled: gate };
 };
 
 const config: Record<string, UiAction> = {
@@ -304,7 +340,7 @@ const configWithNonViewOnlyActionsDisabled: Tools = Object.entries({
 }).reduce(
   (acc, [key, item]) => ({
     ...acc,
-    [key]: updateConfigItem(item as UiAction),
+    [key]: updateConfigItem(item as UiAction, key),
   }),
   {},
 ) as Tools;
