@@ -10,12 +10,15 @@ is hard to reverse; I have flagged the two that get harder with time.
 
 ## Try it first
 
+The trainer now lives in its own project, outside this repository:
+
 ```bash
-npm run dev:standalone --workspace=example
+cd "../Chemistry Mechanism Trainer"
+npm install
+npm run dev
 ```
 
-Open **`/puzzle.html`**. Six mechanisms, locked structures, draw the arrows.
-`/` is still the ordinary editor, untouched.
+Six mechanisms, locked structures, draw the arrows.
 
 ---
 
@@ -47,7 +50,7 @@ tool rather than of the chemistry. Where order genuinely matters, split the
 mechanism into steps — `derivePuzzleFromSolvedKet` takes `stepSizes` for exactly
 this, and none of the six currently uses it.
 
-**To change:** add `stepSizes` to entries in `example/src/puzzle/puzzles.ts`.
+**To change:** add `stepSizes` to entries in `../Chemistry Mechanism Trainer/src/puzzles.ts`.
 
 ### 3. Drawing the same right arrow twice does not count twice
 
@@ -61,7 +64,7 @@ correct arrows green as well made the canvas noisy and gave the answer away.
 Feedback never enters the undo history — a learner should not be able to undo
 into it.
 
-**To change:** `showFeedback` in `example/src/puzzle/MechanismActivity.tsx`.
+**To change:** `showFeedback` in `../Chemistry Mechanism Trainer/src/MechanismActivity.tsx`.
 
 ### 5. Puzzles are derived from worked mechanisms, not hand-authored
 
@@ -74,11 +77,11 @@ I wrote the prompts, hints and explanations myself. **These are the most likely
 thing to want changing** — they are ordinary prose in one file, no chemistry
 knowledge encoded anywhere else.
 
-**To change:** `example/src/puzzle/puzzles.ts`.
+**To change:** `../Chemistry Mechanism Trainer/src/puzzles.ts`.
 
 ### 6. The documents are *copies* of the visual-test fixtures
 
-I copied the six `.ket` files into `example/src/puzzle/content/` rather than
+I copied the six `.ket` files into the trainer's own `src/content/` rather than
 importing them from `ketcher-autotests`. A fixture may one day be edited to
 provoke a rendering bug, which would be no reason to change a lesson.
 
@@ -86,19 +89,22 @@ The cost is that they can drift. If you would rather they stayed shared, delete
 the folder and import across — the derivation code does not care where the text
 comes from.
 
-### 7. The slice lives in `example/`, not in `mnx-add-ons`
+### 7. The trainer is now a standalone project in `mnx-add-ons`
 
-You left this to me. The embedding API is still moving, and cross-repo linking
-during that churn costs more than the move will. `example/` already builds these
-packages, so the slice got a working host for free and needed no new build
-config — it is served as a second page, `/puzzle.html`.
+Originally built inside `example/` while the embedding API was churning, then
+moved to `mnx-add-ons/Chemistry Mechanism Trainer/` once it settled. It runs on
+its own — its own Vite project, consuming the three Ketcher packages as **built
+packages** via `file:` links to the sibling checkout.
 
-Everything is self-contained in `example/src/puzzle/`. Moving it later means
-moving the folder and deleting two files (`hostContract.ts`, `ExperienceHost.tsx`),
-which exist only to stand in for MnemoNexus.
+It is deliberately *not* wired into MnemoNexus yet. See "What the move to
+MnemoNexus still needs" below.
 
-**This is the decision that gets harder to change with time** — not much harder,
-but the longer the folder grows the more there is to move.
+Consuming the built packages rather than aliasing to source was the right call
+and proved itself immediately: it exposed a genuine packaging bug in the fork
+(see below) that the editor's own example app cannot see.
+
+`mnx-add-ons` is not a git repository, so the trainer was given its own — the
+work would otherwise have left version control entirely on the move.
 
 ### 8. The host contract is restated, not imported
 
@@ -107,8 +113,13 @@ same shapes — but is declared locally so the trainer does not depend on that
 repository to run. The activity is written against it, so swapping in the real
 import should be mechanical.
 
-I could not verify it against the live MnemoNexus source in this session, so
-**treat the field shapes as needing one check** before the move.
+**Since verified against the live source** (`mnemonexus/src/core/extensions/contract.ts`).
+All six `ExperienceHostProps` fields match exactly — names, types, `readonly`.
+`ExperienceResult`, `ExtensionLaunchSurface` and all eight `ExtensionPermission`
+values match too. My `ExtensionKnowledgeItem` declares four of its fourteen
+fields, which is a clean structural subset, so the real type is assignable.
+
+Swapping the import really is mechanical.
 
 ### 9. `mechanism` profile withholds nothing
 
@@ -153,7 +164,8 @@ first puzzle (CH₃O⁻ + HBr), and the lock holds on every route I could find:
 Re-run it any time with the dev server up:
 
 ```bash
-node example/src/puzzle/smoke-check.mjs
+cd "../Chemistry Mechanism Trainer"
+PUZZLE_URL=http://localhost:5300/ node smoke-check.mjs
 ```
 
 **One cosmetic gap found and left alone.** The charge group button still *looks*
@@ -164,10 +176,30 @@ only. I tried adding the matching entry and it made the whole charge group
 disappear, so I reverted rather than trade a cosmetic flaw for a real one. Worth
 a proper fix in the toolbar's group-status logic, not worth a rushed one.
 
-## One thing I could not verify, and one to decide
+## A real bug the move exposed
 
-**Not verified — the MnemoNexus contract shapes** (see decision 8). I could not
-check `hostContract.ts` against the live MnemoNexus source in this session.
+Consuming Ketcher as a *built package* — rather than aliasing to source the way
+the editor's own example app does — broke immediately:
+
+> `ReferenceError: require is not defined`
+> at `ketcher-core/dist/application/render/raphael-ext.modern.js`
+
+`raphael-ext` loads Raphaël with a bare `require('raphael')` guarded by
+`typeof window`, so server rendering skips it. The build emits that call verbatim
+into the **ESM** output, where `require` does not exist. Any consumer taking the
+package as published hits it on first paint; the example app never does, because
+it aliases to TypeScript source and runs a CommonJS plugin over it.
+
+It is the only such call in `dist`, so the trainer works around it with a narrow
+shim (`src/raphaelShim.ts`) that resolves that one module and refuses everything
+else. **The proper fix belongs in `ketcher-core`** — a static import, or a
+dynamic `import()` if the SSR guard must stay.
+
+Linking from a sibling checkout also gave two copies of React until
+`resolve.dedupe` was set. That one is a property of `file:` linking, not a
+Ketcher fault.
+
+## One to decide
 
 **To decide — pre-existing test failures.** There were 16 failing tests before I
 started, and there still are: 12 in `antisenseChain` (monomer library items not
@@ -195,3 +227,33 @@ The 58 modified / 28 untracked files that were already there when I started are
 still uncommitted, now mixed in with this work. Committing the earlier mechanism
 work separately would make this reviewable on its own; I did not do it because
 committing was not something you asked for.
+
+---
+
+## What the move to MnemoNexus still needs
+
+The trainer now lives at `mnx-add-ons/Chemistry Mechanism Trainer/` and runs on
+its own. It is **not** wired into MnemoNexus, and that is a bigger job than it
+sounds:
+
+1. **A consumption path.** MnemoNexus uses **bun**, and this fork is published
+   nowhere. It needs a `file:` link or a real publish. Package renaming to
+   `@mnx/curly-arrow-ketcher-*` was already deferred and belongs with this.
+2. **Build plumbing.** MnemoNexus's Vite config is bare — `react()` plus three
+   dev plugins. No `svgr`, no CommonJS handling, no `.less`, no Indigo WASM
+   worker setup. All of that has to be added.
+3. **Size.** The trainer's production bundle is ~30 MB raw, 7.3 MB gzipped.
+   Acceptable standalone; a real question inside a Tauri desktop app, and well
+   past the 8 MB code-bundle cap in the `.mnxpack` format.
+4. **Styling.** MnemoNexus experiences ship no CSS of their own — everything goes
+   through `usePluginPrimitives()`. `activity.module.css` would be rewritten
+   against `Panel`, `HeroHeader`, `Badge`, `Button`, `ProgressBar`, all of which
+   exist.
+5. **The easy part.** Delete `hostContract.ts` and `ExperienceHost.tsx`, import
+   the real contract, and add a manifest to
+   `mnemonexus/src/core/extensions/builtins.ts`. `src/extensions/maths-drills/`
+   is the closest existing example — `knowledgeBinding: 'none'`, calendar
+   surface, self-contained subject practice.
+
+Items 1 and 2 gate everything else. Items 3–5 are wasted effort until Ketcher can
+be imported at all.
