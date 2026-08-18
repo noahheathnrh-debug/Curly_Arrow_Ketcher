@@ -27,6 +27,8 @@
     "node": ">=24.14.1"
   },
   "scripts": {
+    "generate:icon-sprite": "node ./scripts/generate-icon-sprite.mjs",
+    "prebuild": "npm run generate:icon-sprite",
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.mjs -m true",
     "start": "cross-env NODE_ENV=development rollup -c rollup.config.mjs -m true -w",
     "test": "run-s test:prettier test:stylelint test:eslint:quiet test:types test:circ test:unit",

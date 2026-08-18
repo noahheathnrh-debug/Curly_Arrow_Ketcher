@@ -18,6 +18,7 @@ import type { ReStruct } from 'application/render';
 import type { LonePairAttachment, RadicalAttachment } from 'domain/entities';
 import type { Vec2 } from 'domain/entities/vec2';
 import {
+  type MechanismAnchors,
   RxnArrowAdd,
   RxnArrowDelete,
   RxnArrowResize,
@@ -35,10 +36,21 @@ export function fromArrowAddition(
   raAttach?: RadicalAttachment,
   height?: number,
   height2?: number,
+  anchors?: MechanismAnchors,
 ) {
   const action = new Action();
   action.addOp(
-    new RxnArrowAdd(pos, mode, undefined, height, lpAttach, raAttach, height2),
+    new RxnArrowAdd(
+      pos,
+      mode,
+      undefined,
+      height,
+      lpAttach,
+      raAttach,
+      height2,
+      undefined,
+      anchors,
+    ),
   );
   return action.perform(restruct);
 }

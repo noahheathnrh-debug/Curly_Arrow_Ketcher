@@ -18,11 +18,13 @@ import { capitalize, isEqual, throttle } from 'lodash/fp';
 
 import { basicAtoms } from '../../action/atoms';
 import tools from '../../action/tools';
+import { loadMechanismControlsPreference } from '../mechanismControls';
 
 const initial = {
   freqAtoms: [],
   currentAtom: 0,
   opened: null,
+  mechanismControlsEnabled: loadMechanismControlsPreference(),
   visibleTools: {
     select: 'select-rectangle',
   },
@@ -87,6 +89,12 @@ export default function (state = initial, action) {
         ? { ...state, opened: null }
         : { ...state, opened: data.menuName };
     }
+    case 'SET_MECHANISM_CONTROLS':
+      return {
+        ...state,
+        opened: null,
+        mechanismControlsEnabled: data.enabled,
+      };
     case 'UPDATE':
       return { ...state, opened: null };
     case 'MODAL_OPEN':

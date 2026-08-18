@@ -1,6 +1,9 @@
 import type { BaseRenderer } from 'application/render';
 import { DrawingEntity } from 'domain/entities/DrawingEntity';
-import type { RxnArrowMode } from 'domain/entities/rxnArrow';
+import type {
+  MechanismArrowData,
+  RxnArrowMode,
+} from 'domain/entities/rxnArrow';
 import { Vec2 } from 'domain/entities/vec2';
 import type { RxnArrowRenderer } from 'application/render/renderers/RxnArrowRenderer';
 import type { initiallySelectedType } from 'domain/entities/BaseMicromoleculeEntity';
@@ -14,6 +17,11 @@ export class RxnArrow extends DrawingEntity {
     public startEndPosition: [Vec2, Vec2],
     public height?: number,
     public initiallySelected?: initiallySelectedType,
+    /**
+     * Opaque to this class — it exists only so mechanism anchors survive the
+     * Struct -> DrawingEntity -> Struct round trip the KET serializer performs.
+     */
+    public mechanism?: MechanismArrowData,
   ) {
     super();
   }

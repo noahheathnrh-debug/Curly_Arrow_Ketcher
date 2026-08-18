@@ -24,6 +24,7 @@ import { generateMenuShortcuts } from 'ketcher-core';
 import { removeStructAction } from 'src/script/ui/state/shared';
 import { saveSettings } from 'src/script/ui/state/options';
 import { createSelector } from 'reselect';
+import { toggleMechanismControls } from '../../../state/mechanismControls';
 
 const getActionState = (state) => state.actionState ?? {};
 
@@ -74,6 +75,7 @@ const mapStateToProps = (state: any) => {
     indigoVerification: state.requestsStatuses.indigoVerification,
     disableableButtons,
     showLonePairs: !!state.options?.settings?.showLonePairs,
+    mechanismControlsEnabled: Boolean(state.toolbar.mechanismControlsEnabled),
   };
 };
 
@@ -140,6 +142,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
           },
         }),
       ),
+    onToggleMechanismControls: () =>
+      dispatch(toggleMechanismControls() as never),
   };
 };
 

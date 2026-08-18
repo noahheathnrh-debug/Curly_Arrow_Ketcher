@@ -18,6 +18,11 @@ declare module '*.ket' {
   export default content;
 }
 
+declare module '*.ket?raw' {
+  const content: string;
+  export default content;
+}
+
 declare module '*.svg' {
   export const ReactComponent: React.FunctionComponent<
     React.SVGProps<SVGSVGElement> & { title?: string }

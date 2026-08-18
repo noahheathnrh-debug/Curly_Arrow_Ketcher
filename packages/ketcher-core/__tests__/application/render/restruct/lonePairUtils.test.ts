@@ -40,14 +40,19 @@ describe('calcNonBondingLayout', () => {
     expect(layout).not.toBeNull();
     if (!layout) return;
 
-    // Gaps: one bond at 0 rad with width 0.2. Gap is [0.2, 2PI-0.2] = 5.88 rad size.
-    // 3 items to allocate. Each spacing = 5.88 / (3+1) = 1.47.
-    // Slots: 0.2 + 1.47 = 1.67, 0.2 + 2*1.47 = 3.14 (PI), 0.2 + 3*1.47 = 4.61.
-    // hydrogenOnTheLeft=false means baseAngle=0.
-    // Distances from 0: 1.67, 3.14, (6.28-4.61)=1.67.
-    // Sorting by distance from 0: 1.67, 1.67, 3.14.
-    // radicalCount=1. First item should be at 1.67.
-    expect(layout.radicalAngles[0]).toBeCloseTo(1.67, 0.1);
+    // Lewis structures put non-bonding electrons squarely on the sides of the
+    // atom symbol. With the single bond occupying east, the three remaining
+    // electrons take north, south and west — and none of them drifts to an
+    // in-between angle, which is what made hydroxyls look skewed.
+    const all = [...layout.radicalAngles, ...layout.lonePairAngles];
+    expect(all).toHaveLength(3);
+
+    const cardinals = all.map((angle) => Math.round((angle * 2) / Math.PI));
+    expect(cardinals.slice().sort()).toEqual([-1, 1, 2]); // N, S, W
+
+    for (const angle of all) {
+      expect(Math.abs(angle % (Math.PI / 2))).toBeLessThan(1e-6);
+    }
   });
 
   it('prefers the hydrogen side for isolated radicals when hydrogen is on the right', () => {
@@ -69,16 +74,12 @@ describe('calcNonBondingLayout', () => {
     const layout = calcNonBondingLayout(atom, struct, 0, false);
 
     if (!layout) return;
-    // O has 6 valence electrons, 0 bonds -> 3 lone pairs. 1 radical. Total 4 slots.
-    // 2PI gap / (4+1) = 1.256 rad step.
-    // Near 0 (hydrogenOnTheLeft=false) means items at 1.25, 2.51, 3.77, 5.02.
-    // Distances from 0: 1.25, 2.51, (6.28-3.77)=2.51, (6.28-5.02)=1.25.
-    // Sorted: 1.25, 1.25, 2.51, 2.51.
-    // Radical is first. Expect 1.25.
+    // Nothing is bonded, so all four sides are free and the radical takes the
+    // one nearest the hydrogen — east, since the hydrogen is on the right.
     let angle = layout.radicalAngles[0];
     while (angle > Math.PI) angle -= 2 * Math.PI;
     while (angle < -Math.PI) angle += 2 * Math.PI;
-    expect(Math.abs(angle)).toBeCloseTo(1.256, 1);
+    expect(Math.abs(angle)).toBeCloseTo(0, 6);
   });
 
   it('prefers the hydrogen side for isolated radicals when hydrogen is on the left', () => {
@@ -100,15 +101,11 @@ describe('calcNonBondingLayout', () => {
     const layout = calcNonBondingLayout(atom, struct, 0, true);
 
     if (!layout) return;
-    // Left preference (PI). Items at 1.25, 2.51, 3.77, 5.02.
-    // Distances from PI: |1.25-3.14|=1.89, |2.51-3.14|=0.63, |3.77-3.14|=0.63, |5.02-3.14|=1.88.
-    // Closest to PI is 2.51. Wait, 3.14 - 1.256 = 1.88. 3.14 - 2.51 = 0.63.
-    // Next one is 3.14 + 0.63 = 3.77.
-    // So closest is 2.51.
+    // Mirror of the previous case: hydrogen on the left puts the radical west.
     let angle = layout.radicalAngles[0];
     while (angle > Math.PI) angle -= 2 * Math.PI;
     while (angle < -Math.PI) angle += 2 * Math.PI;
-    expect(Math.abs(angle)).toBeCloseTo(2.51, 1);
+    expect(Math.abs(angle)).toBeCloseTo(Math.PI, 6);
   });
 
   it('still produces radical slots for atoms without lone-pair element data', () => {
@@ -224,6 +221,9 @@ describe('getRadicalModelPositions', () => {
     const positions = getRadicalModelPositions(atom, struct, 0, options, false);
 
     expect(positions).toHaveLength(1);
-    expect(positions[0].x).toBeLessThan(0);
+    // The bond runs east, so the radical must not sit on top of it. Asserting
+    // the direction rather than a specific side: any of the three free sides is
+    // correct, and pinning one would just re-encode the layout algorithm.
+    expect(positions[0].x).toBeLessThan(positions[0].length() * 0.5);
   });
 });

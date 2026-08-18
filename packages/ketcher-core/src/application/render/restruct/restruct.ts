@@ -368,18 +368,52 @@ class ReStruct {
 
   markBond(bid: number, mark: number): void {
     this.markItem('bonds', bid, mark);
+    this.cascadeToMechanismArrows(
+      mark,
+      (arrow) =>
+        arrow.bdAttach?.bondId === bid ||
+        (arrow.destAttach?.kind === 'bond' && arrow.destAttach.bondId === bid),
+    );
   }
 
   markAtom(aid: number, mark: number): void {
     this.markItem('atoms', aid, mark);
-    // Cascade to any CurlyMechanism arrows whose start is pinned to this atom's lone pairs
+    this.cascadeToMechanismArrows(
+      mark,
+      (arrow) =>
+        arrow.lpAttach?.atomId === aid ||
+        arrow.raAttach?.atomId === aid ||
+        (arrow.destAttach?.kind === 'atom' &&
+          arrow.destAttach.atomId === aid) ||
+        (arrow.destAttach?.kind === 'new-bond' &&
+          (arrow.destAttach.atomId1 === aid ||
+            arrow.destAttach.atomId2 === aid)),
+    );
+  }
+
+  /**
+   * Repaint and re-route any mechanism arrow pinned to something that changed.
+   *
+   * A mechanism arrow's geometry is derived from the structure around it — the
+   * tail sits on a specific lone pair, the head arrives through whichever
+   * angular sector is free — so moving an anchored atom invalidates both the
+   * endpoints and the curve. Dropping the cached route here is what makes
+   * re-routing lazy: the work happens on the next paint, once, rather than on
+   * every frame.
+   */
+  private cascadeToMechanismArrows(
+    mark: number,
+    matches: (arrow: ReRxnArrow['item']) => boolean,
+  ): void {
     this.rxnArrows.forEach((reArrow, arrowId) => {
-      if (
-        reArrow.item.lpAttach?.atomId === aid &&
-        reArrow.item.mode === RxnArrowMode.CurlyMechanism
-      ) {
-        this.markItem('rxnArrows', arrowId, mark);
-      }
+      const isMechanism =
+        reArrow.item.mode === RxnArrowMode.CurlyMechanism ||
+        reArrow.item.mode === RxnArrowMode.FishhookMechanism;
+      if (!isMechanism) return;
+      if (!matches(reArrow.item)) return;
+
+      reArrow.invalidateRoute();
+      this.markItem('rxnArrows', arrowId, mark);
     });
   }
 

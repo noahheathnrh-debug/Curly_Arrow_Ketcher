@@ -34,6 +34,7 @@ interface ExternalFuncProps {
   hiddenButtons: string[];
   indigoVerification: boolean;
   shortcuts: { [key in string]: string };
+  visibleButtons?: string[];
 }
 
 export const ExternalFuncControls = ({
@@ -53,6 +54,7 @@ export const ExternalFuncControls = ({
   indigoVerification,
   hiddenButtons,
   shortcuts,
+  visibleButtons,
 }: ExternalFuncProps) => {
   const externalFuncButtons = [
     {
@@ -109,7 +111,7 @@ export const ExternalFuncControls = ({
       handler: onMiew,
       testId: '3D Viewer button',
     },
-  ];
+  ].filter((button) => !visibleButtons || visibleButtons.includes(button.name));
 
   const getButtonElement = (button) => (
     <TopToolbarIconButton
@@ -132,23 +134,28 @@ export const ExternalFuncControls = ({
     .filter((button) => button !== firstButtonObj)
     .map((button) => getButtonElement(button));
 
-  const lonePairsButton = (
-    <TopToolbarIconButton
-      title="Show Lone Pairs"
-      onClick={onToggleLonePairs}
-      iconName="lone-pairs"
-      isHidden={hiddenButtons.includes('lone-pairs')}
-      isActive={showLonePairs}
-      key="lone-pairs"
-      testId="Show Lone Pairs button"
-    />
-  );
+  const lonePairsButton =
+    !visibleButtons || visibleButtons.includes('lone-pairs') ? (
+      <TopToolbarIconButton
+        title="Show Lone Pairs"
+        onClick={onToggleLonePairs}
+        iconName="lone-pairs"
+        isHidden={hiddenButtons.includes('lone-pairs')}
+        isActive={showLonePairs}
+        ariaPressed={showLonePairs}
+        key="lone-pairs"
+        testId="Show Lone Pairs button"
+      />
+    ) : null;
 
-  if (isCollapsed) {
+  if (isCollapsed && firstButtonObj) {
     return (
       <ElementWithDropdown
         topElement={getButtonElement(firstButtonObj)}
-        dropDownElements={[...collapsibleElements, lonePairsButton]}
+        dropDownElements={[
+          ...collapsibleElements,
+          ...(lonePairsButton ? [lonePairsButton] : []),
+        ]}
       />
     );
   }

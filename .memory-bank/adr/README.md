@@ -20,4 +20,5 @@ Example: `2026-07-10-adopt-spec-driven-development.md`
 
 ## Records
 
-<!-- ADRs are added here as architectural decisions are made or retroactively documented. -->
+- [2026-08-06 — Obstacle-aware mechanism arrow routing](./2026-08-06-obstacle-aware-mechanism-arrow-routing.md) — mechanism arrows carry semantic anchors at both ends; a pure router in `ketcher-core` chooses their shape by scoring candidates against collision geometry
+- [2026-08-16 — Stable ids for mechanism anchors](./2026-08-16-stable-ids-for-mechanism-anchors.md) — anchored atoms and bonds carry an explicit id through KET, because Pool ids are renumbered several times on save and silently repoint every arrow

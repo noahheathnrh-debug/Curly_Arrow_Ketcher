@@ -7,3 +7,4 @@ export * from './scrollbar';
 export * from './notifyRenderComplete';
 export { getOptionsWithConvertedUnits } from './options';
 export * from './render.types';
+export * from './mechanism';

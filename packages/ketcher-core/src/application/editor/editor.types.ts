@@ -69,9 +69,10 @@ export interface Editor {
   options(value: EditorOptions): void;
   setOptions: (opts: string) => void;
   zoom: (value?: any) => any;
-  structSelected: () => Struct;
+  structSelected: (existingSelection?: EditorSelection) => Struct;
   explicitSelected: () => EditorSelection;
   centerStruct: () => void;
+  centerViewportAccordingToStruct: (struct?: Struct) => void;
   zoomAccordingContent: (struct: Struct) => void;
   errorHandler: ((message: string) => void) | null;
   event: {

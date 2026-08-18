@@ -42,10 +42,12 @@ import classes from './LeftToolbar.module.less';
 import clsx from 'clsx';
 import { useInView } from 'react-intersection-observer';
 import { useResizeObserver } from '../../../../../hooks';
+import { MECHANISM_LEFT_TOOL_IDS } from '../../../state/mechanismControls';
 
 interface LeftToolbarProps
   extends Omit<ToolbarGroupItemProps, 'id' | 'options'> {
   className?: string;
+  mechanismControlsEnabled: boolean;
 }
 
 type LeftToolbarCallProps = ToolbarGroupItemCallProps;
@@ -62,7 +64,7 @@ interface GroupProps {
   items?: ItemProps[];
   className?: string;
   height?: number;
-  rest: Omit<Props, 'className'>;
+  rest: Omit<Props, 'className' | 'mechanismControlsEnabled'>;
 }
 
 const Group = ({ items, className, height, rest }: GroupProps) => {
@@ -113,7 +115,7 @@ const Group = ({ items, className, height, rest }: GroupProps) => {
 };
 
 const LeftToolbar = (props: Props) => {
-  const { className, ...rest } = props;
+  const { className, mechanismControlsEnabled, ...rest } = props;
   const { ref, height } = useResizeObserver<HTMLDivElement>();
   const scrollRef = useRef(null) as RefObject<HTMLDivElement | null>;
   const [startRef, startInView] = useInView({ threshold: 1 });
@@ -136,6 +138,53 @@ const LeftToolbar = (props: Props) => {
     scrollRef.current.scrollTop += sizeRef.current.offsetHeight;
   };
 
+  const primaryItems: ItemProps[] = [
+    { id: 'hand' },
+    { id: 'select', options: selectOptions },
+    { id: 'erase' },
+  ];
+  const structureItems: ItemProps[] = [
+    {
+      id: 'bonds',
+      options: [...bondCommon, ...bondQuery, ...bondSpecial, ...bondStereo],
+    },
+    { id: 'chain' },
+    { id: 'enhanced-stereo' },
+    {
+      id: 'charge',
+      options: [
+        { id: 'charge-plus' },
+        { id: 'charge-minus' },
+        { id: 'radical' },
+      ],
+    },
+    { id: 'lone-pair' },
+    { id: 'curly-arrow' },
+  ];
+  const reactionItems: ItemProps[] = [
+    { id: 'reaction-plus' },
+    { id: 'arrows', options: arrowsOptions },
+    {
+      id: 'reaction-mapping-tools',
+      options: mappingOptions,
+    },
+  ];
+  const focusedItems = [...primaryItems, ...structureItems, ...reactionItems]
+    .filter((item) => MECHANISM_LEFT_TOOL_IDS.has(item.id))
+    .map((item) =>
+      item.id === 'bonds'
+        ? {
+            ...item,
+            options: [
+              ...bondCommon,
+              ...bondStereo,
+              { id: 'bond-aromatic' as const },
+              { id: 'bond-dative' as const },
+            ],
+          }
+        : item,
+    );
+
   return (
     <div
       data-testid="left-toolbar"
@@ -147,86 +196,66 @@ const LeftToolbar = (props: Props) => {
         ref={scrollRef}
         data-testid="left-toolbar-buttons"
       >
-        <div className={classes.listener} ref={startRef}>
-          <Group
-            className={classes.groupItem}
-            items={[
-              { id: 'hand' },
-              { id: 'select', options: selectOptions },
-              { id: 'erase' },
-            ]}
-            height={height}
-            rest={rest}
-          />
-        </div>
+        {mechanismControlsEnabled ? (
+          <div className={classes.listener} ref={startRef}>
+            <Group
+              className={classes.groupItem}
+              items={focusedItems}
+              height={height}
+              rest={rest}
+            />
+          </div>
+        ) : (
+          <>
+            <div className={classes.listener} ref={startRef}>
+              <Group
+                className={classes.groupItem}
+                items={primaryItems}
+                height={height}
+                rest={rest}
+              />
+            </div>
 
-        <Group
-          className={classes.groupItem}
-          items={[
-            {
-              id: 'bonds',
-              options: [
-                ...bondCommon,
-                ...bondQuery,
-                ...bondSpecial,
-                ...bondStereo,
-              ],
-            },
-            { id: 'chain' },
-            { id: 'enhanced-stereo' },
-            {
-              id: 'charge',
-              options: [
-                { id: 'charge-plus' },
-                { id: 'charge-minus' },
-                { id: 'radical' },
-              ],
-            },
-            { id: 'lone-pair' },
-            { id: 'curly-arrow' },
-          ]}
-          height={height}
-          rest={rest}
-        />
-        <div className={classes.listener} ref={sizeRef}>
-          <Group
-            className={classes.groupItem}
-            items={[
-              { id: 'sgroup' },
-              { id: 'rgroup', options: rGroupOptions },
-              { id: CREATE_MONOMER_TOOL_NAME },
-            ]}
-            height={height}
-            rest={rest}
-          />
-        </div>
+            <Group
+              className={classes.groupItem}
+              items={structureItems}
+              height={height}
+              rest={rest}
+            />
+            <div className={classes.listener} ref={sizeRef}>
+              <Group
+                className={classes.groupItem}
+                items={[
+                  { id: 'sgroup' },
+                  { id: 'rgroup', options: rGroupOptions },
+                  { id: CREATE_MONOMER_TOOL_NAME },
+                ]}
+                height={height}
+                rest={rest}
+              />
+            </div>
 
-        <Group
-          className={classes.groupItem}
-          items={[
-            { id: 'reaction-plus' },
-            { id: 'arrows', options: arrowsOptions },
-            {
-              id: 'reaction-mapping-tools',
-              options: mappingOptions,
-            },
-          ]}
-          height={height}
-          rest={rest}
-        />
+            <Group
+              className={classes.groupItem}
+              items={reactionItems}
+              height={height}
+              rest={rest}
+            />
 
-        <div ref={endRef}>
-          <Group
-            className={classes.groupItem}
-            items={[
-              { id: 'shapes', options: shapeOptions },
-              { id: 'text' },
-              { id: IMAGE_KEY },
-            ]}
-            height={height}
-            rest={rest}
-          />
-        </div>
+            <div ref={endRef}>
+              <Group
+                className={classes.groupItem}
+                items={[
+                  { id: 'shapes', options: shapeOptions },
+                  { id: 'text' },
+                  { id: IMAGE_KEY },
+                ]}
+                height={height}
+                rest={rest}
+              />
+            </div>
+          </>
+        )}
       </div>
       {height && (scrollRef?.current?.scrollHeight || 0) > height && (
         <ArrowScroll

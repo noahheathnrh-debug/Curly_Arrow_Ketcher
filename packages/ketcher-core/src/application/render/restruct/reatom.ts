@@ -32,13 +32,18 @@ import {
 
 import ReObject from './reobject';
 import type ReStruct from './restruct';
-import { calcLonePairAngles, getRadicalModelPositions } from './lonePairUtils';
+import {
+  calcChargeAngle,
+  calcLonePairAngles,
+  getRadicalModelPositions,
+} from './lonePairUtils';
 import type { Render } from '../raphaelRender';
 import { Scale } from 'domain/helpers';
 import draw from '../draw';
 import util from '../util';
 import { assert, toFixed } from 'utilities';
 import type {
+  RelativeBox,
   RenderOptions,
   RenderOptionStyles,
 } from 'application/render/render.types';
@@ -664,7 +669,7 @@ class ReAtom extends ReObject {
         this.a.charge = null;
       }
       if (this.a.charge && options.showCharge) {
-        const charge = showCharge(this, render, rightMargin);
+        const charge = showCharge(this, render, rightMargin, aid);
         rightMargin += charge.rbb.width + delta;
         restruct.addReObjectPath(
           LayerMap.data,
@@ -1832,10 +1837,62 @@ function showIsotope(
   return isotope;
 }
 
+/**
+ * Where to put the charge glyph relative to the atom centre.
+ *
+ * Lone pairs are laid out first and never moved — an arrow tail can be pinned
+ * to a specific `pairIdx`, so their positions are load-bearing. The charge is
+ * the flexible one, so when an atom carries non-bonding electrons the charge
+ * goes to whichever direction is still free, rather than to its usual fixed
+ * upper-right corner where it would collide with a pair.
+ *
+ * Atoms with no lone pairs or radicals keep exactly the previous placement.
+ */
+function chargeOffset(
+  atom: ReAtom,
+  render: Render,
+  chargeBox: RelativeBox,
+  rightMargin: number,
+  delta: number,
+  chargeGap: number,
+  aid: number,
+): { xOff: number; yOff: number } {
+  const legacy = {
+    xOff: rightMargin + 0.5 * chargeBox.width + delta + chargeGap,
+    yOff: -0.3 * (atom.label?.rbb.height ?? 0),
+  };
+
+  const angle = calcChargeAngle(
+    atom.a,
+    render.ctab.molecule,
+    aid,
+    atom.hydrogenOnTheLeft,
+  );
+  if (angle === null) return legacy;
+
+  const labelHalfSize = atom.label
+    ? 0.5 *
+      Math.max(
+        atom.label.rbb.width,
+        atom.label.rbb.height,
+        render.options.fontszInPx,
+      )
+    : render.options.fontszInPx * 0.5;
+
+  const chargeRadius = 0.5 * Math.max(chargeBox.width, chargeBox.height);
+  const distance = labelHalfSize + chargeRadius + chargeGap;
+
+  return {
+    xOff: Math.cos(angle) * distance,
+    yOff: Math.sin(angle) * distance,
+  };
+}
+
 function showCharge(
   atom: ReAtom,
   render: Render,
   rightMargin: number,
+  aid: number,
 ): ElemAttr {
   const ps = Scale.modelToCanvas(atom.a.pp, render.options);
   const options = render.options;
@@ -1918,8 +1975,15 @@ function showCharge(
     const bbox = chargeSet.getBBox();
     charge.rbb = util.relBox(bbox);
 
-    const xOff = rightMargin + 0.5 * charge.rbb.width + delta + chargeGap;
-    const yOff = -0.3 * atom.label!.rbb.height;
+    const { xOff, yOff } = chargeOffset(
+      atom,
+      render,
+      charge.rbb,
+      rightMargin,
+      delta,
+      chargeGap,
+      aid,
+    );
     charge.path.translate(xOff, yOff);
     charge.rbb.x += xOff;
     charge.rbb.y += yOff;
@@ -1942,14 +2006,16 @@ function showCharge(
     });
     charge.rbb = util.relBox(charge.path.getBBox());
     draw.recenterText(charge.path, charge.rbb);
-    /* eslint-disable no-mixed-operators */
-    pathAndRBoxTranslate(
-      charge.path,
+    const { xOff, yOff } = chargeOffset(
+      atom,
+      render,
       charge.rbb,
-      rightMargin + 0.5 * charge.rbb.width + delta + chargeGap,
-      -0.3 * atom.label!.rbb.height,
+      rightMargin,
+      delta,
+      chargeGap,
+      aid,
     );
-    /* eslint-enable no-mixed-operators */
+    pathAndRBoxTranslate(charge.path, charge.rbb, xOff, yOff);
   }
 
   return charge;

@@ -153,6 +153,7 @@ type LeftToolbarItemVariant =
 type BottomToolbarItemVariant =
   | 'template-common'
   | 'template-lib'
+  | 'chemical-composer'
   | 'enhanced-stereo'
   | 'fullscreen';
 

@@ -18,6 +18,7 @@ import { Vec2 } from 'domain/entities/vec2';
 import utils from '../editor/shared/utils';
 import { ShowHydrogenLabels } from './restruct/showHydrogenLabels';
 import { ChargeDisplayStyle, type RenderOptions } from './render.types';
+import { MECH_ARROW_COLOR, MECH_STROKE_SCALE } from './mechanism/constants';
 import {
   SELECTION_COLOR,
   SELECTION_HOVERED_COLOR,
@@ -60,8 +61,14 @@ function defaultOptions(renderOptions: RenderOptions): RenderOptions {
     // atoms
     carbonExplicitly: false,
     showCharge: true,
-    chargeDisplayStyle: ChargeDisplayStyle.Standard,
+    // Circled by default: this fork is aimed at mechanism drawing, where the
+    // circled glyph is the convention. Note this changes how charges look in
+    // every structure, not only in mechanisms.
+    chargeDisplayStyle: ChargeDisplayStyle.Circled,
     chargeSize: 6,
+    // mechanism arrows
+    mechanismArrowColor: MECH_ARROW_COLOR,
+    mechanismArrowWidthScale: MECH_STROKE_SCALE,
     showHydrogenLabels: ShowHydrogenLabels.TerminalAndHetero,
     showValence: true,
     // bonds

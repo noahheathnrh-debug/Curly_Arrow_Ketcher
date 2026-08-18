@@ -26,6 +26,7 @@ export const IconButtonBase = ({
   isHidden = false,
   disabled = false,
   testId,
+  ariaPressed,
   children,
 }: IIconButtonBaseProps) => {
   const combinedTitle = shortcut ? `${title} (${shortcut})` : title;
@@ -42,6 +43,7 @@ export const IconButtonBase = ({
       disabled={disabled}
       isActive={isActive}
       data-testid={testId}
+      aria-pressed={ariaPressed}
     >
       {children}
     </StyledButton>

@@ -16,7 +16,11 @@
 
 import type { RaphaelPaper, Element } from 'raphael';
 import type { HalfBond } from 'domain/entities/halfBond';
-import { RxnArrowMode } from 'domain/entities/rxnArrow';
+import {
+  DEFAULT_ALONG_1,
+  DEFAULT_ALONG_2,
+  RxnArrowMode,
+} from 'domain/entities/rxnArrow';
 import { Vec2 } from 'domain/entities/vec2';
 
 import { getOptionsWithConvertedUnits } from './options';
@@ -26,6 +30,21 @@ import util from './util';
 import type { ArrowItem, RelativeBox, RenderOptions } from './render.types';
 import { toFixed } from 'utilities';
 import { PathBuilder } from './pathBuilder';
+// Imported from the leaf modules rather than the mechanism barrel: the barrel
+// pulls in the router, which would make this a cycle.
+import {
+  cubicControlPoints,
+  headChordDirection,
+  parameterAtDistanceFromEnd,
+  splitCubic,
+} from './mechanism/geometry';
+import {
+  MECH_ARROW_COLOR,
+  MECH_HEAD_HALF_WIDTH,
+  MECH_HEAD_LENGTH,
+  MECH_HEAD_NOTCH,
+  MECH_STROKE_SCALE,
+} from './mechanism/constants';
 
 export const ARROW_HEAD_LENGHT = 0.25; // 10
 export const ARROW_HEAD_WIDTH = 0.125; // 5
@@ -43,6 +62,30 @@ export function getArrowHeadDimensions(options: RenderOptions) {
     arrowHeadWidth: ARROW_HEAD_WIDTH * microModeScale,
     arrowHeadAttr: ARROW_HEAD_ATTR * microModeScale,
     arrowOffset: ARROW_OFFSET * microModeScale,
+  };
+}
+
+/**
+ * Head geometry and stroke for mechanism arrows.
+ *
+ * Separate from {@link getArrowHeadDimensions} because these arrows sit inside
+ * a structure rather than between two of them: a head sized for a reaction
+ * arrow completely covers the atom it points at. The constants come from the
+ * mechanism module rather than being defined here, because the router scores
+ * the head polygon against obstacles and the two must describe the same shape.
+ */
+export function getMechanismArrowDimensions(options: RenderOptions) {
+  const { microModeScale } = getOptionsWithConvertedUnits(options);
+  const bondStroke =
+    Number(options.lineattr['stroke-width']) || microModeScale / 20;
+
+  return {
+    arrowHeadLength: MECH_HEAD_LENGTH * microModeScale,
+    arrowHeadWidth: MECH_HEAD_HALF_WIDTH * microModeScale,
+    arrowHeadAttr: MECH_HEAD_NOTCH * microModeScale,
+    strokeWidth:
+      bondStroke * (options.mechanismArrowWidthScale ?? MECH_STROKE_SCALE),
+    color: options.mechanismArrowColor ?? MECH_ARROW_COLOR,
   };
 }
 
@@ -1811,14 +1854,36 @@ function rgroupAttachmentPointLabel(
 
 function arrowCurlyMechanism(
   paper: RaphaelPaper,
-  { pos: [start], height, height2 }: ArrowItem,
+  item: ArrowItem,
   arrowLength: number,
   arrowAngle: number,
   options: RenderOptions,
   shouldApplySnappingStyle: boolean,
 ) {
-  const { arrowHeadLength, arrowHeadWidth, arrowHeadAttr } =
-    getArrowHeadDimensions(options);
+  const { pos, height, height2, along1, along2 } = item;
+  const [start] = pos;
+  const { arrowHeadLength, arrowHeadWidth, arrowHeadAttr, strokeWidth, color } =
+    getMechanismArrowDimensions(options);
+
+  // A two-segment arrow is drawn in plain canvas coordinates rather than the
+  // rotated chord frame the single-segment path uses: with a waypoint there is
+  // no single chord to rotate about, and the two halves have to be laid out
+  // where the router actually put them.
+  if (item.leads?.length) {
+    return segmentedMechanismArrow(
+      paper,
+      item as ArrowItem & { leads: NonNullable<ArrowItem['leads']> },
+      options,
+      {
+        arrowHeadLength,
+        arrowHeadWidth,
+        arrowHeadAttr,
+        strokeWidth,
+        color,
+        shouldApplySnappingStyle,
+      },
+    );
+  }
 
   const endX = start.x + arrowLength;
   let shaftPath: string;
@@ -1830,27 +1895,51 @@ function arrowCurlyMechanism(
     // Scale factor 4/3 ensures symmetric cubic (h1==h2) matches old quadratic visually.
     const h1 = height;
     const h2 = height2;
-    const cp1X = start.x + arrowLength / 3;
-    const cp1Y = start.y - h1 * (4 / 3);
-    const cp2X = start.x + (2 * arrowLength) / 3;
-    const cp2Y = start.y - h2 * (4 / 3);
+    // Control points are free in two dimensions: `along1`/`along2` slide them
+    // up and down the chord, `h1`/`h2` push them sideways. Defaulting the
+    // along-values to the classic thirds makes an arrow drawn before they
+    // existed render byte-identically.
+    const a1 = along1 ?? DEFAULT_ALONG_1;
+    const a2 = along2 ?? DEFAULT_ALONG_2;
+    const from = new Vec2(start.x, start.y);
+    const tip = new Vec2(endX, start.y);
+    const shape = { h1, h2, along1: a1, along2: a2 };
 
-    // End tangent: 3*(P3 - P2)
-    const rawTanX = endX - cp2X; // = arrowLength / 3
-    const rawTanY = start.y - cp2Y; // = h2 * 4/3
-    const tLen = Math.hypot(rawTanX, rawTanY);
-    tx = tLen > 1e-9 ? rawTanX / tLen : 1;
-    ty = tLen > 1e-9 ? rawTanY / tLen : 0;
+    // The way the arrow came in over the head's own length rather than the
+    // tangent at the very tip, so the shaft runs into the head's point instead
+    // of along one of its edges.
+    const arrival = headChordDirection(from, tip, shape, arrowHeadLength);
+    tx = arrival.x;
+    ty = arrival.y;
     px = -ty;
     py = tx;
 
-    const bx = endX - arrowHeadLength * tx;
-    const by = start.y - arrowHeadLength * ty;
+    // The shaft stops where the head begins, and it stops by *splitting* the
+    // curve there. Pulling the endpoint back while keeping the control points
+    // — which is what this used to do — is a different cubic entirely, so the
+    // line that was drawn was not the line that had been checked against the
+    // structure. A sub-curve is exact and lies on the original.
+    const split = splitCubic(
+      from,
+      tip,
+      shape,
+      parameterAtDistanceFromEnd(from, tip, shape, arrowHeadLength),
+    );
+    const [s1, s2] = cubicControlPoints(
+      from,
+      split.end,
+      split.shape.h1,
+      split.shape.h2,
+      split.shape.along1,
+      split.shape.along2,
+    );
 
     shaftPath = svgPath(
-      `M${toFixed(start.x)},${toFixed(start.y)}C${toFixed(cp1X)},${toFixed(
-        cp1Y,
-      )},${toFixed(cp2X)},${toFixed(cp2Y)},${toFixed(bx)},${toFixed(by)}`,
+      `M${toFixed(start.x)},${toFixed(start.y)}C${toFixed(s1.x)},${toFixed(
+        s1.y,
+      )},${toFixed(s2.x)},${toFixed(s2.y)},${toFixed(split.end.x)},${toFixed(
+        split.end.y,
+      )}`,
     )
       .rotate(arrowAngle, start.x, start.y)
       .toString();
@@ -1900,30 +1989,226 @@ function arrowCurlyMechanism(
   result.push(
     paper.path(shaftPath).attr({
       ...options.lineattr,
+      stroke: color,
+      'stroke-width': strokeWidth,
       fill: 'none',
       ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
     }),
   );
   result.push(
     paper.path(headPath).attr({
-      fill: options.lineattr.stroke,
-      stroke: options.lineattr.stroke,
-      'stroke-width': options.lineattr['stroke-width'],
+      fill: color,
+      stroke: color,
+      'stroke-width': strokeWidth,
       ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
     }),
   );
   return result;
 }
 
+/**
+ * Highlight and selection outline for a mechanism arrow: a thick translucent
+ * band following the curve itself.
+ *
+ * The generic elliptical-arrow plate is a rotated rectangle spanning the whole
+ * chord, which for a curly arrow covers a large area of unrelated structure and
+ * says almost nothing about where the arrow actually is — making it hard to see
+ * what you have grabbed or where to grab it.
+ */
+/**
+ * A mechanism arrow that turns at a waypoint.
+ *
+ * Both halves are built from the same construction the router validated, so the
+ * drawn curve is the curve that was checked against the structure. The shaft
+ * runs the whole way to the tip and the head is filled over it — no pulling the
+ * endpoint back, which would change the shape of the curve rather than shorten
+ * it.
+ */
+/**
+ * The shaft of a mechanism arrow with interior turn points, as one path.
+ *
+ * Built in plain canvas coordinates rather than the rotated chord frame a
+ * single cubic uses, because a chain of segments has no single chord to rotate
+ * into. Shared by the arrow itself and its hover outline so the two cannot
+ * disagree about where the curve runs.
+ */
+function segmentedShaftPath(
+  item: ArrowItem & { leads: NonNullable<ArrowItem['leads']> },
+): string {
+  const [start, end] = item.pos;
+  const at = (v: Vec2) => `${toFixed(v.x)},${toFixed(v.y)}`;
+
+  let path = `M${at(start)}`;
+  let from = start;
+
+  for (const turnPoint of item.leads) {
+    const [c1, c2] = cubicControlPoints(
+      from,
+      turnPoint.at,
+      turnPoint.height,
+      turnPoint.height2,
+      turnPoint.along1,
+      turnPoint.along2,
+    );
+    path += `C${at(c1)},${at(c2)},${at(turnPoint.at)}`;
+    from = turnPoint.at;
+  }
+
+  const [c1, c2] = cubicControlPoints(
+    from,
+    end,
+    item.height,
+    item.height2 ?? item.height,
+    item.along1,
+    item.along2,
+  );
+  return path + `C${at(c1)},${at(c2)},${at(end)}`;
+}
+
+function segmentedMechanismArrow(
+  paper: RaphaelPaper,
+  item: ArrowItem & { leads: NonNullable<ArrowItem['leads']> },
+  options: RenderOptions,
+  style: {
+    arrowHeadLength: number;
+    arrowHeadWidth: number;
+    arrowHeadAttr: number;
+    strokeWidth: number;
+    color: string;
+    shouldApplySnappingStyle: boolean;
+  },
+) {
+  const [, end] = item.pos;
+  const join = item.leads[item.leads.length - 1].at;
+  const shaftPath = segmentedShaftPath(item);
+  const at = (v: Vec2) => `${toFixed(v.x)},${toFixed(v.y)}`;
+
+  // The way the arrow came in over the head's own length, not the tangent at
+  // the very tip: a head is a narrow triangle, and on a tightly curving arrival
+  // the tip tangent leans far enough off that the shaft grazes one edge of it
+  // rather than running into its point.
+  const t = headChordDirection(
+    join,
+    end,
+    {
+      h1: item.height,
+      h2: item.height2 ?? item.height,
+      along1: item.along1 ?? DEFAULT_ALONG_1,
+      along2: item.along2 ?? DEFAULT_ALONG_2,
+    },
+    style.arrowHeadLength,
+  );
+  const p = new Vec2(-t.y, t.x);
+
+  const backLeft = end
+    .addScaled(t, -style.arrowHeadLength)
+    .addScaled(p, style.arrowHeadWidth);
+  const notch = end.addScaled(
+    t,
+    -(style.arrowHeadLength - style.arrowHeadAttr),
+  );
+  const backRight = end
+    .addScaled(t, -style.arrowHeadLength)
+    .addScaled(p, -style.arrowHeadWidth);
+
+  const result = paper.set();
+  result.push(
+    paper.path(shaftPath).attr({
+      ...options.lineattr,
+      stroke: style.color,
+      'stroke-width': style.strokeWidth,
+      fill: 'none',
+      ...(style.shouldApplySnappingStyle && options.arrowSnappingStyle),
+    }),
+  );
+  result.push(
+    paper
+      .path(`M${at(end)}L${at(backLeft)}L${at(notch)}L${at(backRight)}Z`)
+      .attr({
+        fill: style.color,
+        stroke: style.color,
+        'stroke-width': style.strokeWidth,
+        ...(style.shouldApplySnappingStyle && options.arrowSnappingStyle),
+      }),
+  );
+  return result;
+}
+
+/**
+ * The hover/selection outline for a mechanism arrow: the curve itself, to be
+ * drawn as a thick soft stroke.
+ *
+ * Returns a path *string*, like every other highlight generator here, and
+ * deliberately not a painted element. Returning an element bypassed the visel
+ * that owns an object's drawn artifacts, so the highlight was never anybody's
+ * to erase: every hover left another green smear behind, and deleting the
+ * arrow removed only the arrow.
+ */
+function arrowMechanismHighlight(
+  _paper: RaphaelPaper,
+  item: ArrowItem,
+  arrowLength: number,
+  arrowAngle: number,
+) {
+  const { pos, height, height2, along1, along2 } = item;
+  const [start] = pos;
+
+  // An arrow that turns at a waypoint is two segments in plain canvas
+  // coordinates, not one in a rotated chord frame — so the outline has to be
+  // built the same way the arrow itself is. Built from the chord instead, the
+  // highlight traced a curve the arrow does not follow and ended up sitting
+  // well away from it.
+  if (item.leads?.length) {
+    return segmentedShaftPath(
+      item as ArrowItem & { leads: NonNullable<ArrowItem['leads']> },
+    );
+  }
+
+  const a1 = along1 ?? DEFAULT_ALONG_1;
+  const a2 = along2 ?? DEFAULT_ALONG_2;
+  const h1 = height;
+  const h2 = height2 ?? height;
+
+  return svgPath(
+    `M${toFixed(start.x)},${toFixed(start.y)}C${toFixed(
+      start.x + arrowLength * a1,
+    )},${toFixed(start.y - h1 * (4 / 3))},${toFixed(
+      start.x + arrowLength * a2,
+    )},${toFixed(start.y - h2 * (4 / 3))},${toFixed(
+      start.x + arrowLength,
+    )},${toFixed(start.y)}`,
+  )
+    .rotate(arrowAngle, start.x, start.y)
+    .toString();
+}
+
+/**
+ * Attributes that turn the curve path above into a highlight.
+ *
+ * An open curve cannot be filled the way the rectangular highlights are, so the
+ * band is made of stroke width instead — hence the explicit `fill: none`, which
+ * overrides the fill the shared hover and selection styles carry.
+ */
+function mechanismHighlightStyle(options: RenderOptions) {
+  const { microModeScale } = getOptionsWithConvertedUnits(options);
+  return {
+    fill: 'none',
+    'stroke-width': microModeScale * 0.2,
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
+  };
+}
+
 function arrowFishhookMechanism(
   paper: RaphaelPaper,
-  { pos: [start], height, height2 }: ArrowItem,
+  { pos: [start], height, height2, along1, along2 }: ArrowItem,
   arrowLength: number,
   arrowAngle: number,
   options: RenderOptions,
   shouldApplySnappingStyle: boolean,
 ) {
-  const { arrowHeadLength, arrowHeadWidth } = getArrowHeadDimensions(options);
+  const { arrowHeadLength, arrowHeadWidth, strokeWidth, color } =
+    getMechanismArrowDimensions(options);
 
   const endX = start.x + arrowLength;
   let shaftPath: string;
@@ -1933,9 +2218,15 @@ function arrowFishhookMechanism(
     // Cubic Bezier
     const h1 = height;
     const h2 = height2;
-    const cp1X = start.x + arrowLength / 3;
+    // Control points are free in two dimensions: `along1`/`along2` slide them
+    // up and down the chord, `h1`/`h2` push them sideways. Defaulting the
+    // along-values to the classic thirds makes an arrow drawn before they
+    // existed render byte-identically.
+    const a1 = along1 ?? DEFAULT_ALONG_1;
+    const a2 = along2 ?? DEFAULT_ALONG_2;
+    const cp1X = start.x + arrowLength * a1;
     const cp1Y = start.y - h1 * (4 / 3);
-    const cp2X = start.x + (2 * arrowLength) / 3;
+    const cp2X = start.x + arrowLength * a2;
     const cp2Y = start.y - h2 * (4 / 3);
 
     const rawTanX = endX - cp2X;
@@ -2000,15 +2291,17 @@ function arrowFishhookMechanism(
   result.push(
     paper.path(shaftPath).attr({
       ...options.lineattr,
+      stroke: color,
+      'stroke-width': strokeWidth,
       fill: 'none',
       ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
     }),
   );
   result.push(
     paper.path(headPath).attr({
-      fill: options.lineattr.stroke,
-      stroke: options.lineattr.stroke,
-      'stroke-width': options.lineattr['stroke-width'],
+      fill: color,
+      stroke: color,
+      'stroke-width': strokeWidth,
       ...(shouldApplySnappingStyle && options.arrowSnappingStyle),
     }),
   );
@@ -2016,6 +2309,8 @@ function arrowFishhookMechanism(
 }
 
 export default {
+  arrowMechanismHighlight,
+  mechanismHighlightStyle,
   recenterText,
   arrow,
   plus,

@@ -24,6 +24,13 @@ import type { ComponentType } from 'react';
 import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { onAction } from '../../../state';
+import action from '../../../action';
+import {
+  arrangeActiveMechanismStep,
+  duplicateActiveMechanismStep,
+  getMechanismStepSummary,
+  navigateMechanismStep,
+} from '../../../state/mechanismSteps';
 
 type StateProps = Omit<BottomToolbarProps, 'className'>;
 type OwnProps = Pick<BottomToolbarProps, 'className'>;
@@ -35,6 +42,8 @@ const mapStateToProps = (state): StateProps => ({
   opened: state.toolbar.opened,
   indigoVerification: state.requestsStatuses.indigoVerification,
   disableableButtons,
+  mechanismControlsEnabled: Boolean(state.toolbar.mechanismControlsEnabled),
+  stepSummary: getMechanismStepSummary(state.editor),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): BottomToolbarCallProps => ({
@@ -44,6 +53,11 @@ const mapDispatchToProps = (dispatch: Dispatch): BottomToolbarCallProps => ({
       type: 'OPENED',
       data: { menuName, isSelected },
     }),
+  onPreviousStep: () => dispatch(navigateMechanismStep(-1) as never),
+  onNextStep: () => dispatch(navigateMechanismStep(1) as never),
+  onArrangeStep: () => dispatch(arrangeActiveMechanismStep() as never),
+  onDuplicateStep: () => dispatch(duplicateActiveMechanismStep() as never),
+  onAddChemical: () => dispatch(onAction(action['chemical-composer'].action)),
 });
 
 const BottomToolbarContainer: ComponentType<OwnProps> = connect(

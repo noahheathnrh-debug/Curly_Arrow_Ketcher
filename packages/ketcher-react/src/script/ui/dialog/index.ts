@@ -14,60 +14,76 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { About, Settings } from '../views/modal/components/meta';
-import {
-  Analyse,
-  Check,
-  Miew,
-  Recognize,
-} from '../views/modal/components/process';
-// schemify dialogs
-import {
-  Atom,
-  AttachPoints,
-  Automap,
-  Bond,
-  RgroupLogic,
-} from '../views/modal/components/toolbox';
-import { Open, Save } from '../views/modal/components/document';
+import { lazy, type ComponentType } from 'react';
 
-import EnhancedStereo from './toolbox/enhancedStereo/enhancedStereo';
-import LabelEdit from './toolbox/labeledit';
-import PeriodTable from '../views/modal/components/PeriodTable';
-import ExtendedTable from '../views/modal/components/ExtendedTable';
-import { RemoveFG } from '../views/modal/components/toolbox/FG/RemoveFG';
-import Rgroup from './toolbox/rgroup/rgroup';
-import SGroup from './toolbox/sgroup';
-import TemplateAttach from './template/template-attach';
-import TemplatesDialog from './template/TemplateDialog';
-import Text from '../views/modal/components/Text';
-import { Confirm } from '../views/modal/components/Confirm';
-import InfoModal from '../views/modal/components/InfoModal';
+const lazyComponent = (
+  loader: () => Promise<unknown>,
+  exportName = 'default',
+) =>
+  lazy(async () => {
+    const module = (await loader()) as Record<
+      string,
+      ComponentType<Record<string, unknown>>
+    >;
+
+    return { default: module[exportName] };
+  });
 
 export default {
-  open: Open,
-  analyse: Analyse,
-  recognize: Recognize,
-  'period-table': PeriodTable,
-  'extended-table': ExtendedTable,
-  rgroup: Rgroup,
-  attach: TemplateAttach,
-  templates: TemplatesDialog,
-  about: About,
-  miew: Miew,
-  atomProps: Atom,
-  attachmentPoints: AttachPoints,
-  automap: Automap,
-  bondProps: Bond,
-  check: Check,
-  enhancedStereo: EnhancedStereo,
-  labelEdit: LabelEdit,
-  rgroupLogic: RgroupLogic,
-  removeFG: RemoveFG,
-  save: Save,
-  settings: Settings,
-  sgroup: SGroup,
-  text: Text,
-  confirm: Confirm,
-  'info-modal': InfoModal,
+  open: lazyComponent(() => import('../views/modal/components/document/Open')),
+  analyse: lazyComponent(
+    () => import('../views/modal/components/process/Analyse'),
+  ),
+  recognize: lazyComponent(
+    () => import('../views/modal/components/process/Recognize'),
+  ),
+  'period-table': lazyComponent(
+    () => import('../views/modal/components/PeriodTable'),
+  ),
+  'extended-table': lazyComponent(
+    () => import('../views/modal/components/ExtendedTable'),
+  ),
+  rgroup: lazyComponent(() => import('./toolbox/rgroup/rgroup')),
+  attach: lazyComponent(() => import('./template/template-attach')),
+  templates: lazyComponent(() => import('./template/TemplateDialog')),
+  about: lazyComponent(() => import('../views/modal/components/meta/About')),
+  miew: lazyComponent(() => import('../views/modal/components/process/Miew')),
+  atomProps: lazyComponent(
+    () => import('../views/modal/components/toolbox/Atom'),
+  ),
+  attachmentPoints: lazyComponent(
+    () => import('../views/modal/components/toolbox/Attach'),
+  ),
+  automap: lazyComponent(
+    () => import('../views/modal/components/toolbox/Automap'),
+  ),
+  bondProps: lazyComponent(
+    () => import('../views/modal/components/toolbox/Bond'),
+  ),
+  check: lazyComponent(() => import('../views/modal/components/process/Check')),
+  enhancedStereo: lazyComponent(
+    () => import('./toolbox/enhancedStereo/enhancedStereo'),
+  ),
+  labelEdit: lazyComponent(() => import('./toolbox/labeledit')),
+  rgroupLogic: lazyComponent(
+    () => import('../views/modal/components/toolbox/RgroupLogic'),
+  ),
+  removeFG: lazyComponent(
+    () => import('../views/modal/components/toolbox/FG/RemoveFG'),
+    'RemoveFG',
+  ),
+  save: lazyComponent(() => import('../views/modal/components/document/Save')),
+  settings: lazyComponent(
+    () => import('../views/modal/components/meta/Settings'),
+  ),
+  sgroup: lazyComponent(() => import('./toolbox/sgroup')),
+  text: lazyComponent(() => import('../views/modal/components/Text')),
+  confirm: lazyComponent(
+    () => import('../views/modal/components/Confirm'),
+    'Confirm',
+  ),
+  'info-modal': lazyComponent(
+    () => import('../views/modal/components/InfoModal'),
+  ),
+  'chemical-composer': lazyComponent(() => import('./ChemicalComposer')),
 } as any;

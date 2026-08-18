@@ -14,8 +14,9 @@
  * limitations under the License.
  ***************************************************************************/
 
-import type { IconName, SvgComponent } from '../types';
+import { iconSpriteDescriptors } from '../generated/iconSprite.generated';
+import type { IconName, IconSpriteDescriptor } from '../types';
 import { iconNameToIcon } from './iconNameToIcon';
 
-export const getIconByName = (name: IconName): SvgComponent =>
-  iconNameToIcon[name];
+export const getIconByName = (name: IconName): IconSpriteDescriptor =>
+  iconSpriteDescriptors[iconNameToIcon[name]];

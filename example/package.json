@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev:standalone": "node ../packages/ketcher-react/scripts/generate-icon-sprite.mjs",
     "dev:standalone": "cross-env MODE=standalone vite",
+    "predev:remote": "node ../packages/ketcher-react/scripts/generate-icon-sprite.mjs",
     "dev:remote": "cross-env MODE=remote vite",
     "start:standalone": "cross-env MODE=standalone react-app-rewired start",
     "start:remote": "cross-env MODE=remote react-app-rewired start",

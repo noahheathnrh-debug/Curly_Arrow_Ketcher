@@ -14,510 +14,272 @@
  * limitations under the License.
  ***************************************************************************/
 
-import AboutIcon from '../../../assets/icons/files/about.svg';
-import AddImageIcon from '../../../assets/icons/files/add-image.svg';
-import AnalyseIcon from '../../../assets/icons/files/analyse.svg';
-import AromIcon from '../../../assets/icons/files/arom.svg';
-import ArrowUpwardIcon from '../../../assets/icons/files/arrow-upward.svg';
-import BondAnyIcon from '../../../assets/icons/files/bond-any.svg';
-import BondAromaticIcon from '../../../assets/icons/files/bond-aromatic.svg';
-import BondCrossedIcon from '../../../assets/icons/files/bond-crossed.svg';
-import BondDative from '../../../assets/icons/files/bond-dative.svg';
-import BondDoubleAromaticIcon from '../../../assets/icons/files/bond-doublearomatic.svg';
-import BondDoubleIcon from '../../../assets/icons/files/bond-double.svg';
-import BondDownIcon from '../../../assets/icons/files/bond-down.svg';
-import BondHydrogenIcon from '../../../assets/icons/files/bond-hydrogen.svg';
-import BondOneElectronIcon from '../../../assets/icons/files/bond-one-electron.svg';
-import BondSingleAromaticIcon from '../../../assets/icons/files/bond-singlearomatic.svg';
-import BondSingleDoubleIcon from '../../../assets/icons/files/bond-singledouble.svg';
-import BondSingleIcon from '../../../assets/icons/files/bond-single.svg';
-import BondTripleIcon from '../../../assets/icons/files/bond-triple.svg';
-import BondUpIcon from '../../../assets/icons/files/bond-up.svg';
-import BondUpdownIcon from '../../../assets/icons/files/bond-updown.svg';
-import CapitalTIcon from '../../../assets/icons/files/capital-t.svg';
-import ChainIcon from '../../../assets/icons/files/chain.svg';
-import ChargeMinusIcon from '../../../assets/icons/files/charge-minus.svg';
-import ChargePlusIcon from '../../../assets/icons/files/charge-plus.svg';
-import RadicalToolIcon from '../../../assets/icons/files/radical.svg';
-import CheckIcon from '../../../assets/icons/files/check.svg';
-import CheckMarkIcon from '../../../assets/icons/files/checkmark.svg';
-import ChiralFlagIcon from '../../../assets/icons/files/chiral-flag.svg';
-import CipIcon from '../../../assets/icons/files/cip.svg';
-import CleanIcon from '../../../assets/icons/files/clean.svg';
-import CopyIcon from '../../../assets/icons/files/copy.svg';
-import CopyNavBar from '../../../assets/icons/files/copy-for-nav-bar.svg';
-import CopyImageIcon from '../../../assets/icons/files/copy-image.svg';
-import CopyKetIcon from '../../../assets/icons/files/copy-ket.svg';
-import CopyMolIcon from '../../../assets/icons/files/copy-mol.svg';
-import CutIcon from '../../../assets/icons/files/cut.svg';
-import DearomIcon from '../../../assets/icons/files/dearom.svg';
-import DeleteIcon from '../../../assets/icons/files/delete.svg';
-import DropdownIcon from '../../../assets/icons/files/dropdown.svg';
-import EnhancedStereoIcon from '../../../assets/icons/files/enhanced-stereo.svg';
-import EditIcon from '../../../assets/icons/files/edit.svg';
-import ElementsGroupIcon from '../../../assets/icons/files/elements-group.svg';
-import EraseIcon from '../../../assets/icons/files/erase.svg';
-import ExtendedTableIcon from '../../../assets/icons/files/extended-table.svg';
-import FileThumbnailIcon from '../../../assets/icons/files/file-thumbnail.svg';
-import FilterIcon from '../../../assets/icons/files/filter.svg';
-import GenericGroupsIcon from '../../../assets/icons/files/generic-groups.svg';
-import HandIcon from '../../../assets/icons/files/hand.svg';
-import CompressedHandIcon from '../../../assets/icons/files/compressed-hand.svg';
-import HelpIcon from '../../../assets/icons/files/help.svg';
-import HistoryIcon from '../../../assets/icons/files/history.svg';
-import ImageFrameIcon from '../../../assets/icons/files/image-frame.svg';
-import LayoutIcon from '../../../assets/icons/files/layout.svg';
-import LogoIcon from '../../../assets/icons/files/logo.svg';
-import MiewIcon from '../../../assets/icons/files/miew.svg';
-import MacromoleculesMode from '../../../assets/icons/files/macromolecules-mode.svg';
-import MoleculesMode from '../../../assets/icons/files/molecules-mode.svg';
-import ClearIcon from '../../../assets/icons/files/clear.svg';
-import NotFoundIcon from '../../../assets/icons/files/not-found.svg';
-import OpenIcon from '../../../assets/icons/files/open.svg';
-import PasteIcon from '../../../assets/icons/files/paste.svg';
-import OpenWindowPasteIcon from '../../../assets/icons/files/open-window-paste-icon.svg';
-import OpenWindowUploadIcon from '../../../assets/icons/files/open-window-upload-icon.svg';
-import PeriodTableIcon from '../../../assets/icons/files/period-table.svg';
-import ReactionArrowBothEndsFilledTriangle from '../../../assets/icons/files/reaction-arrow-both-ends-filled-triangle.svg';
-import ReactionArrowDashedOpenAngle from '../../../assets/icons/files/reaction-arrow-dashed-open-angle.svg';
-import ReactionArrowEllipticalArcArrowFilledBow from '../../../assets/icons/files/reaction-arrow-elliptical-arc-arrow-filled-bow.svg';
-import ReactionArrowEllipticalArcArrowFilledTriangle from '../../../assets/icons/files/reaction-arrow-elliptical-arc-arrow-filled-triangle.svg';
-import ReactionArrowEllipticalArcArrowOpenAngle from '../../../assets/icons/files/reaction-arrow-elliptical-arc-arrow-open-angle.svg';
-import ReactionArrowEllipticalArcArrowOpenHalfAngle from '../../../assets/icons/files/reaction-arrow-elliptical-arc-arrow-open-half-angle.svg';
-import ReactionArrowEquilibriumFilledHalfBow from '../../../assets/icons/files/reaction-arrow-equilibrium-filled-half-bow.svg';
-import ReactionArrowEquilibriumFilledTriangle from '../../../assets/icons/files/reaction-arrow-equilibrium-filled-triangle.svg';
-import ReactionArrowEquilibriumOpenAngle from '../../../assets/icons/files/reaction-arrow-equilibrium-open-angle.svg';
-import ReactionArrowFailed from '../../../assets/icons/files/reaction-arrow-failed.svg';
-import ReactionArrowRetrosynthetic from '../../../assets/icons/files/reaction-arrow-retrosynthetic-arrow.svg';
-import ReactionArrowFilledBow from '../../../assets/icons/files/reaction-arrow-filled-bow.svg';
-import ReactionArrowFilledTriangle from '../../../assets/icons/files/reaction-arrow-filled-triangle.svg';
-import ReactionArrowOpenAngleIcon from '../../../assets/icons/files/reaction-arrow-open-angle.svg';
-import ReactionArrowUnbalancedEquilibriumFilledHalfBow from '../../../assets/icons/files/reaction-arrow-unbalanced-equilibrium-filled-half-bow.svg';
-import ReactionArrowUnbalancedEquilibriumFilledHalfTriangle from '../../../assets/icons/files/reaction-arrow-unbalanced-equilibrium-filled-half-triangle.svg';
-import ReactionArrowUnbalancedEquilibriumLargeFilledHalfBow from '../../../assets/icons/files/reaction-arrow-unbalanced-equilibrium-large-filled-half-bow.svg';
-import ReactionArrowUnbalancedEquilibriumOpenHalfAngle from '../../../assets/icons/files/reaction-arrow-unbalanced-equilibrium-open-half-angle.svg';
-import ReactionArrowMultitail from '../../../assets/icons/files/reaction-arrow-multitail.svg';
-import ReactionAutomapIcon from '../../../assets/icons/files/reaction-automap.svg';
-import ReactionMapIcon from '../../../assets/icons/files/reaction-map.svg';
-import ReactionPlusIcon from '../../../assets/icons/files/reaction-plus.svg';
-import ReactionUnmapIcon from '../../../assets/icons/files/reaction-unmap.svg';
-import RecognizeIcon from '../../../assets/icons/files/recognize.svg';
-import RedoIcon from '../../../assets/icons/files/redo.svg';
-import RgroupAttpointsIcon from '../../../assets/icons/files/rgroup-attpoints.svg';
-import RgroupFragmentIcon from '../../../assets/icons/files/rgroup-fragment.svg';
-import RgroupLabelIcon from '../../../assets/icons/files/rgroup-label.svg';
-import SaveIcon from '../../../assets/icons/files/save.svg';
-import SearchIcon from '../../../assets/icons/files/search.svg';
-import SelectFragmentIcon from '../../../assets/icons/files/select-fragment.svg';
-import SelectStructureIcon from '../../../assets/icons/files/select-structure.svg';
-import SelectLassoIcon from '../../../assets/icons/files/select-lasso.svg';
-import SelectRectangleIcon from '../../../assets/icons/files/select-rectangle.svg';
-import SettingsIcon from '../../../assets/icons/files/settings.svg';
-import SgroupIcon from '../../../assets/icons/files/sgroup.svg';
-import ShapeEllipseIcon from '../../../assets/icons/files/shape-ellipse.svg';
-import ShapeLineIcon from '../../../assets/icons/files/shape-line.svg';
-import ShapePolylineIcon from '../../../assets/icons/files/shape-polyline.svg';
-import ShapeRectangleIcon from '../../../assets/icons/files/shape-rectangle.svg';
-import Template0Icon from '../../../assets/icons/files/template-0.svg';
-import Template1Icon from '../../../assets/icons/files/template-1.svg';
-import Template2Icon from '../../../assets/icons/files/template-2.svg';
-import Template3Icon from '../../../assets/icons/files/template-3.svg';
-import Template4Icon from '../../../assets/icons/files/template-4.svg';
-import Template5Icon from '../../../assets/icons/files/template-5.svg';
-import Template6Icon from '../../../assets/icons/files/template-6.svg';
-import Template7Icon from '../../../assets/icons/files/template-7.svg';
-import TemplateDialogIcon from '../../../assets/icons/files/template-dialog.svg';
-import TemplateLibIcon from '../../../assets/icons/files/template-lib.svg';
-import TextBold from '../../../assets/icons/files/text-bold.svg';
-import TextIcon from '../../../assets/icons/files/text.svg';
-import TextItalic from '../../../assets/icons/files/text-italic.svg';
-import TextSubscript from '../../../assets/icons/files/text-subscript.svg';
-import TextSuperscript from '../../../assets/icons/files/text-superscript.svg';
-import TransformFlipHIcon from '../../../assets/icons/files/transform-flip-h.svg';
-import TransformFlipVIcon from '../../../assets/icons/files/transform-flip-v.svg';
-import SnakeModeIcon from '../../../assets/icons/files/snake-mode.svg';
-import UndoIcon from '../../../assets/icons/files/undo.svg';
-import ZoomInIcon from '../../../assets/icons/files/zoom-in.svg';
-import ZoomOutIcon from '../../../assets/icons/files/zoom-out.svg';
-import ZoomResetIcon from '../../../assets/icons/files/zoom-reset.svg';
-import TextSpecialSymbolsIcon from '../../../assets/icons/files/text-special-symbols.svg';
-import Save1Icon from '../../../assets/icons/files/save-1.svg';
-import Open1Icon from '../../../assets/icons/files/open-1.svg';
-import ResetIcon from '../../../assets/icons/files/reset.svg';
-import CloseIcon from '../../../assets/icons/files/close.svg';
-import GeneralIcon from '../../../assets/icons/files/general.svg';
-import GeneralWhiteIcon from '../../../assets/icons/files/general-white.svg';
-import StereoIcon from '../../../assets/icons/files/stereo.svg';
-import StereoWhiteIcon from '../../../assets/icons/files/stereo-white.svg';
-import AtomsIcon from '../../../assets/icons/files/atoms.svg';
-import AtomsWhiteIcon from '../../../assets/icons/files/atoms-white.svg';
-import BondsIcon from '../../../assets/icons/files/bonds.svg';
-import BondsWhiteIcon from '../../../assets/icons/files/bonds-white.svg';
-import ServerIcon from '../../../assets/icons/files/server.svg';
-import ServerWhiteIcon from '../../../assets/icons/files/server-white.svg';
-import ThreeDViewerIcon from '../../../assets/icons/files/3d.svg';
-import ThreeDViewerWhiteIcon from '../../../assets/icons/files/3d-white.svg';
-import DebuggingIcon from '../../../assets/icons/files/debugging.svg';
-import DebuggingWhiteIcon from '../../../assets/icons/files/debugging-white.svg';
-import DropdownIndicatorIcon from '../../../assets/icons/files/dropdown-indicator.svg';
-import ChevronIcon from '../../../assets/icons/files/chevron.svg';
-import FullscreenEnterIcon from '../../../assets/icons/files/fullscreen-enter.svg';
-import FullscreenExitIcon from '../../../assets/icons/files/fullscreen-exit.svg';
-import α from '../../../assets/icons/files/α.svg';
-import β from '../../../assets/icons/files/β.svg';
-import γ from '../../../assets/icons/files/γ.svg';
-import δ from '../../../assets/icons/files/δ.svg';
-import ε from '../../../assets/icons/files/ε.svg';
-import ζ from '../../../assets/icons/files/ζ.svg';
-import η from '../../../assets/icons/files/η.svg';
-import θ from '../../../assets/icons/files/θ.svg';
-import ι from '../../../assets/icons/files/ι.svg';
-import κ from '../../../assets/icons/files/κ.svg';
-import λ from '../../../assets/icons/files/λ.svg';
-import μ from '../../../assets/icons/files/μ.svg';
-import ν from '../../../assets/icons/files/ν.svg';
-import ξ from '../../../assets/icons/files/ξ.svg';
-import ο from '../../../assets/icons/files/ο.svg';
-import π from '../../../assets/icons/files/π.svg';
-import ρ from '../../../assets/icons/files/ρ.svg';
-import σ from '../../../assets/icons/files/σ.svg';
-import τ from '../../../assets/icons/files/τ.svg';
-import υ from '../../../assets/icons/files/υ.svg';
-import φ from '../../../assets/icons/files/φ.svg';
-import χ from '../../../assets/icons/files/χ.svg';
-import ψ from '../../../assets/icons/files/ψ.svg';
-import ω from '../../../assets/icons/files/ω.svg';
-import DegreeCelseusIcon from '../../../assets/icons/files/degree-celseus.svg';
-import DegreeFahreinheitIcon from '../../../assets/icons/files/degree-fahreinheit.svg';
-import AngstromIcon from '../../../assets/icons/files/angstrom.svg';
-import DegreeIcon from '../../../assets/icons/files/degree-symbol.svg';
-import PlanckDiracConstantIcon from '../../../assets/icons/files/planck-dirac-constant.svg';
-import PlusMinusIcon from '../../../assets/icons/files/plus-minus.svg';
-import PromilleIcon from '../../../assets/icons/files/promille.svg';
-import RootIcon from '../../../assets/icons/files/root-symbol.svg';
-import LeftArrowIcon from '../../../assets/icons/files/left-arrow.svg';
-import RightArrowIcon from '../../../assets/icons/files/right-arrow.svg';
-import LeftArrowCrossedOutIcon from '../../../assets/icons/files/left-arrow-crossed-out.svg';
-import RightArrowCrossedOutIcon from '../../../assets/icons/files/right-arrow-crossed-out.svg';
-import LeftAndRightArrowIcon from '../../../assets/icons/files/left-and-right-arrow.svg';
-import CapitalPiIcon from '../../../assets/icons/files/capital-pi.svg';
-import SumIcon from '../../../assets/icons/files/sum-symbol.svg';
-import InfinityIcon from '../../../assets/icons/files/infinity-sign.svg';
-import PartialDerivativeIcon from '../../../assets/icons/files/partial-derivative.svg';
-import DeltaIcon from '../../../assets/icons/files/delta-sign.svg';
-import IntegralIcon from '../../../assets/icons/files/integral.svg';
-import ApproximatelyEqualIcon from '../../../assets/icons/files/approximately-equal.svg';
-import NotEqualIcon from '../../../assets/icons/files/not-equal.svg';
-import LessOrEqualIcon from '../../../assets/icons/files/less-or-equal.svg';
-import MoreOrEqualIcon from '../../../assets/icons/files/more-or-equal.svg';
-import AnyAtomIcon from '../../../assets/icons/files/any-atom.svg';
-import Bracket from '../../../assets/icons/files/bracket.svg';
-import Error from '../../../assets/icons/files/error.svg';
-import RapLeftLink from '../../../assets/icons/files/rap-left-link.svg';
-import RapMiddleLink from '../../../assets/icons/files/rap-middle-link.svg';
-import RapRightLink from '../../../assets/icons/files/rap-right-link.svg';
-import ArrowsLeft from '../../../assets/icons/files/arrows-left.svg';
-import ArrowsRight from '../../../assets/icons/files/arrows-right.svg';
-import Sugar from '../../../assets/icons/files/sugar.svg';
-import Base from '../../../assets/icons/files/base.svg';
-import Phosphate from '../../../assets/icons/files/phosphate.svg';
-import Preset from '../../../assets/icons/files/preset.svg';
-import PresetRightPhosphate from '../../../assets/icons/files/preset-right-phosphate.svg';
-import PresetLeftPhosphate from '../../../assets/icons/files/preset-left-phosphate.svg';
-import Nucleotide from '../../../assets/icons/files/nucleotide.svg';
-import Peptide from '../../../assets/icons/files/peptide.svg';
-import Chem from '../../../assets/icons/files/chem.svg';
-import EditFilled from '../../../assets/icons/files/edit-filled.svg';
-import VerticalDots from '../../../assets/icons/files/vertical-dots.svg';
-import ExpandIcon from '../../../assets/icons/files/expand.svg';
-import MinimizeExpansionIcon from '../../../assets/icons/files/minimize-expantion.svg';
-import ExplicitHydrogensIcon from '../../../assets/icons/files/explicit-hydrogens.svg';
-import LonePairsIcon from '../../../assets/icons/files/lone-pairs.svg';
-import LonePairToolIcon from '../../../assets/icons/files/lone-pair-tool.svg';
-import ReactionArrowCurlyMechanismIcon from '../../../assets/icons/files/reaction-arrow-curly-mechanism.svg';
-import CurlyArrowIcon from '../../../assets/icons/files/curly-arrow.svg';
-import FlexLayoutIcon from '../../../assets/icons/files/flex-layout-mode.svg';
-import SnakeLayoutIcon from '../../../assets/icons/files/snake-layout-mode.svg';
-import SequenceLayoutIcon from '../../../assets/icons/files/sequence-layout-mode.svg';
-import QuestionMark from '../../../assets/icons/files/questionMark.svg';
-import ArrangeRingIcon from '../../../assets/icons/files/arrange-ring.svg';
 import {
   CREATE_MONOMER_TOOL_NAME,
   IMAGE_KEY,
   MULTITAIL_ARROW_TOOL_NAME,
 } from 'ketcher-core';
-import CrossIcon from '../../../assets/icons/files/cross.svg';
-import PlusIcon from '../../../assets/icons/files/plus.svg';
-import ArrowsUpDownIcon from '../../../assets/icons/files/arrows-up-down.svg';
-import AntisenseStrandIcon from '../../../assets/icons/files/antisense-strand.svg';
-import DeleteContextMenu from '../../../assets/icons/files/deleteContextMenu.svg';
-import PasteContextMenu from '../../../assets/icons/files/paste-nav-bar.svg';
-import EditContextMenu from '../../../assets/icons/files/edit-nav-bar.svg';
-import MonomerAutochainIcon from '../../../assets/icons/files/monomer-autochain.svg';
-import CreateMonomerIcon from '../../../assets/icons/files/create-monomer.svg';
-import CheckFilledIcon from '../../../assets/icons/files/check-filled.svg';
-import WarningFilledIcon from '../../../assets/icons/files/warning-filled.svg';
-import LeavingGroup from '../../../assets/icons/files/leaving-group.svg';
-import ConnectionPoint from '../../../assets/icons/files/connection-point.svg';
 
 export const iconNameToIcon = {
-  α,
-  β,
-  γ,
-  δ,
-  ε,
-  ζ,
-  η,
-  θ,
-  ι,
-  κ,
-  λ,
-  μ,
-  ν,
-  ξ,
-  ο,
-  π,
-  ρ,
-  σ,
-  τ,
-  υ,
-  φ,
-  χ,
-  ψ,
-  ω,
-  Å: AngstromIcon,
-  '°': DegreeIcon,
-  ħ: PlanckDiracConstantIcon,
-  '±': PlusMinusIcon,
-  '‰': PromilleIcon,
-  '√': RootIcon,
-  '←': LeftArrowIcon,
-  '→': RightArrowIcon,
-  '←/': LeftArrowCrossedOutIcon,
-  '/→': RightArrowCrossedOutIcon,
-  '↔': LeftAndRightArrowIcon,
-  '∏': CapitalPiIcon,
-  '∑': SumIcon,
-  '∞': InfinityIcon,
-  '∂': PartialDerivativeIcon,
-  '∆': DeltaIcon,
-  '∫': IntegralIcon,
-  '≈': ApproximatelyEqualIcon,
-  '=/': NotEqualIcon,
-  '≤': LessOrEqualIcon,
-  '≥': MoreOrEqualIcon,
-  '℉': DegreeFahreinheitIcon,
-  '℃': DegreeCelseusIcon,
-  about: AboutIcon,
-  analyse: AnalyseIcon,
-  'any-atom': AnyAtomIcon,
-  arom: AromIcon,
-  'arrow-upward': ArrowUpwardIcon,
-  bonds: BondSingleIcon,
-  'bond-any': BondAnyIcon,
-  'bond-aromatic': BondAromaticIcon,
-  'bond-crossed': BondCrossedIcon,
-  'bond-hydrogen': BondHydrogenIcon,
-  'bond-oneelectron': BondOneElectronIcon,
-  'bond-dative': BondDative,
-  'bond-double': BondDoubleIcon,
-  'bond-doublearomatic': BondDoubleAromaticIcon,
-  'bond-down': BondDownIcon,
-  'bond-single': BondSingleIcon,
-  'bond-singlearomatic': BondSingleAromaticIcon,
-  'bond-singledouble': BondSingleDoubleIcon,
-  'bond-triple': BondTripleIcon,
-  'bond-up': BondUpIcon,
-  'bond-updown': BondUpdownIcon,
-  'capital-t': CapitalTIcon,
-  chain: ChainIcon,
-  'charge-minus': ChargeMinusIcon,
-  'charge-plus': ChargePlusIcon,
-  radical: RadicalToolIcon,
-  check: CheckIcon,
-  'check-mark': CheckMarkIcon,
-  'chiral-flag': ChiralFlagIcon,
-  cip: CipIcon,
-  clean: CleanIcon,
-  copies: CopyIcon,
-  copy: CopyIcon,
-  'copy-image': CopyImageIcon,
-  'copy-mol': CopyMolIcon,
-  'copy-ket': CopyKetIcon,
-  copyMenu: CopyNavBar,
-  cut: CutIcon,
-  dearom: DearomIcon,
-  delete: DeleteIcon,
-  deleteMenu: DeleteContextMenu,
-  dropdown: DropdownIcon,
-  'enhanced-stereo': EnhancedStereoIcon,
-  edit: EditIcon,
-  'elements-group': ElementsGroupIcon,
-  'extended-table': ExtendedTableIcon,
-  erase: EraseIcon,
-  'file-thumbnail': FileThumbnailIcon,
-  filter: FilterIcon,
-  'fullscreen-enter': FullscreenEnterIcon,
-  'fullscreen-exit': FullscreenExitIcon,
-  'generic-groups': GenericGroupsIcon,
-  hand: HandIcon,
-  compressedhand: CompressedHandIcon,
-  help: HelpIcon,
-  history: HistoryIcon,
-  'image-frame': ImageFrameIcon,
-  layout: LayoutIcon,
-  logo: LogoIcon,
-  miew: MiewIcon,
-  'macromolecules-mode': MacromoleculesMode,
-  'molecules-mode': MoleculesMode,
-  clear: ClearIcon,
-  open: OpenIcon,
-  paste: PasteIcon,
-  editMenu: EditContextMenu,
-  pasteNavBar: PasteContextMenu,
-  'period-table': PeriodTableIcon,
-  arrows: ReactionArrowOpenAngleIcon,
+  α: 'α',
+  β: 'β',
+  γ: 'γ',
+  δ: 'δ',
+  ε: 'ε',
+  ζ: 'ζ',
+  η: 'η',
+  θ: 'θ',
+  ι: 'ι',
+  κ: 'κ',
+  λ: 'λ',
+  μ: 'μ',
+  ν: 'ν',
+  ξ: 'ξ',
+  ο: 'ο',
+  π: 'π',
+  ρ: 'ρ',
+  σ: 'σ',
+  τ: 'τ',
+  υ: 'υ',
+  φ: 'φ',
+  χ: 'χ',
+  ψ: 'ψ',
+  ω: 'ω',
+  Å: 'angstrom',
+  '°': 'degree-symbol',
+  ħ: 'planck-dirac-constant',
+  '±': 'plus-minus',
+  '‰': 'promille',
+  '√': 'root-symbol',
+  '←': 'left-arrow',
+  '→': 'right-arrow',
+  '←/': 'left-arrow-crossed-out',
+  '/→': 'right-arrow-crossed-out',
+  '↔': 'left-and-right-arrow',
+  '∏': 'capital-pi',
+  '∑': 'sum-symbol',
+  '∞': 'infinity-sign',
+  '∂': 'partial-derivative',
+  '∆': 'delta-sign',
+  '∫': 'integral',
+  '≈': 'approximately-equal',
+  '=/': 'not-equal',
+  '≤': 'less-or-equal',
+  '≥': 'more-or-equal',
+  '℉': 'degree-fahreinheit',
+  '℃': 'degree-celseus',
+  about: 'about',
+  analyse: 'analyse',
+  'any-atom': 'any-atom',
+  arom: 'arom',
+  'arrow-upward': 'arrow-upward',
+  bonds: 'bond-single',
+  'bond-any': 'bond-any',
+  'bond-aromatic': 'bond-aromatic',
+  'bond-crossed': 'bond-crossed',
+  'bond-hydrogen': 'bond-hydrogen',
+  'bond-oneelectron': 'bond-one-electron',
+  'bond-dative': 'bond-dative',
+  'bond-double': 'bond-double',
+  'bond-doublearomatic': 'bond-doublearomatic',
+  'bond-down': 'bond-down',
+  'bond-single': 'bond-single',
+  'bond-singlearomatic': 'bond-singlearomatic',
+  'bond-singledouble': 'bond-singledouble',
+  'bond-triple': 'bond-triple',
+  'bond-up': 'bond-up',
+  'bond-updown': 'bond-updown',
+  'capital-t': 'capital-t',
+  chain: 'chain',
+  'charge-minus': 'charge-minus',
+  'charge-plus': 'charge-plus',
+  radical: 'radical',
+  check: 'check',
+  'check-mark': 'checkmark',
+  'chiral-flag': 'chiral-flag',
+  cip: 'cip',
+  clean: 'clean',
+  copies: 'copy',
+  copy: 'copy',
+  'copy-image': 'copy-image',
+  'copy-mol': 'copy-mol',
+  'copy-ket': 'copy-ket',
+  copyMenu: 'copy-for-nav-bar',
+  cut: 'cut',
+  dearom: 'dearom',
+  delete: 'delete',
+  deleteMenu: 'deleteContextMenu',
+  dropdown: 'dropdown',
+  'enhanced-stereo': 'enhanced-stereo',
+  edit: 'edit',
+  'elements-group': 'elements-group',
+  'extended-table': 'extended-table',
+  erase: 'erase',
+  'file-thumbnail': 'file-thumbnail',
+  filter: 'filter',
+  'fullscreen-enter': 'fullscreen-enter',
+  'fullscreen-exit': 'fullscreen-exit',
+  'generic-groups': 'generic-groups',
+  hand: 'hand',
+  compressedhand: 'compressed-hand',
+  help: 'help',
+  history: 'history',
+  'image-frame': 'image-frame',
+  layout: 'layout',
+  logo: 'logo',
+  miew: 'miew',
+  'macromolecules-mode': 'macromolecules-mode',
+  'molecules-mode': 'molecules-mode',
+  clear: 'clear',
+  open: 'open',
+  paste: 'paste',
+  editMenu: 'edit-nav-bar',
+  pasteNavBar: 'paste-nav-bar',
+  'period-table': 'period-table',
+  arrows: 'reaction-arrow-open-angle',
   'reaction-arrow-elliptical-arc-arrow-filled-bow':
-    ReactionArrowEllipticalArcArrowFilledBow,
+    'reaction-arrow-elliptical-arc-arrow-filled-bow',
   'reaction-arrow-elliptical-arc-arrow-filled-triangle':
-    ReactionArrowEllipticalArcArrowFilledTriangle,
+    'reaction-arrow-elliptical-arc-arrow-filled-triangle',
   'reaction-arrow-elliptical-arc-arrow-open-angle':
-    ReactionArrowEllipticalArcArrowOpenAngle,
+    'reaction-arrow-elliptical-arc-arrow-open-angle',
   'reaction-arrow-elliptical-arc-arrow-open-half-angle':
-    ReactionArrowEllipticalArcArrowOpenHalfAngle,
-  'reaction-arrow-curly-mechanism': ReactionArrowCurlyMechanismIcon,
-  'curly-arrow': CurlyArrowIcon,
-  'reaction-arrow-open-angle': ReactionArrowOpenAngleIcon,
-  'reaction-arrow-filled-triangle': ReactionArrowFilledTriangle,
-  'reaction-arrow-filled-bow': ReactionArrowFilledBow,
-  'reaction-arrow-dashed-open-angle': ReactionArrowDashedOpenAngle,
-  'reaction-arrow-failed': ReactionArrowFailed,
-  'reaction-arrow-retrosynthetic': ReactionArrowRetrosynthetic,
+    'reaction-arrow-elliptical-arc-arrow-open-half-angle',
+  'reaction-arrow-curly-mechanism': 'reaction-arrow-curly-mechanism',
+  'curly-arrow': 'curly-arrow',
+  'reaction-arrow-open-angle': 'reaction-arrow-open-angle',
+  'reaction-arrow-filled-triangle': 'reaction-arrow-filled-triangle',
+  'reaction-arrow-filled-bow': 'reaction-arrow-filled-bow',
+  'reaction-arrow-dashed-open-angle': 'reaction-arrow-dashed-open-angle',
+  'reaction-arrow-failed': 'reaction-arrow-failed',
+  'reaction-arrow-retrosynthetic': 'reaction-arrow-retrosynthetic-arrow',
   'reaction-arrow-both-ends-filled-triangle':
-    ReactionArrowBothEndsFilledTriangle,
+    'reaction-arrow-both-ends-filled-triangle',
   'reaction-arrow-equilibrium-filled-half-bow':
-    ReactionArrowEquilibriumFilledHalfBow,
+    'reaction-arrow-equilibrium-filled-half-bow',
   'reaction-arrow-equilibrium-filled-triangle':
-    ReactionArrowEquilibriumFilledTriangle,
-  'reaction-arrow-equilibrium-open-angle': ReactionArrowEquilibriumOpenAngle,
+    'reaction-arrow-equilibrium-filled-triangle',
+  'reaction-arrow-equilibrium-open-angle':
+    'reaction-arrow-equilibrium-open-angle',
   'reaction-arrow-unbalanced-equilibrium-filled-half-bow':
-    ReactionArrowUnbalancedEquilibriumFilledHalfBow,
+    'reaction-arrow-unbalanced-equilibrium-filled-half-bow',
   'reaction-arrow-unbalanced-equilibrium-open-half-angle':
-    ReactionArrowUnbalancedEquilibriumOpenHalfAngle,
+    'reaction-arrow-unbalanced-equilibrium-open-half-angle',
   'reaction-arrow-unbalanced-equilibrium-large-filled-half-bow':
-    ReactionArrowUnbalancedEquilibriumLargeFilledHalfBow,
+    'reaction-arrow-unbalanced-equilibrium-large-filled-half-bow',
   'reaction-arrow-unbalanced-equilibrium-filled-half-triangle':
-    ReactionArrowUnbalancedEquilibriumFilledHalfTriangle,
-  [MULTITAIL_ARROW_TOOL_NAME]: ReactionArrowMultitail,
-  'reaction-automap': ReactionAutomapIcon,
-  'reaction-mapping-tools': ReactionMapIcon,
-  'reaction-map': ReactionMapIcon,
-  'reaction-plus': ReactionPlusIcon,
-  'reaction-unmap': ReactionUnmapIcon,
-  recognize: RecognizeIcon,
-  redo: RedoIcon,
-  rgroup: RgroupLabelIcon,
-  'rgroup-attpoints': RgroupAttpointsIcon,
-  'rgroup-fragment': RgroupFragmentIcon,
-  'rgroup-label': RgroupLabelIcon,
-  save: SaveIcon,
-  search: SearchIcon,
-  'select-structure': SelectStructureIcon,
-  'select-fragment': SelectFragmentIcon,
-  'select-lasso': SelectLassoIcon,
-  'select-rectangle': SelectRectangleIcon,
-  settings: SettingsIcon,
-  sgroup: SgroupIcon,
-  'template-0': Template0Icon,
-  'template-1': Template1Icon,
-  'template-2': Template2Icon,
-  'template-3': Template3Icon,
-  'template-4': Template4Icon,
-  'template-5': Template5Icon,
-  'template-6': Template6Icon,
-  'template-7': Template7Icon,
-  'template-dialog': TemplateDialogIcon,
-  'template-lib': TemplateLibIcon,
-  'snake-mode': SnakeModeIcon,
-  text: TextIcon,
-  [IMAGE_KEY]: AddImageIcon,
-  'text-bold': TextBold,
-  'text-italic': TextItalic,
-  'text-subscript': TextSubscript,
-  'text-superscript': TextSuperscript,
-  'transform-flip-h': TransformFlipHIcon,
-  'transform-flip-v': TransformFlipVIcon,
-  undo: UndoIcon,
-  'zoom-in': ZoomInIcon,
-  'zoom-out': ZoomOutIcon,
-  'zoom-reset': ZoomResetIcon,
-  shapes: ShapeEllipseIcon,
-  'shape-ellipse': ShapeEllipseIcon,
-  'shape-rectangle': ShapeRectangleIcon,
-  'shape-polyline': ShapePolylineIcon,
-  'shape-line': ShapeLineIcon,
-  'not-found': NotFoundIcon,
-  'save-1': Save1Icon,
-  'open-1': Open1Icon,
-  reset: ResetIcon,
-  close: CloseIcon,
-  general: GeneralIcon,
-  'general-white': GeneralWhiteIcon,
-  stereo: StereoIcon,
-  'stereo-white': StereoWhiteIcon,
-  atoms: AtomsIcon,
-  'atoms-white': AtomsWhiteIcon,
-  'bond-common': BondsIcon,
-  'bonds-white': BondsWhiteIcon,
-  server: ServerIcon,
-  'server-white': ServerWhiteIcon,
-  '3dviewer': ThreeDViewerIcon,
-  '3dviewer-white': ThreeDViewerWhiteIcon,
-  debugging: DebuggingIcon,
-  'debugging-white': DebuggingWhiteIcon,
-  'dropdown-indicator': DropdownIndicatorIcon,
-  'text-special-symbols': TextSpecialSymbolsIcon,
-  chevron: ChevronIcon,
-  'open-window-paste-icon': OpenWindowPasteIcon,
-  'open-window-upload-icon': OpenWindowUploadIcon,
-  bracket: Bracket,
-  error: Error,
-  'rap-left-link': RapLeftLink,
-  'rap-middle-link': RapMiddleLink,
-  'rap-right-link': RapRightLink,
-  'arrows-left': ArrowsLeft,
-  'arrows-right': ArrowsRight,
-  sugar: Sugar,
-  base: Base,
-  phosphate: Phosphate,
-  preset: Preset,
-  'preset-left-phosphate': PresetLeftPhosphate,
-  'preset-right-phosphate': PresetRightPhosphate,
-  nucleotide: Nucleotide,
-  peptide: Peptide,
-  chem: Chem,
-  'edit-filled': EditFilled,
-  'vertical-dots': VerticalDots,
-  expand: ExpandIcon,
-  'minimize-expansion': MinimizeExpansionIcon,
-  'explicit-hydrogens': ExplicitHydrogensIcon,
-  'lone-pairs': LonePairsIcon,
-  'lone-pair': LonePairToolIcon,
-  'flex-layout-mode': FlexLayoutIcon,
-  'snake-layout-mode': SnakeLayoutIcon,
-  'sequence-layout-mode': SequenceLayoutIcon,
-  questionMark: QuestionMark,
-  'no-highlight-cross': CrossIcon,
-  arrowsUpDown: ArrowsUpDownIcon,
-  plus: PlusIcon,
-  antisenseStrand: AntisenseStrandIcon,
-  antisenseRnaStrand: AntisenseStrandIcon,
-  antisenseDnaStrand: AntisenseStrandIcon,
-  'arrange-ring': ArrangeRingIcon,
-  'monomer-autochain': MonomerAutochainIcon,
-  [CREATE_MONOMER_TOOL_NAME]: CreateMonomerIcon,
-  checkFilled: CheckFilledIcon,
-  warningFilled: WarningFilledIcon,
-  leavingGroup: LeavingGroup,
-  connectionPoint: ConnectionPoint,
+    'reaction-arrow-unbalanced-equilibrium-filled-half-triangle',
+  [MULTITAIL_ARROW_TOOL_NAME]: 'reaction-arrow-multitail',
+  'reaction-automap': 'reaction-automap',
+  'reaction-mapping-tools': 'reaction-map',
+  'reaction-map': 'reaction-map',
+  'reaction-plus': 'reaction-plus',
+  'reaction-unmap': 'reaction-unmap',
+  recognize: 'recognize',
+  redo: 'redo',
+  rgroup: 'rgroup-label',
+  'rgroup-attpoints': 'rgroup-attpoints',
+  'rgroup-fragment': 'rgroup-fragment',
+  'rgroup-label': 'rgroup-label',
+  save: 'save',
+  search: 'search',
+  'chemical-composer': 'search',
+  'select-structure': 'select-structure',
+  'select-fragment': 'select-fragment',
+  'select-lasso': 'select-lasso',
+  'select-rectangle': 'select-rectangle',
+  settings: 'settings',
+  sgroup: 'sgroup',
+  'template-0': 'template-0',
+  'template-1': 'template-1',
+  'template-2': 'template-2',
+  'template-3': 'template-3',
+  'template-4': 'template-4',
+  'template-5': 'template-5',
+  'template-6': 'template-6',
+  'template-7': 'template-7',
+  'template-dialog': 'template-dialog',
+  'template-lib': 'template-lib',
+  'snake-mode': 'snake-mode',
+  text: 'text',
+  [IMAGE_KEY]: 'add-image',
+  'text-bold': 'text-bold',
+  'text-italic': 'text-italic',
+  'text-subscript': 'text-subscript',
+  'text-superscript': 'text-superscript',
+  'transform-flip-h': 'transform-flip-h',
+  'transform-flip-v': 'transform-flip-v',
+  undo: 'undo',
+  'zoom-in': 'zoom-in',
+  'zoom-out': 'zoom-out',
+  'zoom-reset': 'zoom-reset',
+  shapes: 'shape-ellipse',
+  'shape-ellipse': 'shape-ellipse',
+  'shape-rectangle': 'shape-rectangle',
+  'shape-polyline': 'shape-polyline',
+  'shape-line': 'shape-line',
+  'not-found': 'not-found',
+  'save-1': 'save-1',
+  'open-1': 'open-1',
+  reset: 'reset',
+  close: 'close',
+  general: 'general',
+  'general-white': 'general-white',
+  stereo: 'stereo',
+  'stereo-white': 'stereo-white',
+  atoms: 'atoms',
+  'atoms-white': 'atoms-white',
+  'bond-common': 'bonds',
+  'bonds-white': 'bonds-white',
+  server: 'server',
+  'server-white': 'server-white',
+  '3dviewer': '3d',
+  '3dviewer-white': '3d-white',
+  debugging: 'debugging',
+  'debugging-white': 'debugging-white',
+  'dropdown-indicator': 'dropdown-indicator',
+  'text-special-symbols': 'text-special-symbols',
+  chevron: 'chevron',
+  'open-window-paste-icon': 'open-window-paste-icon',
+  'open-window-upload-icon': 'open-window-upload-icon',
+  bracket: 'bracket',
+  error: 'error',
+  'rap-left-link': 'rap-left-link',
+  'rap-middle-link': 'rap-middle-link',
+  'rap-right-link': 'rap-right-link',
+  'arrows-left': 'arrows-left',
+  'arrows-right': 'arrows-right',
+  sugar: 'sugar',
+  base: 'base',
+  phosphate: 'phosphate',
+  preset: 'preset',
+  'preset-left-phosphate': 'preset-left-phosphate',
+  'preset-right-phosphate': 'preset-right-phosphate',
+  nucleotide: 'nucleotide',
+  peptide: 'peptide',
+  chem: 'chem',
+  'edit-filled': 'edit-filled',
+  'vertical-dots': 'vertical-dots',
+  expand: 'expand',
+  'minimize-expansion': 'minimize-expantion',
+  'explicit-hydrogens': 'explicit-hydrogens',
+  'lone-pairs': 'lone-pairs',
+  'lone-pair': 'lone-pair-tool',
+  'flex-layout-mode': 'flex-layout-mode',
+  'snake-layout-mode': 'snake-layout-mode',
+  'sequence-layout-mode': 'sequence-layout-mode',
+  questionMark: 'questionMark',
+  'no-highlight-cross': 'cross',
+  arrowsUpDown: 'arrows-up-down',
+  plus: 'plus',
+  antisenseStrand: 'antisense-strand',
+  antisenseRnaStrand: 'antisense-strand',
+  antisenseDnaStrand: 'antisense-strand',
+  'arrange-ring': 'arrange-ring',
+  'monomer-autochain': 'monomer-autochain',
+  [CREATE_MONOMER_TOOL_NAME]: 'create-monomer',
+  checkFilled: 'check-filled',
+  warningFilled: 'warning-filled',
+  leavingGroup: 'leaving-group',
+  connectionPoint: 'connection-point',
 } as const;

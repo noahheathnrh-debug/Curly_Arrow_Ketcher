@@ -14,7 +14,7 @@
  * limitations under the License.
  ***************************************************************************/
 
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 
 import type { BaseCallProps, ModalContainerProps } from './modal.types';
 import classes from './Modal.module.less';
@@ -55,14 +55,16 @@ function ModalContent({ modal, ...rest }: ModalContentProps) {
       ref={containerRef}
       data-testid={`${modal.name}-dialog`}
     >
-      <Component
-        className={clsx({
-          [classes.smallScreen]:
-            (height && height <= mediaSizes.smallHeight) ||
-            (width && width <= mediaSizes.smallWidth),
-        })}
-        {...rest}
-      />
+      <Suspense fallback={null}>
+        <Component
+          className={clsx({
+            [classes.smallScreen]:
+              (height && height <= mediaSizes.smallHeight) ||
+              (width && width <= mediaSizes.smallWidth),
+          })}
+          {...rest}
+        />
+      </Suspense>
     </div>
   );
 }

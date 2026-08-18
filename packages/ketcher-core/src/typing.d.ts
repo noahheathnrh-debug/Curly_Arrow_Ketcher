@@ -25,4 +25,9 @@ declare global {
     const content: string;
     export default content;
   }
+
+  declare module '*.ket?raw' {
+    const content: string;
+    export default content;
+  }
 }

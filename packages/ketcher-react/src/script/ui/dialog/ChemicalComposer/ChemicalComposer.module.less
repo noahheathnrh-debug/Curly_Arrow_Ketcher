@@ -1,0 +1,491 @@
+@import '../../../../style/mixins';
+@import '../../../../style/variables';
+
+.dialog {
+  width: min(980px, 94vw);
+  height: min(720px, 90vh);
+  color: @color-text-primary;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: @color-primary;
+  }
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  min-height: 0;
+  height: 100%;
+  border-top: 1px solid @color-grey-3;
+}
+
+.searchPanel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 14px;
+  background: @color-primary-light;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchInputWrap {
+  position: relative;
+  flex: 1;
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 34px;
+    padding: 7px 10px 7px 34px;
+    border: 1px solid @color-border-input;
+    border-radius: 4px;
+    background: @color-background-primary;
+    color: @color-text-primary;
+    font: 400 13px/18px @Inter;
+
+    &:focus {
+      border-color: @color-primary;
+      outline: 2px solid fade(@color-primary, 14%);
+    }
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  z-index: 1;
+  top: 7px;
+  left: 8px;
+  width: 20px;
+  height: 20px;
+  color: @color-primary;
+}
+
+.searchStatus {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 0 0 82px;
+  gap: 6px;
+  color: @color-grey-6;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.searchSpinner,
+.searchComplete {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.searchSpinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid fade(@color-primary, 22%);
+  border-top-color: @color-primary;
+  animation: chemical-search-spin 0.7s linear infinite;
+}
+
+.searchComplete {
+  width: 8px;
+  height: 8px;
+  background: @color-primary;
+  box-shadow: 0 0 0 2px fade(@color-primary, 14%);
+}
+
+@keyframes chemical-search-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.searchHint {
+  margin: 8px 2px 10px;
+  color: @color-grey-6;
+  font-size: 11px;
+}
+
+.searchError {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid fade(@error-color, 40%);
+  border-radius: 4px;
+  background: fade(@error-color, 7%);
+  color: darken(@error-color, 15%);
+}
+
+.results {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 3px;
+  .scrollbar();
+}
+
+.emptyState {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  color: @color-grey-6;
+  text-align: center;
+
+  button {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: @color-primary;
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+
+.resultCard {
+  display: grid;
+  grid-template-columns: 132px minmax(120px, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 116px;
+  padding: 8px;
+  border: 1px solid @color-grey-3;
+  border-radius: 6px;
+  background: @color-background-primary;
+}
+
+.previewSlot {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: @color-background-canvas-light;
+}
+
+.previewImage,
+.structurePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.notationPreview {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 82px;
+  overflow: hidden;
+  padding: 8px;
+  color: @color-text-secondary;
+  font: 500 11px/16px monospace;
+  overflow-wrap: anywhere;
+}
+
+.resultDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+
+  strong {
+    overflow: hidden;
+    color: @color-text-primary;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span,
+  small {
+    color: @color-grey-6;
+  }
+}
+
+.representationBadge {
+  align-self: flex-start;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: fade(@color-primary, 10%);
+  color: @color-primary !important;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.resultActions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.primaryButton,
+.secondaryButton,
+.textButton {
+  white-space: nowrap;
+}
+
+.primaryButton {
+  .button-primary();
+}
+
+.secondaryButton {
+  .button-secondary();
+}
+
+.textButton {
+  border: 0;
+  padding: 4px 6px;
+  background: transparent;
+  color: @color-primary;
+  cursor: pointer;
+
+  &:hover {
+    color: @color-primary-hover;
+    text-decoration: underline;
+  }
+}
+
+.trayPanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 14px;
+  border-left: 1px solid @color-grey-3;
+  background: @color-background-primary;
+}
+
+.trayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid @color-grey-3;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  span {
+    color: @color-grey-6;
+    font-size: 11px;
+  }
+}
+
+.trayList {
+  flex: 1;
+  min-height: 100px;
+  margin: 10px 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style-position: inside;
+  .scrollbar();
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    min-height: 30px;
+    padding: 4px 6px;
+    border-bottom: 1px solid @color-grey-3;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    button {
+      border: 0;
+      background: transparent;
+      color: @color-grey-6;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  }
+
+  .trayEmpty {
+    display: block;
+    padding: 12px 4px;
+    border: 0;
+    color: @color-grey-6;
+    line-height: 18px;
+  }
+}
+
+.trayList .trayItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px auto;
+  gap: 6px;
+  padding: 6px 2px;
+
+  select {
+    min-width: 0;
+    height: 27px;
+    border: 1px solid @color-border-input;
+    border-radius: 3px;
+    background: @color-background-primary;
+    color: @color-text-primary;
+    font-size: 11px;
+  }
+}
+
+.trayItemName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+
+  > span {
+    display: grid;
+    place-items: center;
+    flex: 0 0 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: fade(@color-primary, 12%);
+    color: @color-primary;
+    font-size: 10px;
+  }
+
+  strong {
+    overflow: hidden;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.trayItemActions {
+  display: flex;
+  align-items: center;
+
+  button {
+    padding: 1px 3px;
+    font-size: 14px !important;
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.3;
+    }
+  }
+}
+
+.densityControl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  select {
+    flex: 1;
+    height: 30px;
+    border: 1px solid @color-border-input;
+    border-radius: 4px;
+    background: @color-background-primary;
+    color: @color-text-primary;
+  }
+}
+
+.canvasTools,
+.savedSets {
+  padding: 9px 0;
+  border-top: 1px solid @color-grey-3;
+
+  > strong {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 12px;
+  }
+}
+
+.canvasTools {
+  > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  button {
+    padding-right: 5px;
+    padding-left: 5px;
+    font-size: 11px;
+  }
+
+  small {
+    display: block;
+    margin-top: 5px;
+    color: @color-grey-6;
+    font-size: 10px;
+  }
+}
+
+.saveSetRow,
+.loadSetRow {
+  display: flex;
+  gap: 5px;
+
+  input,
+  select {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    height: 29px;
+    border: 1px solid @color-border-input;
+    border-radius: 3px;
+    background: @color-background-primary;
+    color: @color-text-primary;
+  }
+}
+
+.loadSetRow {
+  margin-top: 6px;
+}
+
+.trayFooter {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+}
+
+@media (max-width: 760px) {
+  .dialog {
+    width: 94vw;
+  }
+
+  .composer {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .trayPanel {
+    min-height: 260px;
+    border-top: 1px solid @color-grey-3;
+    border-left: 0;
+  }
+
+  .resultCard {
+    grid-template-columns: 110px 1fr;
+  }
+
+  .resultActions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+  }
+}

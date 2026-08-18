@@ -109,6 +109,7 @@ export function load(struct: string | Struct, options?) {
       isPaste,
       method,
       preserveViewport = false,
+      requireAtoms = false,
       skipCenter = false,
       ...otherOptions
     } = options;
@@ -121,6 +122,11 @@ export function load(struct: string | Struct, options?) {
 
     try {
       const parsedStruct = await parseStruct(struct, server, otherOptions);
+      if (requireAtoms && !parsedStruct.atoms.size) {
+        throw new Error(
+          'The selected result did not resolve to a molecular structure.',
+        );
+      }
       const { fragment } = otherOptions;
       const hasUnsupportedGroups = parsedStruct.sgroups.some(
         (sGroup) => !supportedSGroupTypes[sGroup.type],

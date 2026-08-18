@@ -2,7 +2,6 @@ import replace from '@rollup/plugin-replace';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { createLogger, defineConfig, loadEnv } from 'vite';
-import { createHtmlPlugin } from 'vite-plugin-html';
 import vitePluginRaw from 'vite-plugin-raw';
 import svgr from 'vite-plugin-svgr';
 import ketcherCoreTSConfig from '../packages/ketcher-core/tsconfig.json';
@@ -159,41 +158,6 @@ const HtmlReplaceVitePlugin = () => {
   };
 };
 
-const normalizeHtmlTransformHook = (plugin) => {
-  if (!plugin || typeof plugin === 'function') {
-    return plugin;
-  }
-
-  if (Array.isArray(plugin)) {
-    return plugin.map(normalizeHtmlTransformHook);
-  }
-
-  const { transformIndexHtml } = plugin;
-
-  if (
-    transformIndexHtml &&
-    typeof transformIndexHtml !== 'function' &&
-    !transformIndexHtml.handler &&
-    transformIndexHtml.transform
-  ) {
-    const order =
-      transformIndexHtml.enforce === 'pre' ||
-      transformIndexHtml.enforce === 'post'
-        ? transformIndexHtml.enforce
-        : undefined;
-
-    return {
-      ...plugin,
-      transformIndexHtml: {
-        ...(order ? { order } : {}),
-        handler: transformIndexHtml.transform,
-      },
-    };
-  }
-
-  return plugin;
-};
-
 const logger = createLogger();
 const loggerWarn = logger.warn;
 logger.warn = (msg, options) => {
@@ -284,25 +248,6 @@ export default defineConfig({
         require: 'await import',
       },
     }),
-    normalizeHtmlTransformHook(
-      createHtmlPlugin({
-        entry: '/src/index.tsx',
-        template: 'public/index.html',
-        inject: {
-          tags: [
-            {
-              /**
-               * HACK: https://github.com/bevacqua/dragula/issues/602#issuecomment-1109840139
-               * Fix: global is not defined
-               */
-              injectTo: 'body',
-              tag: 'script',
-              children: 'var global = global || window',
-            },
-          ],
-        },
-      }),
-    ),
     HtmlReplaceVitePlugin(),
     commonjs(),
   ],

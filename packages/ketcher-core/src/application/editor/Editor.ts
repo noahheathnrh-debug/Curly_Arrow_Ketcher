@@ -91,7 +91,6 @@ import {
   keyNorm,
   SettingsManager,
 } from 'utilities';
-import monomersDataRaw from './data/monomers.ket';
 import { type HistoryOperationType, EditorHistory } from './EditorHistory';
 import { Coordinates } from './shared/coordinates';
 import ZoomTool from './tools/Zoom';
@@ -236,6 +235,24 @@ const hasBilnAliasUniquenessScope = (
 let persistentMonomersLibrary: MonomerItemType[] = [];
 let persistentMonomersLibraryParsedJson: IKetMacromoleculesContent | null =
   null;
+let defaultMonomersLibraryDataPromise: Promise<string> | undefined;
+
+const loadDefaultMonomersLibraryData = () => {
+  defaultMonomersLibraryDataPromise ??= import('./data/monomers.ket').then(
+    ({ default: monomersDataRaw }) => monomersDataRaw,
+  );
+
+  return defaultMonomersLibraryDataPromise;
+};
+
+const deferUntilAfterInitialRender = (callback: () => void) => {
+  if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+    window.requestAnimationFrame(() => window.setTimeout(callback, 0));
+    return;
+  }
+
+  setTimeout(callback, 0);
+};
 
 export class CoreEditor {
   public events: IEditorEvents;
@@ -250,6 +267,7 @@ export class CoreEditor {
   public lastCursorPositionOfCanvas: Vec2 = new Vec2(0, 0);
   private _monomersLibraryParsedJson: IKetMacromoleculesContent | null = null;
   private _monomersLibrary: MonomerItemType[] = [];
+  private readonly monomersLibraryReady: Promise<void>;
   public canvas: SVGSVGElement;
   public ketcherRootElement: HTMLDivElement | null;
   public drawnStructuresWrapperElement: SVGGElement;
@@ -310,8 +328,8 @@ export class CoreEditor {
     this.mode = mode ?? new (getModeConstructor(DEFAULT_LAYOUT_MODE))();
     this.events = createEditorEvents();
     KetSerializer.setMonomerFactory(monomerFactory);
-    this.setMonomersLibrary(monomersDataRaw);
-    this.events.updateMonomersLibrary.dispatch();
+    this.clearMonomersLibrary();
+    this.monomersLibraryReady = this.initializeDefaultMonomersLibrary();
     this.subscribeEvents();
     this.renderersContainer = renderersContainer;
     this.drawingEntitiesManager = new DrawingEntitiesManager();
@@ -409,6 +427,8 @@ export class CoreEditor {
     monomersLibraryReplace?: string | JSON,
     onError?: (err: unknown) => void,
   ): Promise<void> {
+    await this.waitForMonomersLibrary();
+
     const monomersLibraryUpdateData =
       monomersLibraryUpdate || monomersLibraryReplace;
     if (!monomersLibraryUpdateData) {
@@ -453,10 +473,43 @@ export class CoreEditor {
     }
   }
 
+  private initializeDefaultMonomersLibrary(): Promise<void> {
+    if (
+      persistentMonomersLibrary.length !== 0 &&
+      persistentMonomersLibraryParsedJson !== null
+    ) {
+      this._monomersLibrary = persistentMonomersLibrary;
+      this._monomersLibraryParsedJson = persistentMonomersLibraryParsedJson;
+      this.events.updateMonomersLibrary.dispatch();
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      deferUntilAfterInitialRender(() => {
+        loadDefaultMonomersLibraryData()
+          .then((monomersDataRaw) => {
+            this.setMonomersLibrary(monomersDataRaw);
+            this.events.updateMonomersLibrary.dispatch();
+          })
+          .catch((error) => {
+            KetcherLogger.error(
+              'Editor::initializeDefaultMonomersLibrary failed:',
+              error,
+            );
+          })
+          .finally(resolve);
+      });
+    });
+  }
+
+  public waitForMonomersLibrary(): Promise<void> {
+    return this.monomersLibraryReady;
+  }
+
   private setMonomersLibrary(monomersDataRaw: string) {
     if (
       persistentMonomersLibrary.length !== 0 &&
-      persistentMonomersLibraryParsedJson !== undefined
+      persistentMonomersLibraryParsedJson !== null
     ) {
       this._monomersLibrary = persistentMonomersLibrary;
       this._monomersLibraryParsedJson = persistentMonomersLibraryParsedJson;

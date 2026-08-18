@@ -17,13 +17,14 @@
 import type { iconNameToIcon } from './utils/iconNameToIcon';
 import type { MouseEvent } from 'react';
 
-export type SvgComponent = React.FunctionComponent<
-  React.SVGProps<SVGSVGElement> & {
-    title?: string;
-  }
->;
-
 export type IconName = keyof typeof iconNameToIcon;
+
+export interface IconSpriteDescriptor {
+  symbolId: string;
+  width: string;
+  height: string;
+  viewBox: string;
+}
 
 export interface IIconProps {
   name: IconName;

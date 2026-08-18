@@ -17,7 +17,7 @@
 import { Vec2, radicalElectrons } from 'domain/entities';
 import { Elements } from 'domain/constants';
 
-type NonBondingAtom = {
+export type NonBondingAtom = {
   label: string;
   charge?: number | null;
   valence?: number | null;
@@ -27,17 +27,19 @@ type NonBondingAtom = {
   isQuery?: () => boolean;
   badConn?: boolean;
 };
-interface Obstacle {
+export interface AngularObstacle {
   angle: number;
   width: number;
 }
 
-type LonePairStruct = {
+export type AngularGap = { start: number; end: number; size: number };
+
+export type LonePairStruct = {
   atoms: Map<number, NonBondingAtom>;
   bonds: Map<number, { begin: number; end: number }>;
 };
 
-type LonePairOptions = {
+export type LonePairOptions = {
   microModeScale?: number;
   scale?: number;
   lonePairSize?: number;
@@ -46,17 +48,28 @@ type LonePairOptions = {
   fontszInPx: number;
 };
 
-function getObstacles(
+/**
+ * Angular ranges around an atom that are already spoken for.
+ *
+ * `excludeBondIds` exists for arrow routing rather than lone-pair layout: when
+ * an arrow depicts a bond breaking, the electrons must arrive at the atom
+ * along the very direction that bond occupies, so the caller needs to declare
+ * that direction free.
+ */
+export function getAngularObstacles(
   atom: NonBondingAtom,
   struct: LonePairStruct,
   aid: number,
   hydrogenOnTheLeft?: boolean,
-): Obstacle[] {
-  const obstacles: Obstacle[] = [];
+  excludeBondIds?: ReadonlySet<number>,
+): AngularObstacle[] {
+  const obstacles: AngularObstacle[] = [];
   const BOND_HALF_WIDTH = 0.2;
   const HYDROGEN_HALF_WIDTH = 0.6;
 
-  struct.bonds.forEach((bond) => {
+  struct.bonds.forEach((bond, bondId) => {
+    if (excludeBondIds?.has(bondId)) return;
+
     if (bond.begin === aid || bond.end === aid) {
       const neighborId = bond.begin === aid ? bond.end : bond.begin;
       const neighbor = struct.atoms.get(neighborId);
@@ -73,7 +86,16 @@ function getObstacles(
     }
   });
 
-  if ((atom.implicitH ?? 0) > 0 && atom.label !== 'H') {
+  // A skeletal carbon draws neither a label nor its hydrogens, so there is no
+  // text on the canvas to reserve room for. Reserving it anyway blocked a wide
+  // arc of empty space around every ring and chain carbon, which distorted the
+  // approach sectors the arrow router derives from these same obstacles.
+  const drawsHydrogenLabel =
+    (atom.implicitH ?? 0) > 0 &&
+    atom.label !== 'H' &&
+    !(atom.label === 'C' && countNeighbours(struct, aid) >= 2);
+
+  if (drawsHydrogenLabel) {
     obstacles.push({
       angle: hydrogenOnTheLeft ? Math.PI : 0,
       width: HYDROGEN_HALF_WIDTH,
@@ -83,9 +105,15 @@ function getObstacles(
   return obstacles;
 }
 
-function findGaps(
-  obstacles: Obstacle[],
-): { start: number; end: number; size: number }[] {
+function countNeighbours(struct: LonePairStruct, aid: number): number {
+  let count = 0;
+  struct.bonds.forEach((bond) => {
+    if (bond.begin === aid || bond.end === aid) count++;
+  });
+  return count;
+}
+
+export function findGaps(obstacles: AngularObstacle[]): AngularGap[] {
   if (obstacles.length === 0) {
     return [{ start: 0, end: 2 * Math.PI, size: 2 * Math.PI }];
   }
@@ -226,6 +254,66 @@ function getLonePairCount(atom: NonBondingAtom) {
   return Math.min(Math.floor(nonBondingElectrons / 2), 4);
 }
 
+function normaliseToPi(angle: number): number {
+  let a = angle % (2 * Math.PI);
+  if (a > Math.PI) a -= 2 * Math.PI;
+  else if (a < -Math.PI) a += 2 * Math.PI;
+  return a;
+}
+
+/**
+ * The four sides of an atom symbol, in model orientation where +y is downward.
+ *
+ * Listed in preference order — north first, then south, west, east — which is
+ * how ties are broken when two sides are equally free. That order matches how
+ * Lewis structures are conventionally drawn: pairs go above and below before
+ * they go beside.
+ */
+const CARDINALS = [-Math.PI / 2, Math.PI / 2, Math.PI, 0];
+
+/** A cardinal closer than this to a bond or hydrogen label is unusable. */
+const CARDINAL_BLOCKED_WITHIN = 0.55;
+
+/**
+ * Place non-bonding electrons on the free sides of the atom.
+ *
+ * Lewis structures put lone pairs squarely north, south, east or west of the
+ * symbol, not at arbitrary angles. Distributing them evenly through whatever
+ * angular gaps happen to remain — the previous behaviour — pushes them off
+ * those axes and produces the skewed look on a hydroxyl, where the pairs drift
+ * away from the hydrogen instead of sitting cleanly above and beside the O.
+ *
+ * Each cardinal is scored by how far it is from the nearest obstacle, so a side
+ * that merely brushes a bond loses to one that is properly clear.
+ */
+function placeOnCardinals(
+  obstacles: AngularObstacle[],
+  wanted: number,
+): number[] {
+  const clearance = (angle: number) => {
+    let worst = Math.PI;
+    for (const obstacle of obstacles) {
+      const delta = Math.abs(normaliseToPi(angle - obstacle.angle));
+      worst = Math.min(worst, Math.max(0, delta - obstacle.width));
+    }
+    return worst;
+  };
+
+  const free = CARDINALS.map((angle, preference) => ({
+    angle,
+    preference,
+    clearance: clearance(angle),
+  })).filter((slot) => slot.clearance >= CARDINAL_BLOCKED_WITHIN);
+
+  free.sort((a, b) =>
+    Math.abs(a.clearance - b.clearance) > 1e-6
+      ? b.clearance - a.clearance
+      : a.preference - b.preference,
+  );
+
+  return free.slice(0, wanted).map((slot) => slot.angle);
+}
+
 export function calcNonBondingLayout(
   atom: NonBondingAtom,
   struct: LonePairStruct,
@@ -240,27 +328,29 @@ export function calcNonBondingLayout(
     return null;
   }
 
-  const obstacles = getObstacles(atom, struct, aid, hydrogenOnTheLeft);
+  const obstacles = getAngularObstacles(atom, struct, aid, hydrogenOnTheLeft);
   let gaps = findGaps(obstacles);
 
   if (gaps.length === 0) {
     gaps = [{ start: 0, end: 2 * Math.PI, size: 2 * Math.PI }];
   }
 
-  const allocations = allocateItemsToGaps(gaps, totalSlots);
-  const resultAngles: number[] = [];
+  const resultAngles = placeOnCardinals(obstacles, totalSlots);
 
-  for (let i = 0; i < gaps.length; i++) {
-    const gap = gaps[i];
-    const count = allocations[i];
-    if (count > 0) {
-      const step = gap.size / (count + 1);
-      for (let j = 1; j <= count; j++) {
-        let angle = gap.start + j * step;
-        angle = angle % (2 * Math.PI);
-        if (angle > Math.PI) angle -= 2 * Math.PI;
-        else if (angle < -Math.PI) angle += 2 * Math.PI;
-        resultAngles.push(angle);
+  // More electrons than free sides: fall back to spreading whatever is left
+  // evenly through the angular gaps.
+  if (resultAngles.length < totalSlots) {
+    const remaining = totalSlots - resultAngles.length;
+    const allocations = allocateItemsToGaps(gaps, remaining);
+
+    for (let i = 0; i < gaps.length; i++) {
+      const gap = gaps[i];
+      const count = allocations[i];
+      if (count > 0) {
+        const step = gap.size / (count + 1);
+        for (let j = 1; j <= count; j++) {
+          resultAngles.push(normaliseToPi(gap.start + j * step));
+        }
       }
     }
   }
@@ -279,6 +369,72 @@ export function calcNonBondingLayout(
     radicalAngles: resultAngles.slice(0, radicalCount),
     lonePairAngles: resultAngles.slice(radicalCount),
   };
+}
+
+/** Upper-right in canvas orientation, where the y axis points down. */
+const PREFERRED_CHARGE_ANGLE = -Math.PI / 4;
+/** Angular room a charge glyph needs, roughly matching a lone-pair reservation. */
+const CHARGE_HALF_WIDTH = 0.35;
+
+/**
+ * Angle at which to draw the formal-charge glyph.
+ *
+ * Lone pairs are laid out first and are not moved: their positions carry
+ * meaning, because an arrow tail can be anchored to a specific `pairIdx`.
+ * The charge is the flexible one, so it goes wherever is still free —
+ * preferring upper-right, which is where charges conventionally sit and where
+ * the renderer has always put them.
+ *
+ * Returns `null` when the atom has no non-bonding electrons to dodge, letting
+ * the caller keep its existing fixed placement.
+ */
+export function calcChargeAngle(
+  atom: NonBondingAtom,
+  struct: LonePairStruct,
+  aid: number,
+  hydrogenOnTheLeft?: boolean,
+): number | null {
+  const layout = calcNonBondingLayout(atom, struct, aid, hydrogenOnTheLeft);
+  if (!layout) return null;
+
+  const occupied = layout.radicalAngles.concat(layout.lonePairAngles);
+  if (occupied.length === 0) return null;
+
+  const obstacles = getAngularObstacles(
+    atom,
+    struct,
+    aid,
+    hydrogenOnTheLeft,
+  ).concat(occupied.map((angle) => ({ angle, width: CHARGE_HALF_WIDTH })));
+
+  const gaps = findGaps(obstacles);
+  if (gaps.length === 0) return null;
+
+  const centreOf = (gap: AngularGap) => {
+    let centre = (gap.start + gap.size / 2) % (2 * Math.PI);
+    if (centre > Math.PI) centre -= 2 * Math.PI;
+    return centre;
+  };
+
+  const distanceToPreferred = (angle: number) => {
+    const diff = Math.abs(angle - PREFERRED_CHARGE_ANGLE) % (2 * Math.PI);
+    return diff > Math.PI ? 2 * Math.PI - diff : diff;
+  };
+
+  const roomy = gaps.filter((gap) => gap.size >= CHARGE_HALF_WIDTH * 2);
+  const candidates = roomy.length > 0 ? roomy : gaps;
+
+  let best = candidates[0];
+  let bestDistance = distanceToPreferred(centreOf(best));
+  for (const gap of candidates.slice(1)) {
+    const distance = distanceToPreferred(centreOf(gap));
+    if (distance < bestDistance) {
+      best = gap;
+      bestDistance = distance;
+    }
+  }
+
+  return centreOf(best);
 }
 
 /**

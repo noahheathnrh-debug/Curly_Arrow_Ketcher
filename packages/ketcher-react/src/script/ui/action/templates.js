@@ -18,6 +18,13 @@ import templates from '../data/templates';
 import isHidden from './isHidden';
 
 const templateLib = {
+  'chemical-composer': {
+    shortcut: 'Mod+k',
+    title: 'Insert Chemical',
+    action: { dialog: 'chemical-composer' },
+    disabled: (editor) => editor.isMonomerCreationWizardActive,
+    hidden: (options) => isHidden(options, 'chemical-composer'),
+  },
   'template-lib': {
     shortcut: 'Shift+t',
     title: 'Structure Library',

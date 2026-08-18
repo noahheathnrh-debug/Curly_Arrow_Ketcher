@@ -72,6 +72,8 @@ export interface PanelProps {
   togglerComponent?: JSX.Element;
   isModeSwitcherDisabled: boolean;
   customButtons: Array<CustomButton>;
+  mechanismControlsEnabled: boolean;
+  onToggleMechanismControls: VoidFunction;
 }
 
 const collapseLimit = 650;
@@ -162,6 +164,8 @@ export const TopToolbar = ({
   togglerComponent,
   isModeSwitcherDisabled,
   customButtons,
+  mechanismControlsEnabled,
+  onToggleMechanismControls,
 }: PanelProps) => {
   const { ref: resizeRef, width = 50 } = useResizeObserver<HTMLDivElement>();
   const { ketcherId } = useAppContext();
@@ -245,15 +249,37 @@ export const TopToolbar = ({
           hiddenButtons={hiddenButtons}
           shortcuts={shortcuts}
           indigoVerification={indigoVerification}
-          isCollapsed={isCollapsed}
+          isCollapsed={mechanismControlsEnabled ? false : isCollapsed}
+          visibleButtons={
+            mechanismControlsEnabled
+              ? ['explicit-hydrogens', 'lone-pairs']
+              : undefined
+          }
         />
-        <CustomButtons
-          isCollapsed={isCollapsed}
-          customButtons={customButtons}
-          onCustomAction={onCustomAction}
-        />
+        {!mechanismControlsEnabled && (
+          <>
+            <CustomButtons
+              isCollapsed={isCollapsed}
+              customButtons={customButtons}
+              onCustomAction={onCustomAction}
+            />
+          </>
+        )}
       </BtnsWpapper>
       <BtnsWpapper>
+        <TopToolbarIconButton
+          title={
+            mechanismControlsEnabled
+              ? 'Mechanism controls on — show full controls'
+              : 'Show mechanism controls only'
+          }
+          onClick={onToggleMechanismControls}
+          iconName="filter"
+          isActive={mechanismControlsEnabled}
+          ariaPressed={mechanismControlsEnabled}
+          testId="mechanism-controls-toggle"
+        />
+        <Divider />
         {renderedTogglerComponent}
         {renderedTogglerComponent && <Divider />}
 

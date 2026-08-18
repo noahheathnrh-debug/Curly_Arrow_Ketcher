@@ -31,6 +31,7 @@ const mapStateToProps = (state: any): StateProps => ({
   opened: state.toolbar.opened,
   indigoVerification: state.requestsStatuses.indigoVerification,
   disableableButtons,
+  mechanismControlsEnabled: Boolean(state.toolbar.mechanismControlsEnabled),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): LeftToolbarCallProps => ({

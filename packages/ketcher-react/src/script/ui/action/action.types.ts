@@ -43,6 +43,7 @@ type ToolVariant =
   | 'copy-mol'
   | 'copy-ket'
   | 'chain'
+  | 'chemical-composer'
   | 'charge-minus'
   | 'charge-plus'
   | 'radical'

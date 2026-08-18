@@ -343,6 +343,7 @@ export class MacromoleculesConverter {
         height: rxnArrow.height,
         initiallySelected: rxnArrow.initiallySelected,
         arrowId: rxnArrow.arrowId,
+        ...rxnArrow.mechanism,
       });
       const arrowId = struct.addRxnArrow(micromoleculeRxnArrow);
       reStruct?.rxnArrows.set(arrowId, new ReRxnArrow(micromoleculeRxnArrow));
@@ -877,6 +878,7 @@ export class MacromoleculesConverter {
         rxnArrow.height,
         rxnArrow.initiallySelected,
         rxnArrow.arrowId,
+        rxnArrow.mechanismData(),
       );
       command.merge(arrowAddCommand);
     });

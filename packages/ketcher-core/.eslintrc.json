@@ -26,6 +26,7 @@
   "overrides": [
     {
       "files": [
+        "__tests__/application/render/mechanism/*.test.ts",
         "__tests__/domain/serializers/ket/KetSerializer.test.ts",
         "src/application/editor/actions/erase.ts",
         "src/application/editor/actions/template.ts",

@@ -26,6 +26,7 @@ export interface IIconButtonBaseProps {
   isActive?: boolean;
   shortcut?: string;
   testId?: string;
+  ariaPressed?: boolean;
   children: ReactNode;
 }
 

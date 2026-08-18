@@ -13,6 +13,7 @@ import { PolymerBond } from 'domain/entities/PolymerBond';
 import {
   type KetFileMultitailArrowNode,
   type LinkerSequenceNode,
+  type MechanismArrowData,
   type RNABase,
   type RxnArrowMode,
   type SubChainNode,
@@ -2533,6 +2534,7 @@ export class DrawingEntitiesManager {
         rxnArrow.height,
         rxnArrow.initiallySelected,
         rxnArrow.arrowId,
+        rxnArrow.mechanism,
       );
 
       const addedRxnArrow = rxnArrowAddCommand.operations[0]
@@ -4145,6 +4147,7 @@ export class DrawingEntitiesManager {
     initiallySelected?: initiallySelectedType,
     arrowId?: number,
     _arrow?: RxnArrow,
+    mechanism?: MechanismArrowData,
   ) {
     if (_arrow) {
       this.ensureArrowId(_arrow);
@@ -4158,6 +4161,7 @@ export class DrawingEntitiesManager {
       position,
       height,
       DrawingEntitiesManager.normalizeInitiallySelected(initiallySelected),
+      mechanism,
     );
     rxnArrow.arrowId = arrowId;
     this.ensureArrowId(rxnArrow);
@@ -4173,6 +4177,7 @@ export class DrawingEntitiesManager {
     height?: number,
     initiallySelected?: initiallySelectedType,
     arrowId?: number,
+    mechanism?: MechanismArrowData,
   ) {
     const command = new Command();
     const operation = new RxnArrowAddOperation(
@@ -4184,6 +4189,7 @@ export class DrawingEntitiesManager {
           initiallySelected,
           arrowId,
           arrow,
+          mechanism,
         ),
       this.deleteRxnArrowModelChange.bind(this),
     );
@@ -4206,6 +4212,7 @@ export class DrawingEntitiesManager {
           rxnArrow.initiallySelected,
           rxnArrow.arrowId,
           arrow,
+          rxnArrow.mechanism,
         ),
     );
 

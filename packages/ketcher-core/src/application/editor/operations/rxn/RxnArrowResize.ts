@@ -134,6 +134,13 @@ export class RxnArrowResize extends Base {
 
       // Curve handle adjustments (height/height2)
       if (RxnArrow.isElliptical(item)) {
+        // Any hand-adjustment of the curve hands ownership of the shape to the
+        // user permanently. Without this the next structure edit would clear
+        // the route cache and the auto-router would quietly undo their work.
+        if (RxnArrow.isMechanism(item)) {
+          item.autoRoute = false;
+        }
+
         const { angle } = reItem.getArrowParams(
           item.pos[0].x,
           item.pos[0].y,

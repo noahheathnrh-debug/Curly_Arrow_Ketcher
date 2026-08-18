@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`metric snapshots matches the recorded route metrics 1`] = `
+[
+  {
+    "fallback": false,
+    "headTangentErrorDeg": 6.1,
+    "inflections": 1,
+    "intersections": 0,
+    "minimumClearance": 0.053,
+    "name": "carbocation-attack",
+    "pathLengthOverChord": 1.153,
+    "routeClass": "c-positive",
+    "sectorId": "atom0@+017",
+  },
+  {
+    "fallback": false,
+    "headTangentErrorDeg": 1.8,
+    "inflections": 0,
+    "intersections": 0,
+    "minimumClearance": 0.031,
+    "name": "hydride-shift",
+    "pathLengthOverChord": 1.03,
+    "routeClass": "c-negative",
+    "sectorId": "atom1@+143",
+  },
+]
+`;

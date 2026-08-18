@@ -9,6 +9,7 @@ import {
   fromMultipleMove,
   assert,
   getLonePairModelPositions,
+  getRadicalModelPositions,
   type LonePairAttachment,
   RxnArrowMode,
   Vec2,
@@ -62,7 +63,12 @@ export class ReactionArrowMoveTool
 
       if (closestItem.map === 'rxnArrows') {
         const reArrow = this.reStruct.rxnArrows.get(closestItem.id);
-        if (reArrow?.item.mode === RxnArrowMode.CurlyMechanism) {
+        const mode = reArrow?.item.mode;
+        const isMechanism =
+          mode === RxnArrowMode.CurlyMechanism ||
+          mode === RxnArrowMode.FishhookMechanism;
+
+        if (reArrow && isMechanism) {
           const arrow = reArrow.item;
           const ref = closestItem.ref as Vec2;
           // ref equals pos[0] → dragging the start handle (tail at lone pair)
@@ -75,14 +81,20 @@ export class ReactionArrowMoveTool
             Math.abs(ref.y - arrow.pos[1].y) < 1e-3;
 
           if (isDraggingStart) {
-            // Snap start to nearest lone pair position
+            // A fishhook carries a single electron, so its tail belongs on a
+            // radical dot; only an electron-pair arrow snaps to a lone pair.
             isSnappingEnabled = false;
-            const snap = this.snapToLonePair(current);
-            if (snap) {
-              current = snap.pos;
-              newLpAttach = snap.lpAttach;
+            if (mode === RxnArrowMode.FishhookMechanism) {
+              const snap = this.snapToRadical(current);
+              if (snap) current = snap;
             } else {
-              newLpAttach = null;
+              const snap = this.snapToLonePair(current);
+              if (snap) {
+                current = snap.pos;
+                newLpAttach = snap.lpAttach;
+              } else {
+                newLpAttach = null;
+              }
             }
           } else if (isDraggingEnd) {
             // Snap end to nearest atom center
@@ -138,6 +150,43 @@ export class ReactionArrowMoveTool
       return { pos: bestPos, lpAttach: bestAttach };
     }
     return null;
+  }
+
+  /**
+   * Nearest radical dot, for re-anchoring a fishhook tail.
+   *
+   * Returns only a position: unlike `lpAttach`, the resize operation has no
+   * `newRaAttach` channel to persist the new anchor through undo, so the tail
+   * moves visually but keeps its original `raAttach`. Wiring that through is a
+   * separate change to `RxnArrowResize`; snapping to the dot is still a strict
+   * improvement over the previous behaviour, which ignored fishhooks entirely.
+   */
+  private snapToRadical(cursor: Vec2): Vec2 | null {
+    const molecule = this.reStruct.molecule;
+    const options = this.render.options;
+    let bestPos: Vec2 | null = null;
+    let bestDist = Infinity;
+
+    molecule.atoms.forEach((atom, atomId) => {
+      const reAtom = this.reStruct.atoms.get(atomId);
+      const positions = getRadicalModelPositions(
+        atom,
+        molecule,
+        atomId,
+        options,
+        reAtom?.hydrogenOnTheLeft,
+        reAtom?.cachedLabelHalfSize || undefined,
+      );
+      positions.forEach((pos) => {
+        const dist = Vec2.dist(cursor, pos);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestPos = pos;
+        }
+      });
+    });
+
+    return bestPos ? new Vec2(bestPos) : null;
   }
 
   private snapToAtom(cursor: Vec2): Vec2 | null {

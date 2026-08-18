@@ -24,6 +24,8 @@ import {
 import { TemplatesList } from './TemplatesList';
 import classes from './BottomToolbar.module.less';
 import clsx from 'clsx';
+import { MechanismStepBar } from './MechanismStepBar';
+import type { MechanismStepSummary } from '../../../state/mechanismSteps';
 
 const Group: FC<{ className?: string } & PropsWithChildren> = ({
   children,
@@ -37,21 +39,50 @@ interface BottomToolbarProps
     opts: any;
     tool: string;
   };
+  mechanismControlsEnabled: boolean;
+  stepSummary: MechanismStepSummary;
 }
 
-type BottomToolbarCallProps = ToolbarGroupItemCallProps;
+interface BottomToolbarCallProps extends ToolbarGroupItemCallProps {
+  onPreviousStep: () => void;
+  onNextStep: () => void;
+  onArrangeStep: () => void;
+  onDuplicateStep: () => void;
+  onAddChemical: () => void;
+}
 
 type Props = BottomToolbarProps & BottomToolbarCallProps;
 
 const BottomToolbar = (props: Props) => {
-  const { className, ...rest } = props;
+  const {
+    className,
+    mechanismControlsEnabled,
+    stepSummary,
+    onPreviousStep,
+    onNextStep,
+    onArrangeStep,
+    onDuplicateStep,
+    onAddChemical,
+    ...rest
+  } = props;
 
   return (
     <div data-testid="bottom-toolbar" className={clsx(classes.root, className)}>
       <Group>
         <TemplatesList {...rest} />
+        <ToolbarGroupItem id="chemical-composer" {...rest} />
         <ToolbarGroupItem id="template-lib" {...rest} />
       </Group>
+      {mechanismControlsEnabled && (
+        <MechanismStepBar
+          summary={stepSummary}
+          onPrevious={onPreviousStep}
+          onNext={onNextStep}
+          onArrange={onArrangeStep}
+          onDuplicate={onDuplicateStep}
+          onAddChemical={onAddChemical}
+        />
+      )}
     </div>
   );
 };

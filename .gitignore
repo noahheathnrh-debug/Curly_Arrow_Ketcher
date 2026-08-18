@@ -47,3 +47,6 @@ output.txt
 
 .cursor
 .cursor/*
+
+# Screenshots and scratch pages from arrow-rendering work — output, not source.
+.render-preview/

@@ -61,6 +61,14 @@ export type RenderOptions = {
   showCharge: boolean;
   chargeDisplayStyle: ChargeDisplayStyle;
   chargeSize: number;
+  /**
+   * Styling for curly/fishhook mechanism arrows only. Exposed as options so a
+   * downstream app can restyle electron-pushing arrows without forking the
+   * renderer — reaction arrows are unaffected.
+   */
+  mechanismArrowColor?: string;
+  /** Mechanism arrow stroke as a multiple of the bond stroke width. */
+  mechanismArrowWidthScale?: number;
   showHydrogenLabels: string;
   showValence: boolean;
   aromaticCircle: boolean;
@@ -133,6 +141,26 @@ export interface ArrowItem {
   pos: Vec2[];
   height: number;
   height2?: number;
+  /** Control-point positions along the chord, as a fraction of its length. */
+  along1?: number;
+  along2?: number;
+  /**
+   * Interior turn points of a mechanism arrow, in canvas units, ordered from
+   * the tail.
+   *
+   * Empty or absent for an ordinary arrow, which is a single cubic. Each entry
+   * describes the segment *ending* at its own `at`, and the last segment runs
+   * from the final turn point to `pos[1]` using the item's own height/along
+   * fields. Consecutive segments share a tangent where they meet, so however
+   * many there are they draw as one smooth stroke in a single path.
+   */
+  leads?: Array<{
+    at: Vec2;
+    height: number;
+    height2: number;
+    along1: number;
+    along2: number;
+  }>;
 }
 
 export type ViewBox = {

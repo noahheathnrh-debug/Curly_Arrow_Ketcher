@@ -70,9 +70,39 @@ A factory chooses the bond renderer: hydrogen bonds always use the Snake-mode re
 - A factory maps each sequence node to a concrete sequence-item renderer (nucleotide, nucleoside, peptide, CHEM, phosphate, empty, backbone, ambiguous, …).
 - A base sequence-item renderer draws one monospaced symbol plus background, counter, caret, and spacer.
 
+### Mechanism-arrow routing
+
+A self-contained module under the render layer decides the *shape* of curly and
+fishhook arrows. It is pure: it takes a structure and render options, and returns curve
+parameters. No DOM, no Raphael, no pointer state — so it is exercisable in unit tests
+without a browser, and the same code serves the editor tool and the render layer.
+
+Its stages are: resolve the endpoint anchors from the arrow's chemical source and
+destination; build inflated collision geometry for everything drawn (bonds as capsules,
+labels as boxes, charges and non-bonding dots as discs); generate candidate curves from
+analytic tangent seeds plus a coarse sweep with local refinement; score them, comparing
+collisions lexicographically before any aesthetic preference.
+
+Drawn geometry reaches the router through a metrics interface with two implementations —
+one analytic, derived from the model, and one reading the renderer's real measurements.
+The analytic one is also the app's fallback before anything has been painted, since
+Raphael bounding boxes do not exist until then and are cleared on each redraw.
+
+Routes are cached on the render object, not written to the model, and dropped when the
+dirty-marking cascade invalidates an atom or bond the arrow is anchored to. Re-routing
+therefore happens once, on the next paint, rather than every frame.
+
+The arrowhead's geometry constants live in this module rather than with the other arrow
+drawing code, because scoring tests the head polygon against obstacles: if the renderer
+and the router described different shapes, a head that scored clear could still be drawn
+over a label.
+
 ## Assumptions & constraints
 
 - Renderers never mutate the model.
+- Mechanism-arrow routing must never run while an arrow is being resized: the resize
+  operation identifies which handle is being dragged by comparing the drag anchor
+  against reference points derived from the current curvature.
 - Micro uses diff-based dirty marking; macro relies on the executing Command to touch exactly the affected renderers.
 - The macro canvas comes from the zoom tool.
 - One of the goals is to get rid of Raphael and move to D3 for all rendering, but the micro editor is still Raphael-based.
