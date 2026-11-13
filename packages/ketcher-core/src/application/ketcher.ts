@@ -53,10 +53,7 @@ import {
 } from 'utilities';
 import { ketcherProvider } from './ketcherProvider';
 import { capabilityProvider } from './capabilities/CapabilityProvider';
-import type {
-  CapabilityRecord,
-  CapabilitySpec,
-} from './capabilities/types';
+import type { CapabilityRecord, CapabilitySpec } from './capabilities/types';
 import {
   deleteAllEntitiesOnCanvas,
   parseAndAddMacromoleculesOnCanvas,

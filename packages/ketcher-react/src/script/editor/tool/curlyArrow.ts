@@ -623,8 +623,7 @@ class CurlyArrowTool implements Tool {
     );
 
     const wanders =
-      route !== null &&
-      (route.leads !== undefined && route.leads.length > 0) ||
+      (route !== null && route.leads !== undefined && route.leads.length > 0) ||
       (route !== null &&
         route.metrics.pathLengthOverChord * Vec2.dist(route.p0, route.p1) >
           LENGTH_LIMIT_SCALE * Vec2.dist(route.p0, route.p1) +
