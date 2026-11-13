@@ -1,0 +1,21 @@
+.formula { font-weight: 600; margin-left: 0.25em; }
+
+.progress { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.progress button {
+  display: inline-grid; place-items: center; width: 2em; height: 2em;
+  font: inherit; font-size: 0.85rem; color: var(--mnx-text-muted, #5b6470);
+  background: var(--mnx-surface-2, #eef1f4); border: 0; border-radius: 50%; cursor: pointer;
+}
+.progress button:hover { color: var(--mnx-text, #1a1d21); }
+.progress button:focus-visible { outline: 2px solid var(--mnx-focus, #3a6ff0); outline-offset: 1px; }
+.progress [data-state='current'] button, .progress button[aria-current='step'] { color: var(--mnx-accent-text, #fff); background: var(--mnx-accent, #3a6ff0); font-weight: 600; }
+.progress [data-state='right'] button:not([aria-current]) { color: var(--mnx-canvas, #fff); background: var(--mnx-success, #2f8f4e); }
+.progress [data-state='shown'] button:not([aria-current]) { color: var(--mnx-text, #1a1d21); background: color-mix(in srgb, var(--mnx-warning, #c99a1f) 45%, transparent); }
+
+.notes { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.highlighted { margin-top: 6px !important; font-size: 0.85rem; color: var(--mnx-text-muted, #5b6470); }
+.link {
+  padding: 0; font: inherit; color: var(--mnx-accent, #3a6ff0); background: none; border: 0;
+  text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+}
+.link:focus-visible { outline: 2px solid var(--mnx-focus, #3a6ff0); outline-offset: 1px; }

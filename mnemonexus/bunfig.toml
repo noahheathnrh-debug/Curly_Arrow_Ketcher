@@ -1,0 +1,4 @@
+preload = ["./bunPrivateContent.ts"]
+
+[test]
+preload = ["./bunPrivateContent.ts"]

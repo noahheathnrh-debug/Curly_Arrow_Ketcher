@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "mnxpack_manifest_v1",
+  "id": "curly-arrow-ketcher",
+  "version": "0.23.0",
+  "kind": "experience",
+  "label": "Curly Arrow Ketcher",
+  "description": "Complete reaction mechanisms by drawing electron-flow arrows on supplied, locked structures.",
+  "icon": "fa-solid fa-flask",
+  "author": "Curly Arrow Ketcher contributors",
+  "subjects": [
+    "chemistry",
+    "organic chemistry",
+    "biochemistry"
+  ],
+  "knowledgeBinding": {
+    "mode": "none"
+  },
+  "surfaces": {},
+  "practice": {
+    "version": 1,
+    "catalogue": "assets/practice/catalogue.json"
+  },
+  "permissions": [
+    "storage:local",
+    "runtime:wasm"
+  ],
+  "engines": {
+    "mnxSdk": "1.0.0"
+  },
+  "entry": {
+    "logicalPath": "code/main.cjs"
+  },
+  "assets": [
+    {
+      "logicalPath": "assets/ocra-puzzles.json",
+      "mimeType": "application/json"
+    },
+    {
+      "logicalPath": "assets/practice/catalogue.json",
+      "mimeType": "application/json"
+    },
+    {
+      "logicalPath": "assets/indigo.wasm",
+      "mimeType": "application/wasm"
+    }
+  ]
+}

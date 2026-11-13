@@ -1,0 +1,56 @@
+.explorer {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 16px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  color: var(--mnx-text, #1a1d21);
+  font-family: var(--mnx-font, system-ui, sans-serif);
+}
+.picker { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; min-height: 0; }
+.pick {
+  display: flex; align-items: baseline; gap: 10px; padding: 8px 10px; text-align: left;
+  font: inherit; color: inherit; background: transparent; border: 0; border-radius: var(--mnx-radius-button, 6px); cursor: pointer;
+}
+.pick:hover { background: var(--mnx-surface-2, #eef1f4); }
+.pick[aria-pressed='true'] { background: var(--mnx-accent-soft, #dbe7ff); color: var(--mnx-text, inherit); }
+.pick:focus-visible { outline: 2px solid var(--mnx-focus, #3b82f6); outline-offset: 1px; }
+.formula { font-weight: 600; min-width: 4.2em; }
+.name { color: var(--mnx-text-muted, #59636f); font-size: 0.9em; }
+.stage {
+  display: grid; grid-template-columns: 1fr minmax(220px, 300px); gap: 16px; min-height: 0;
+  background: var(--mnx-surface, #fff); border-radius: var(--mnx-radius-surface, 10px); padding: 12px;
+}
+.viewer { min-height: 280px; }
+.viewer canvas:focus-visible { outline: 2px solid var(--mnx-focus, #3b82f6); outline-offset: -2px; border-radius: var(--mnx-radius-field, 6px); }
+.facts { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.facts h2 { margin: 0; font-size: 1.15rem; font-family: var(--mnx-font-heading, inherit); }
+.facts h2 .formula { font-weight: 500; color: var(--mnx-text-muted, #59636f); margin-left: 6px; }
+.facts dl { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.facts dt { font-size: 0.8rem; color: var(--mnx-text-muted, #59636f); }
+.facts dd { margin: 0; }
+.note { margin: 0; color: var(--mnx-text-muted, #59636f); line-height: 1.45; }
+.toggle { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.option {
+  padding: 10px 12px; font: inherit; text-align: left; color: inherit; cursor: pointer;
+  background: var(--mnx-surface-2, #eef1f4); border: 1px solid transparent; border-radius: var(--mnx-radius-button, 6px);
+}
+.option:hover:not(:disabled) { border-color: var(--mnx-border, #d8dde3); }
+.option:focus-visible { outline: 2px solid var(--mnx-focus, #3b82f6); outline-offset: 1px; }
+.option:disabled { cursor: default; }
+.option[data-state='right'] { background: color-mix(in srgb, var(--mnx-success, #2f8f4e) 22%, transparent); }
+.option[data-state='wrong'] { background: color-mix(in srgb, var(--mnx-danger, #c2402f) 22%, transparent); }
+.quizStage { display: grid; min-height: 320px; padding: 12px; }
+.hidden { margin: auto; color: var(--mnx-text-muted, #59636f); }
+/* In the app the activity runs in a page column, often under 1000px wide: the facts go under the model, not beside it. */
+@media (max-width: 1000px) {
+  .stage { grid-template-columns: 1fr; grid-template-rows: minmax(320px, 1fr) auto; overflow-y: auto; }
+  .viewer { min-height: 320px; }
+}
+@media (max-width: 720px) {
+  .explorer { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .picker { flex-direction: row; overflow-x: auto; }
+  .pick { flex-direction: column; gap: 0; }
+}

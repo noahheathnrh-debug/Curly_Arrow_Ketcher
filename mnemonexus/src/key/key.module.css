@@ -1,0 +1,31 @@
+.ask { display: flex; flex-direction: column; gap: 10px; }
+.ask h2, .leaf h2 { margin: 0; font-size: 1.1rem; font-family: var(--mnx-font-heading, inherit); }
+.answers { display: flex; flex-direction: column; gap: 8px; }
+.answer {
+  padding: 10px 12px; font: inherit; text-align: left; color: inherit; cursor: pointer; line-height: 1.4;
+  background: var(--mnx-surface-2, #eef1f4); border: 1px solid transparent; border-radius: var(--mnx-radius-button, 6px);
+}
+.answer:hover { border-color: var(--mnx-border, #d8dde3); }
+.answer:focus-visible, .pick:focus-visible, .trailStep:focus-visible { outline: 2px solid var(--mnx-focus, #3b82f6); outline-offset: 1px; }
+.leaf { display: flex; flex-direction: column; gap: 8px; }
+.leaf p { margin: 0; line-height: 1.45; }
+.trail, .path { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.trailStep {
+  display: block; width: 100%; padding: 6px 8px; font: inherit; font-size: 0.88rem; text-align: left; line-height: 1.35; cursor: pointer;
+  color: var(--mnx-text-muted, #59636f); background: transparent; border: 0; border-radius: var(--mnx-radius-button, 6px);
+}
+.trailStep:hover { background: var(--mnx-surface-2, #eef1f4); }
+.trailLabel { font-weight: 600; color: var(--mnx-text, #1a1d21); }
+.path li { padding: 6px 8px; font-size: 0.9rem; line-height: 1.35; border-radius: var(--mnx-radius-button, 6px); }
+.path li[data-state='wrong'] { background: color-mix(in srgb, var(--mnx-danger, #c2402f) 18%, transparent); }
+.scenario { margin: 0; font-size: 1.05rem; line-height: 1.5; }
+.listStage { display: flex; flex-direction: column; gap: 10px; padding: 14px; overflow-y: auto; min-height: 0; }
+.listHead { margin: 0; font-size: 0.95rem; font-family: var(--mnx-font-heading, inherit); }
+.list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px; }
+.pick {
+  width: 100%; padding: 7px 10px; font: inherit; font-size: 0.9rem; text-align: left; color: inherit; cursor: pointer;
+  background: transparent; border: 0; border-radius: var(--mnx-radius-button, 6px);
+}
+.pick:hover { background: var(--mnx-surface-2, #eef1f4); }
+.pick[aria-pressed='true'] { background: var(--mnx-accent-soft, #dbe7ff); }
+.hidden { margin: auto; color: var(--mnx-text-muted, #59636f); }

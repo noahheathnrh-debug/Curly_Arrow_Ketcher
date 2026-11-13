@@ -1,0 +1,5 @@
+node_modules/
+pack-build/
+*.mnxpack
+tools/editor-check/out/
+tools/preview/out/

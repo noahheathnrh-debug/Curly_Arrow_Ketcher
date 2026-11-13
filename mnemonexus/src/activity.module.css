@@ -1,0 +1,171 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  height: 100%; min-height: 0;
+  font-family: var(--mnx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  color: var(--mnx-text, #1a1d21);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--mnx-surface, #f7f8fa);
+  border-right: 1px solid var(--mnx-border, #dfe3e8);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mnx-text-muted, #6b7480);
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.badge {
+  align-self: flex-start;
+  padding: 2px 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mnx-text-muted, #48515c);
+  background: var(--mnx-surface-2, #e6e9ee);
+  border-radius: var(--mnx-radius-chip, 0);
+}
+
+.prompt {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.message {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  border-radius: var(--mnx-radius-field, 0);
+  border-left: 3px solid transparent;
+}
+
+.solved {
+  background: color-mix(in srgb, var(--mnx-success, #2f8f4e) 14%, transparent);
+  border-left-color: var(--mnx-success, #2f8f4e);
+}
+
+.wrong {
+  background: color-mix(in srgb, var(--mnx-danger, #c2402f) 14%, transparent);
+  border-left-color: var(--mnx-danger, #c2402f);
+}
+
+.partial {
+  background: color-mix(in srgb, var(--mnx-warning, #c99a1f) 14%, transparent);
+  border-left-color: var(--mnx-warning, #c99a1f);
+}
+
+.unanswered {
+  display: none;
+}
+
+.hints {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  background: var(--mnx-surface-2, #fff);
+  border: 1px solid var(--mnx-border-inner, #e2e6eb);
+  border-radius: var(--mnx-radius-field, 0);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.primary,
+.secondary {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: var(--mnx-radius-button, 0);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.primary {
+  color: var(--mnx-accent-text, #fff);
+  background: var(--mnx-accent, #167a3d);
+  border-color: var(--mnx-accent, #167a3d);
+}
+
+.primary:disabled {
+  color: var(--mnx-text-muted, #98a1ac);
+  background: var(--mnx-surface-2, #e6e9ee);
+  border-color: var(--mnx-surface-2, #e6e9ee);
+  cursor: not-allowed;
+}
+
+.secondary {
+  color: var(--mnx-text, #2b3138);
+  background: transparent;
+  border-color: var(--mnx-border, #cfd5dc);
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mnx-text-muted, #6b7480);
+}
+
+.canvas {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Enzyme mechanisms: what the model leaves out is always on screen, and where the step comes from is one click away. */
+.modelNote {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--mnx-text-muted, #48515c);
+  background: var(--mnx-surface-2, #eef1f5);
+  border-left: 3px solid var(--mnx-border, #b8c1cc);
+}
+
+.source {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mnx-text-muted, #6b7480);
+}
+
+.source summary {
+  cursor: pointer;
+}
+
+.source p {
+  margin: 6px 0 0;
+}

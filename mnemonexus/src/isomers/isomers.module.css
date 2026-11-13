@@ -1,0 +1,26 @@
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices button { min-width: 3.5em; }
+
+.targets { display: flex; flex-wrap: wrap; gap: 6px; }
+.target {
+  padding: 4px 10px; font: inherit; font-size: 0.85rem; color: var(--mnx-text-muted, #5b6470);
+  background: var(--mnx-surface-2, #eef1f4); border: 0; border-radius: 999px; cursor: pointer;
+}
+.target[aria-pressed='true'] { color: var(--mnx-accent-text, #fff); background: var(--mnx-accent, #3a6ff0); }
+.target[data-done='right']:not([aria-pressed='true']) { color: var(--mnx-text, #1a1d21); background: color-mix(in srgb, var(--mnx-success, #2f8f4e) 22%, transparent); }
+.target[data-done='wrong']:not([aria-pressed='true']) { color: var(--mnx-text, #1a1d21); background: color-mix(in srgb, var(--mnx-warning, #c99a1f) 35%, transparent); }
+.target:disabled { cursor: default; opacity: 0.6; }
+.target:focus-visible { outline: 2px solid var(--mnx-focus, #3a6ff0); outline-offset: 1px; }
+
+.ranks { margin: 6px 0; padding-left: 1.4em; display: grid; gap: 3px; }
+.ranks li { padding-left: 2px; }
+.dot { display: inline-block; width: 0.7em; height: 0.7em; margin-right: 0.45em; border-radius: 50%; vertical-align: 0.05em; }
+.aside { color: var(--mnx-text-muted, #5b6470); font-size: 0.85em; }
+
+/* The drawing is only looked at: the drawing tools stay hidden, the top bar (zoom, fit) stays. */
+.viewOnly :global([data-testid='left-toolbar']),
+.viewOnly :global([data-testid='right-toolbar']),
+.viewOnly :global([data-testid='bottom-toolbar']) { display: none !important; }
+
+.tally { font-size: 0.95rem; }
+.found { margin: 0; padding-left: 1.6em; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }

@@ -1,0 +1,67 @@
+/* The right-hand column: the spectra above the drawing. */
+.stage { display: grid; grid-template-rows: auto minmax(220px, 1fr); min-height: 0; height: 100%; }
+.stage[data-charts='none'] { grid-template-rows: minmax(0, 1fr); }
+.stage > main { min-height: 0; }
+
+.charts {
+  display: flex; flex-direction: column; gap: 4px; padding: 10px 14px 8px;
+  background: var(--mnx-surface, #fff); border-bottom: 1px solid var(--mnx-border, #dfe3e8);
+  max-height: 52vh; overflow-y: auto;
+}
+.tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chartTitle { font-size: 0.8rem; color: var(--mnx-text-muted, #5b6470); margin-right: 6px; }
+.tab {
+  padding: 4px 10px; font: inherit; font-size: 0.85rem; color: var(--mnx-text-muted, #5b6470);
+  background: var(--mnx-surface-2, #eef1f4); border: 0; border-radius: 999px; cursor: pointer;
+}
+.whose { display: inline-flex; gap: 4px; margin-right: 10px; padding-right: 10px; border-right: 1px solid var(--mnx-border, #dfe3e8); }
+.tab[aria-selected='true'], .tab[aria-pressed='true'] { color: var(--mnx-accent-text, #fff); background: var(--mnx-accent, #3a6ff0); }
+.tab:focus-visible { outline: 2px solid var(--mnx-focus, #3a6ff0); outline-offset: 1px; }
+
+.charts { container-type: inline-size; }
+.chartBody { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(220px, 1fr); gap: 8px 14px; align-items: start; }
+.side { min-width: 0; }
+@container (max-width: 680px) { .chartBody { grid-template-columns: minmax(0, 1fr); } }
+.plot { width: 100%; height: auto; display: block; color: var(--mnx-text, #1a1d21); flex: none; }
+.axis line { stroke: var(--mnx-text-muted, #5b6470); stroke-width: 1; }
+.axis text { fill: var(--mnx-text-muted, #5b6470); font-size: 11.5px; }
+.axisLabel { font-style: italic; }
+.reference line { stroke: var(--mnx-text-muted, #5b6470); stroke-width: 1.2; }
+.reference text { fill: var(--mnx-text-muted, #5b6470); font-size: 10.5px; }
+.peak line { stroke: currentColor; stroke-width: 1.6; }
+.peak rect { fill: currentColor; }
+.peak[data-kind='molecular'] rect { fill: var(--mnx-accent, #3a6ff0); }
+.peak, .band { cursor: pointer; outline: none; }
+.peak[data-hover='true'], .band[data-hover='true'] { color: var(--mnx-accent, #3a6ff0); }
+.peak[data-hover='true'] line, .band[data-hover='true'] line { stroke-width: 2.4; }
+.peakLabel { fill: currentColor; font-size: 12.5px; font-weight: 600; }
+.peakSub { fill: var(--mnx-text-muted, #5b6470); font-size: 11px; }
+.peak[data-hover='true'] .peakSub, .band[data-hover='true'] .peakSub { fill: var(--mnx-accent, #3a6ff0); }
+.trace { fill: none; stroke: currentColor; stroke-width: 1.4; }
+.band line { stroke: var(--mnx-text-muted, #5b6470); stroke-dasharray: 2 2; stroke-width: 1; }
+.print { fill: color-mix(in srgb, var(--mnx-text-muted, #5b6470) 8%, transparent); }
+
+.table { width: 100%; border-collapse: collapse; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.table th { text-align: left; font-weight: 500; color: var(--mnx-text-muted, #5b6470); padding: 3px 8px; border-bottom: 1px solid var(--mnx-border, #dfe3e8); }
+.table td { padding: 3px 8px; }
+.table tbody tr { cursor: pointer; outline: none; }
+.table tbody tr[data-hover='true'] { background: color-mix(in srgb, var(--mnx-accent, #3a6ff0) 14%, transparent); }
+.note { margin: 2px 0 0; font-size: 0.78rem; color: var(--mnx-text-muted, #5b6470); }
+
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices button { min-width: 3em; }
+.options { display: grid; gap: 6px; }
+.options button { text-align: left; }
+.envs { margin: 4px 0; padding: 0; list-style: none; display: grid; gap: 3px; font-variant-numeric: tabular-nums; }
+.dot { display: inline-block; width: 0.7em; height: 0.7em; margin-right: 0.45em; border-radius: 50%; vertical-align: 0.05em; }
+.facts { margin: 0; padding-left: 1.2em; display: grid; gap: 2px; }
+.formula { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.02em; }
+
+/* The drawing is only looked at: the drawing tools stay hidden, the top bar (zoom, fit) stays. */
+.viewOnly :global([data-testid='left-toolbar']),
+.viewOnly :global([data-testid='right-toolbar']),
+.viewOnly :global([data-testid='bottom-toolbar']) { display: none !important; }
+
+@media (max-width: 760px) {
+  .charts { max-height: none; }
+}

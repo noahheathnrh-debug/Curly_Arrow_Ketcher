@@ -17,3 +17,9 @@
  The Mozilla Public License https://opensource.org/licenses/MPL-1.0
  Public Domain https://wiki.creativecommons.org/wiki/Public_domain
  Unlicense http://unlicense.org/
+
+ Curly Arrow Ketcher
+ This repository is a modified version of Ketcher. Files under packages/ that differ
+ from upstream (https://github.com/epam/ketcher) were changed for this fork: mechanism
+ arrows, capability profiles and focused controls. The mnemonexus/ folder is new work,
+ a MnemoNexus add-on built on the modified packages, under the same Apache License 2.0.

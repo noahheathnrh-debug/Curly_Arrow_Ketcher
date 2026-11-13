@@ -50,3 +50,6 @@ output.txt
 
 # Screenshots and scratch pages from arrow-rendering work — output, not source.
 .render-preview/
+
+# MnemoNexus private content: lecture-derived enzyme mechanisms and the recovered corpus (origin unchecked). Never publish.
+/mnemonexus/private/

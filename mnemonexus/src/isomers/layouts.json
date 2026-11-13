@@ -1,0 +1,11064 @@
+{
+ "F[C@H](Cl)Br": {
+  "atoms": [
+   {
+    "label": "F",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "C[C@H](F)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "F",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "C[C@H](O)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "C[C@@H](Br)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CC[C@@H](C)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "C[C@@H](O)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "C[C@H](N)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "O=C[C@H](O)CO": {
+  "atoms": [
+   {
+    "label": "O",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CCC[C@@H](C)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     6
+    ]
+   }
+  ]
+ },
+ "C[C@@H](CC)CO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "C=C[C@H](C)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC[C@H](C)CBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC[C@H](C)C=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C)CC1=CC=C(C=C1)[C@H](C)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -3.464,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -3.464,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -4.33,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     2.598,
+     -0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     6,
+     7
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     7,
+     8
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     8,
+     9
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     9,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     7,
+     10
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     10,
+     11
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     10,
+     12
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     12,
+     13
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     12,
+     14
+    ]
+   }
+  ]
+ },
+ "C[C@@H](Br)[C@H](C)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ],
+    "stereo": 1
+   }
+  ]
+ },
+ "C[C@@H](O)[C@H](N)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     7
+    ]
+   }
+  ]
+ },
+ "CC[C@@H](Br)[C@H](C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     6
+    ],
+    "stereo": 6
+   }
+  ]
+ },
+ "C[C@@H](O)[C@@H](C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "C/C=C/C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "C/C=C\\C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CC/C=C\\C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "Cl/C=C\\Cl": {
+  "atoms": [
+   {
+    "label": "Cl",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "C=CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "CC=C(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "C/C=C(/C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "CC/C(C)=C/C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "C/C=C/C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "OC(=O)/C=C/C1=CC=CC=C1": {
+  "atoms": [
+   {
+    "label": "O",
+    "location": [
+     -3,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -2.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -3,
+     -1.732,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     6,
+     7
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     7,
+     8
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     8,
+     9
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     9,
+     10
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     10,
+     5
+    ]
+   }
+  ]
+ },
+ "CC/C(C)=C/Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "C/C=C(\\Cl)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "C/C=C/C=C\\C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CCCCO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCC(C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "CCO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "COC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "CCC=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CC(C)=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "CCCCC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCC(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "CCCCl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CC(C)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "C=CCC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CCCC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "Cl/C=C/Cl": {
+  "atoms": [
+   {
+    "label": "Cl",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "C[C@@H](O)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "C[C@@H](N)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CC[C@H](C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ],
+    "stereo": 1
+   }
+  ]
+ },
+ "OC(=O)[C@@H](C)O": {
+  "atoms": [
+   {
+    "label": "O",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "C[C@@H](Br)[C@@H](C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "C[C@H](Br)[C@H](C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ],
+    "stereo": 1
+   }
+  ]
+ },
+ "C[C@@H](Br)[C@H](C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ],
+    "stereo": 1
+   }
+  ]
+ },
+ "C[C@H](O)[C@H](N)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     1.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     7
+    ]
+   }
+  ]
+ },
+ "C[C@@H](O)[C@H](C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 1
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ],
+    "stereo": 1
+   }
+  ]
+ },
+ "C[C@H](O)[C@@H](C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "C[C@H](Br)[C@@H](C)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     0
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ],
+    "stereo": 6
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "CC(C)(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CC)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "CCCO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CCOC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CC(C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "CCCBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CC(C)(C)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CCl)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CC)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CCCCCl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(C)(Cl)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CCl)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CCC(Cl)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "C(CCl)CCl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CC)(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C(C)C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(CC)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(CCC)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CCCCCC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2.598,
+     -0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C)(C)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CO)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CC)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(C)OC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCCOC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCOCC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(CBr)(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(CC)(C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C(C)Br)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(CC)CBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(CCBr)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CCC(CC)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(CCC)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     5
+    ]
+   }
+  ]
+ },
+ "CCCCCBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     2.598,
+     -0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ "CC(C)CO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CC=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "C=CCO": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CCCC=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCC(C)=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(C)C=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCC(=O)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CCCC(C)=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C)C(C)=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "COC=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CCC(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "COC(C)=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "CCOC=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCCC(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CCOC(C)=O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CCC(=O)OC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C)C(=O)O": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CCl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ "CCCl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "CCBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "ClCCCl": {
+  "atoms": [
+   {
+    "label": "Cl",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CC(Cl)Cl": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Cl",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "CCCCBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCC(C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(C)(C)Br": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ "CC(C)CBr": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "Br",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   }
+  ]
+ },
+ "CCN": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "CNC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "CCCN": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "CN(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "CC#N": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 3,
+    "atoms": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "CCC#N": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "N",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 3,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "C=C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ "CC=CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "C=C(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ "C1CCCCC1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     -1.732,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1.732,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     0
+    ]
+   }
+  ]
+ },
+ "CCCC(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -2.598,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "CCC(C)CC": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   }
+  ]
+ },
+ "CCC(C)(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     5
+    ]
+   }
+  ]
+ },
+ "CC(C)C(C)C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     5
+    ]
+   }
+  ]
+ },
+ "C1=CC=CC=C1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     -1.732,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1.732,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     0
+    ]
+   }
+  ]
+ },
+ "CC1=CC=CC=C1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     6,
+     1
+    ]
+   }
+  ]
+ },
+ "CCC1=CC=CC=C1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     6,
+     7
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     7,
+     2
+    ]
+   }
+  ]
+ },
+ "CC1=CC=CC=C1C": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     -1.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     6,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     6,
+     7
+    ]
+   }
+  ]
+ },
+ "CC1=CC=CC(C)=C1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -0.866,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     -1.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     -1,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.732,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2.598,
+     0.5,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.866,
+     0.5,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     7
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     7,
+     1
+    ]
+   }
+  ]
+ },
+ "CC1=CC=C(C)C=C1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     3,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     6
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     6,
+     7
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     7,
+     1
+    ]
+   }
+  ]
+ },
+ "O=CC1=CC=CC=C1": {
+  "atoms": [
+   {
+    "label": "O",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 2,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     2,
+     3
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     6,
+     7
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     7,
+     2
+    ]
+   }
+  ]
+ },
+ "CC(=O)C1=CC=CC=C1": {
+  "atoms": [
+   {
+    "label": "C",
+    "location": [
+     -1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "O",
+    "location": [
+     -1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     -0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     2,
+     0,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     1.5,
+     0.866,
+     0
+    ]
+   },
+   {
+    "label": "C",
+    "location": [
+     0.5,
+     0.866,
+     0
+    ]
+   }
+  ],
+  "bonds": [
+   {
+    "type": 1,
+    "atoms": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     4,
+     5
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     5,
+     6
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     6,
+     7
+    ]
+   },
+   {
+    "type": 2,
+    "atoms": [
+     7,
+     8
+    ]
+   },
+   {
+    "type": 1,
+    "atoms": [
+     8,
+     3
+    ]
+   }
+  ]
+ }
+}

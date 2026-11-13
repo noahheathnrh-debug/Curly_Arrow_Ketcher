@@ -1,0 +1,35 @@
+{
+  "name": "@mnemonexus/curly-arrow-ketcher-addon",
+  "version": "0.23.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build --config vite.config.pack.ts && bun run build-catalogue.ts && bun run build-pack.ts",
+    "build:private": "MNX_PACK_CONTENT=private bun run build",
+    "check:editor": "MNX_PACK_CONTENT=private vite build --config tools/editor-check/vite.config.ts && node tools/editor-check/run.mjs",
+    "preview": "vite build --config tools/preview/vite.config.ts && node tools/preview/run.mjs",
+    "times": "vite build --config tools/preview/vite.config.ts && node tools/preview/times.mjs"
+  },
+  "dependencies": {
+    "@mnemonexus/addon-sdk": "file:../../mnx-addon-kit-release/sdk",
+    "events": "3.3.0",
+    "indigo-ketcher": "1.47.0-rc.1",
+    "ketcher-core": "file:../packages/ketcher-core",
+    "ketcher-react": "file:../packages/ketcher-react",
+    "paper": "0.12.18",
+    "raphael": "^2.3.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "subscription": "3.0.0"
+  },
+  "devDependencies": {
+    "@types/raphael": "^2.3.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.16"
+  }
+}

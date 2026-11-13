@@ -1,0 +1,30 @@
+import type { LessonDef } from './kit';
+import { FIRST_SLICE } from './content/firstSlice';
+import { SUBSTITUTION_ELIMINATION } from './content/substitutionElimination';
+import { ALKENES } from './content/alkenes';
+import { CARBONYLS } from './content/carbonyls';
+import { ACYL_SUBSTITUTION } from './content/acyl';
+import { ENOLATES } from './content/enolates';
+import { AROMATIC } from './content/aromatic';
+import { RADICALS } from './content/radicals';
+import { PERICYCLIC } from './content/pericyclic';
+import { CONJUGATE } from './content/conjugate';
+import { REARRANGEMENTS } from './content/rearrangements';
+import { E1CB } from './content/e1cb';
+import { WITTIG } from './content/wittig';
+import { HALOHYDRIN } from './content/halohydrin';
+import { HYDROBORATION } from './content/hydroboration';
+import { EPOXIDES } from './content/epoxides';
+import { DECARBOXYLATION } from './content/decarboxylation';
+import { ENOLS } from './content/enols';
+import { RESONANCE } from './content/resonance';
+import { ESTER_ADDITION } from './content/esterAddition';
+import { CARBOXYLATION } from './content/carboxylation';
+import { FISCHER } from './content/fischer';
+import { AMIDE_HYDROLYSIS } from './content/amideHydrolysis';
+import { NITRILE_HYDROLYSIS } from './content/nitrileHydrolysis';
+import { ENOLATE_ALKYLATION, MICHAEL } from './content/stabilisedEnolates';
+import { CORE_ACYL, CORE_ALKENES, CORE_AROMATIC, CORE_CARBONYL, CORE_RADICALS, CORE_SUBSTITUTION } from './content/core';
+
+/** Every lesson in Reactions & mechanisms → Learn, in teaching order. */
+export const LESSONS: readonly LessonDef[] = [...FIRST_SLICE, ...RESONANCE, ...SUBSTITUTION_ELIMINATION, ...CORE_SUBSTITUTION, ...ALKENES, ...CORE_ALKENES, ...CARBONYLS, ...CORE_CARBONYL, ...ACYL_SUBSTITUTION, ...CORE_ACYL, ...FISCHER, ...AMIDE_HYDROLYSIS, ...ESTER_ADDITION, ...CARBOXYLATION, ...NITRILE_HYDROLYSIS, ...ENOLS, ...ENOLATES, ...ENOLATE_ALKYLATION, ...E1CB, ...CONJUGATE, ...MICHAEL, ...AROMATIC, ...CORE_AROMATIC, ...RADICALS, ...CORE_RADICALS, ...HALOHYDRIN, ...HYDROBORATION, ...EPOXIDES, ...WITTIG, ...PERICYCLIC, ...DECARBOXYLATION, ...REARRANGEMENTS];

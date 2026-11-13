@@ -1,0 +1,19 @@
+.browser { height: 100%; box-sizing: border-box; overflow-y: auto; padding: 24px 32px; color: #1a1d21; background: #fafbfc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.header, .filters, .pages { display: flex; align-items: center; gap: 12px; }
+.header { justify-content: space-between; }
+.header h1 { margin: 0; font-size: 22px; }
+.section { margin: 24px 0 0; font-size: 17px; }
+.intro, .status, .provenance { color: #59636f; font-size: 14px; }
+.browser button, .browser input, .browser select { font: inherit; border-radius: 0; }
+.header button, .pages button { padding: 6px 12px; background: transparent; color: inherit; border: 1px solid #cfd5dc; cursor: pointer; }
+.filters input { flex: 1; min-width: 0; }
+.filters input, .filters select { padding: 9px; border: 1px solid #cfd5dc; background: white; }
+.list { list-style: none; margin: 0; padding: 0; }
+.level { width: 100%; display: flex; justify-content: space-between; gap: 16px; text-align: left; padding: 12px 0; border: 0; border-bottom: 1px solid #e0e4e8; color: inherit; background: transparent; cursor: pointer; }
+.level:hover, .level:focus-visible { background: #eef4f0; }
+.level small { color: #59636f; white-space: nowrap; }
+.pages { justify-content: center; padding: 18px 0; }
+.pages button:disabled { opacity: .4; cursor: default; }
+.provenance { margin-top: 16px; }
+.provenance summary { cursor: pointer; }
+@media (max-width: 600px) { .browser { padding: 16px; } .level { flex-direction: column; gap: 4px; } .filters { flex-wrap: wrap; } }

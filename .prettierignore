@@ -1,0 +1,2 @@
+# The MnemoNexus add-on is its own package with its own code style; Ketcher's formatter does not apply to it.
+mnemonexus/
