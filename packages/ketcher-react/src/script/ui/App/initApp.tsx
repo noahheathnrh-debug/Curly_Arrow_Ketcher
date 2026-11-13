@@ -28,6 +28,7 @@ import createStore, { setServer } from '../state';
 import { initKeydownListener, removeKeydownListener } from '../state/hotkeys';
 import { initResize } from '../state/toolbar';
 import { initMouseListener, removeMouseListeners } from '../state/mouse';
+import { capabilityProvider } from 'ketcher-core';
 
 function initApp(
   prevKetcherId: string,
@@ -53,6 +54,9 @@ function initApp(
     resolve({ editor, setServer });
   };
   const store = createStore(options, server, setEditor);
+  if (capabilityProvider.getProfile(ketcherId) === 'puzzle-arrow-only') {
+    store.dispatch({ type: 'SET_MECHANISM_CONTROLS', data: { enabled: true } });
+  }
 
   getServerSetter = () => {
     return (structService: StructService) => {

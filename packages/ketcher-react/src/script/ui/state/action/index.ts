@@ -19,6 +19,7 @@ import {
   type Struct,
   type PersistedSelectionTool,
   SettingsManager,
+  capabilityProvider,
 } from 'ketcher-core';
 import actions, { type UiAction, type UiActionAction } from '../../action';
 import type Editor from '../../../editor/Editor';
@@ -129,7 +130,25 @@ function status(
   return pickBy((x) => x, {
     selected: selected(actObj, activeTool, params),
     disabled: disabled(actObj, params),
-    hidden: hidden(actObj, params),
+    hidden:
+      hidden(actObj, params) ||
+      (capabilityProvider.getProfile(params.editor.ketcherId) ===
+        'puzzle-arrow-only' &&
+        ![
+          'hand',
+          'select-rectangle',
+          'select-lasso',
+          'select-fragment',
+          'curly-arrow',
+          'undo',
+          'redo',
+          'explicit-hydrogens',
+          'lone-pairs',
+          'zoom',
+          'zoom-list',
+          'zoom-in',
+          'zoom-out',
+        ].includes(actionName)),
   });
 }
 

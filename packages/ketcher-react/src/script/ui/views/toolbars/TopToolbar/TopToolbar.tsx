@@ -34,6 +34,7 @@ import type { CustomButton } from '../../../../builders/ketcher/CustomButtons';
 type VoidFunction = () => void;
 
 export interface PanelProps {
+  taskControlsOnly?: boolean;
   className: string;
   disabledButtons: string[];
   indigoVerification: boolean;
@@ -126,6 +127,7 @@ const BtnsWpapper = styled.div`
 `;
 
 export const TopToolbar = ({
+  taskControlsOnly = false,
   className,
   disabledButtons,
   indigoVerification,
@@ -278,6 +280,7 @@ export const TopToolbar = ({
           isActive={mechanismControlsEnabled}
           ariaPressed={mechanismControlsEnabled}
           testId="mechanism-controls-toggle"
+          isHidden={taskControlsOnly}
         />
         <Divider />
         {renderedTogglerComponent}

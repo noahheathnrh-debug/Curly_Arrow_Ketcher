@@ -20,7 +20,7 @@ import {
   RightToolbarContainer,
   TopToolbarContainer,
 } from '../views/toolbars';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import { createTheme, Snackbar, ThemeProvider } from '@mui/material';
 import AppClipArea from '../views/AppClipArea';
 import { AppHiddenContainer } from './AppHidden';
@@ -39,7 +39,7 @@ import {
 } from '../../../hooks';
 import { AbbreviationLookupContainer } from '../dialog/AbbreviationLookup';
 import { initLib } from '../state/templates/init-lib';
-import { ketcherProvider } from 'ketcher-core';
+import { ketcherProvider, capabilityProvider } from 'ketcher-core';
 import { useAppDispatch } from '../state/hooks';
 import { selectSnackbarNotificationText } from '../state/notifications';
 import { useSelector } from 'react-redux';
@@ -73,6 +73,16 @@ const App = (props: Props) => {
 
   useSubscriptionOnEvents();
   const { ketcherId, prevKetcherId } = useAppContext();
+  const taskControlsOnly = useSyncExternalStore(
+    useCallback(
+      (notify) => capabilityProvider.subscribe(ketcherId, notify),
+      [ketcherId],
+    ),
+    useCallback(
+      () => capabilityProvider.getProfile(ketcherId) === 'puzzle-arrow-only',
+      [ketcherId],
+    ),
+  );
 
   const handleCloseSnackbarNotification = useCallback(() => {
     dispatch({ type: 'HIDE_SNACKBAR_NOTIFICATION' });
@@ -111,7 +121,11 @@ const App = (props: Props) => {
 
   return (
     <ThemeProvider theme={muiTheme}>
-      <div className={classes.app}>
+      <div
+        className={`${classes.app} ${
+          taskControlsOnly ? classes.taskControls : ''
+        }`}
+      >
         <AppHiddenContainer />
         <Editor
           prevKetcherId={prevKetcherId}
@@ -120,12 +134,17 @@ const App = (props: Props) => {
         />
 
         <TopToolbarContainer
+          taskControlsOnly={taskControlsOnly}
           className={classes.top}
           togglerComponent={props.togglerComponent}
         />
         <LeftToolbarContainer className={classes.left} />
-        <BottomToolbarContainer className={classes.bottom} />
-        <RightToolbarContainer className={classes.right} />
+        {!taskControlsOnly && (
+          <BottomToolbarContainer className={classes.bottom} />
+        )}
+        {!taskControlsOnly && (
+          <RightToolbarContainer className={classes.right} />
+        )}
 
         {
           // TODO suppressed after upgrade to react 19. Need to fix

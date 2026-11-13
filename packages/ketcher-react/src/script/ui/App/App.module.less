@@ -53,6 +53,13 @@
   grid-template-columns: minmax(35px, max-content) 1fr minmax(35px, max-content);
 }
 
+.app.taskControls,
+:global(.smallEditor) .app.taskControls {
+  grid-template-areas: 'toolbar-top toolbar-top' 'toolbar-left canvas';
+  grid-template-columns: minmax(36px, max-content) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
 .toastNotification {
   background-color: #333333;
   max-height: 40px;
