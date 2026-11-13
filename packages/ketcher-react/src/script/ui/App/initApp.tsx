@@ -19,7 +19,7 @@ import {
   ErrorsContext,
   SettingsContext,
 } from './../../../contexts';
-import type { StructService } from 'ketcher-core';
+import { capabilityProvider, type StructService } from 'ketcher-core';
 
 import App from './App.container';
 import { Provider } from 'react-redux';
@@ -28,7 +28,6 @@ import createStore, { setServer } from '../state';
 import { initKeydownListener, removeKeydownListener } from '../state/hotkeys';
 import { initResize } from '../state/toolbar';
 import { initMouseListener, removeMouseListeners } from '../state/mouse';
-import { capabilityProvider } from 'ketcher-core';
 
 function initApp(
   prevKetcherId: string,
