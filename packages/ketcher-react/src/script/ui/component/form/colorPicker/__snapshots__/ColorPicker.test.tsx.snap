@@ -19,9 +19,17 @@ exports[`should be rendered correctly should be rendered without crashing 1`] = 
         data-testid="testname-color-picker-preview"
         style="background-color: rgb(0, 0, 0);"
       />
-      <icon-chevron.svg
+      <svg
         class="expandIcon turnedIcon"
-      />
+        height="48"
+        viewBox="0 0 48 48"
+        width="48"
+      >
+        <use
+          href="#ketcher-icon-chevron"
+          xlink:href="#ketcher-icon-chevron"
+        />
+      </svg>
     </button>
   </div>
 </DocumentFragment>

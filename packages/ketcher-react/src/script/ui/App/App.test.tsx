@@ -73,6 +73,11 @@ jest.mock('ketcher-core', () => ({
     removeKetcherInstance: (...args: unknown[]) =>
       mockRemoveKetcherInstance(...args),
   },
+  // The fork's App reads the task profile to hide the side palettes in arrow-only tasks.
+  capabilityProvider: {
+    subscribe: () => () => undefined,
+    getProfile: () => undefined,
+  },
 }));
 
 jest.mock('react-redux', () => ({
